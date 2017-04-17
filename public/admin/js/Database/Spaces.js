@@ -60,7 +60,18 @@ Ext.define('Admin.Database.Spaces', {
 
   truncateSpace(space) {
     dispatch('space.truncate', this.spaceParams(space))
-      .then(() => this.refreshSpaces())
+      .then(() => {
+        this.refreshSpaces();
+        this.up('database-tab').items.each(item => {
+          if(item.params && item.params.space == space) {
+            item.items.each(item => {
+              if(item.xtype == 'space-collection') {
+                item.store.load();
+              }
+            })
+          }
+        })
+      })
   },
 
   dropSpace(space) {
