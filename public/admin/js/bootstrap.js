@@ -4,7 +4,7 @@ Ext.onReady(() => {
     enabled:true,
     disableCaching:true,
     paths:{
-      Admin:'./admin/js',
+      Admin:'/admin/js',
     }
   });
 

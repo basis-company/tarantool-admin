@@ -26,7 +26,7 @@ Ext.define('Admin.Viewport', {
     return new Promise(function(resolve, reject) {
       Ext.Ajax.request({
           method: 'post',
-          url: 'admin/api',
+          url: '/admin/api',
           params: {
             rpc: Ext.JSON.encode({
               job: job,
