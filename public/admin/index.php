@@ -1,2 +1,3 @@
 <?php
-header('location: /admin/index');
+
+include '../index.html';
