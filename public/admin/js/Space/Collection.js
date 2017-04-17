@@ -55,78 +55,81 @@ Ext.define('Admin.Space.Collection', {
         });
 
         if(this.params.index !== undefined) {
-
-          var index = result.indexes.filter(i => i.iid == this.params.index)[0];
-
-          this.setTitle('Index: ' + index.name.split('_').map(Ext.util.Format.capitalize).join(''));
-
-          var items = [];
-
-          index.parts.forEach(p => {
-            items.push({
-              xtype: 'label',
-              text: fields[p[0]]
-            });
-
-            var field = {
-              xtype: 'textfield',
-              searchField: true,
-            };
-
-            if(['str', 'string'].indexOf(p[1].toLowerCase()) == -1) {
-              Ext.apply(field, {
-                xtype: 'numberfield',
-                showSpinner: false,
-                minValue: 0,
-              })
-            }
-
-            items.push(Ext.apply(field, {
-              name: fields[p[0]],
-              width: 70,
-              labelAlign: 'right',
-              enableKeyEvents: true,
-              listeners: {
-                specialkey(field, e) {
-                  if(e.getKey() == e.ENTER) {
-                    field.up('space-collection').down('[text=EQ]').handler();
-                  }
-                }
-              }
-            }));
-          });
-
-          items.push({
-            text: 'Select',
-            menu: ['EQ', 'REQ', 'ALL', 'LT', 'LE', 'GE', 'GT', 'BITS_ALL_SET', 'BITS_ANY_SET', 'BITS_ALL_NOT_SET', 'OVERLAPS', 'NEIGHBOR'].map((text, iterator) => {
-              return {
-                text: text,
-                handler: () => {
-                  this.down('[text=' + text +']').up('button').setText(text + ' iterator');
-                  var params = [];
-                  this.down('pagingtoolbar').items.findBy(item => {
-                    if(item.searchField) {
-                      if(item.value === "" || item.value == undefined) {
-                        return true;
-                      }
-                      params.push(item.value);
-                    }
-                  })
-                  this.store.proxy.params.key = [0];
-                  this.store.proxy.params.iterator = iterator
-                  if(params.length) {
-                    this.store.proxy.params.key = params
-                    this.store.load();
-                  }
-                }
-              }
-            })
-          });
-
-          this.down('pagingtoolbar').insert(10, items);
+          this.updateSearchToolbar(result.indexes.filter(i => i.iid == this.params.index)[0], fields);
         }
 
         this.reconfigure(store, columns);
       });
+  },
+
+
+  updateSearchToolbar(index, fields) {
+
+    this.setTitle('Index: ' + index.name.split('_').map(Ext.util.Format.capitalize).join(''));
+
+    var items = [];
+
+    index.parts.forEach(p => {
+      items.push({
+        xtype: 'label',
+        text: fields[p[0]]
+      });
+
+      var field = {
+        xtype: 'textfield',
+        searchField: true,
+      };
+
+      if(['str', 'string'].indexOf(p[1].toLowerCase()) == -1) {
+        Ext.apply(field, {
+          xtype: 'numberfield',
+          showSpinner: false,
+          minValue: 0,
+        })
+      }
+
+      items.push(Ext.apply(field, {
+        name: fields[p[0]],
+        width: 70,
+        labelAlign: 'right',
+        enableKeyEvents: true,
+        listeners: {
+          specialkey(field, e) {
+            if(e.getKey() == e.ENTER) {
+              field.up('space-collection').down('[text=EQ]').handler();
+            }
+          }
+        }
+      }));
+    });
+
+    items.push({
+      text: 'Select',
+      menu: ['EQ', 'REQ', 'ALL', 'LT', 'LE', 'GE', 'GT', 'BITS_ALL_SET', 'BITS_ANY_SET', 'BITS_ALL_NOT_SET', 'OVERLAPS', 'NEIGHBOR'].map((text, iterator) => {
+        return {
+          text: text,
+          handler: () => {
+            this.down('[text=' + text +']').up('button').setText(text + ' iterator');
+            var params = [];
+            this.down('pagingtoolbar').items.findBy(item => {
+              if(item.searchField) {
+                if(item.value === "" || item.value == undefined) {
+                  return true;
+                }
+                params.push(item.value);
+              }
+            })
+            this.store.proxy.params.key = [0];
+            this.store.proxy.params.iterator = iterator
+            if(params.length) {
+              this.store.proxy.params.key = params
+              this.store.load();
+            }
+          }
+        }
+      })
+    });
+
+    this.down('pagingtoolbar').insert(10, items);
   }
 });
