@@ -19,11 +19,8 @@ Ext.define('Admin.Space.Info', {
   reloadInfo() {
     dispatch('space.info', this.up('space-tab').params)
       .then(result => {
+        result.indexes.forEach(i => delete(i.id));
         this.down('space-format').store.loadData(result.format);
-        console.log(result.indexes);
-        result.indexes.forEach(i => {
-          delete(i.id);
-        })
         this.down('space-indexes').store.loadData(result.indexes);
       })
       .catch(e => this.up('space-tab').close());
