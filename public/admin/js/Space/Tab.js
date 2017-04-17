@@ -2,10 +2,12 @@ Ext.define('Admin.Space.Tab', {
 
   extend: 'Ext.tab.Panel',  
   title: 'Space',
+  activeTab: 1,
 
   closable: true,
 
   requires: [
+    'Admin.Space.Collection',
     'Admin.Space.Info',
   ],
 
@@ -16,5 +18,7 @@ Ext.define('Admin.Space.Tab', {
 
   items:[{
     xtype: 'space-info',
+  }, {
+    xtype: 'space-collection'
   }]
 });
