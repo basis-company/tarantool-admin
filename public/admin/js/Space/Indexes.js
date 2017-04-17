@@ -5,6 +5,10 @@ Ext.define('Admin.Space.Indexes', {
   title: 'Indexes',
   flex: 1,
 
+  statics: {
+    iterators: ['EQ', 'REQ', 'ALL', 'LT', 'LE', 'GE', 'GT', 'BITS_ALL_SET', 'BITS_ANY_SET', 'BITS_ALL_NOT_SET', 'OVERLAPS', 'NEIGHBOR'],
+  },
+
   store: {
     fields: ['iid', 'name', 'type', 'parts', 'opts']
   },

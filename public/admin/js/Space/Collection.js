@@ -5,7 +5,8 @@ Ext.define('Admin.Space.Collection', {
   title: 'Collection',
 
   requires: [
-    'Admin.data.proxy.PagingDispatch'
+    'Admin.data.proxy.PagingDispatch',
+    'Admin.Space.Indexes',
   ],
 
   tbar: {
@@ -105,7 +106,7 @@ Ext.define('Admin.Space.Collection', {
 
     items.push({
       text: 'Select',
-      menu: ['EQ', 'REQ', 'ALL', 'LT', 'LE', 'GE', 'GT', 'BITS_ALL_SET', 'BITS_ANY_SET', 'BITS_ALL_NOT_SET', 'OVERLAPS', 'NEIGHBOR'].map((text, iterator) => {
+      menu: Admin.Space.Indexes.iterators.map((text, iterator) => {
         return {
           text: text,
           handler: () => {
@@ -121,15 +122,15 @@ Ext.define('Admin.Space.Collection', {
             })
             this.store.proxy.params.key = [0];
             this.store.proxy.params.iterator = iterator
-            if(params.length) {
-              this.store.proxy.params.key = params
-              this.store.load();
-            }
+
+            this.store.proxy.params.key = params
+            this.store.load();
           }
         }
       })
     });
 
+    this.down('pagingtoolbar').remove(10);
     this.down('pagingtoolbar').insert(10, items);
   }
 });
