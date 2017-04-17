@@ -8,6 +8,11 @@ Ext.define('Admin.Space.Collection', {
     'Admin.data.proxy.PagingDispatch'
   ],
 
+  tbar: {
+    xtype: 'pagingtoolbar',
+    displayInfo: true,
+  },
+
   autoLoad: true,
 
   initComponent() {
@@ -20,7 +25,6 @@ Ext.define('Admin.Space.Collection', {
 
     dispatch('space.info', this.up('space-tab').params)
       .then(result => {
-        console.log(result);
 
         var fields = [];
         result.format.forEach(p => fields.push(p.name));
@@ -45,7 +49,6 @@ Ext.define('Admin.Space.Collection', {
         });
 
         this.reconfigure(store, columns);
-        console.log([store, columns]);
       });
   }
 });

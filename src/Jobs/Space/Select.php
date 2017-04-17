@@ -14,6 +14,10 @@ class Select extends Job
             ->select($this->key, $this->index, $this->limit, $this->offset, $this->iterator)
             ->getData();
 
-        return compact('data');
+        $total = $this->getMapper()->getClient()
+            ->evaluate("return box.space.$this->space.index[$this->index]:count(...)", [$this->key])
+            ->getData();
+
+        return compact('data', 'total');
     }
 }
