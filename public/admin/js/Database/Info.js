@@ -4,6 +4,7 @@ Ext.define('Admin.Database.Info', {
   title: 'Info',
   layout: 'hbox',
   border: false,
+  iconCls: 'fa fa-info',
 
   listeners: {
     activate() {

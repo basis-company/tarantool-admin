@@ -5,6 +5,7 @@ Ext.define('Admin.Space.Tab', {
   activeTab: 0,
 
   closable: true,
+  iconCls: 'fa fa-hdd-o',
 
   requires: [
     'Admin.Space.Collection',

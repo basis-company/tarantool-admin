@@ -2,6 +2,7 @@ Ext.define('Admin.Home.Tab', {
 
   extend: 'Ext.panel.Panel',  
   title: 'Home',
+  iconCls: 'fa fa-home',
 
   requires: [
     'Admin.Home.New',

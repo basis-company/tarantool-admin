@@ -4,6 +4,8 @@ Ext.define('Admin.Space.Collection', {
 
   title: 'Data',
 
+  iconCls: 'fa fa-table',
+
   requires: [
     'Admin.data.proxy.PagingDispatch',
     'Admin.Space.Indexes',
@@ -22,7 +24,10 @@ Ext.define('Admin.Space.Collection', {
       this.params = this.up('space-tab').params;
     }
 
-    this.closable = this.params.index !== undefined;
+    if(this.params.index !== undefined) {
+      this.closable = true;
+      this.iconCls = 'fa fa-search';
+    }
 
     this.callParent(arguments);
 
@@ -142,14 +147,17 @@ Ext.define('Admin.Space.Collection', {
 
     var items = ['-', {
       text: 'Create',
+      iconCls: 'fa fa-plus-circle',
       handler: () => this.createEntityWindow()
     }, {
       text: 'Update',
+      iconCls: 'fa fa-gg-circle',
       disabled: true,
       handler: () => this.createEntityWindow(this.getSelectionModel().getSelection()[0])
     }, {
       text: 'Delete',
       disabled: true,
+      iconCls: 'fa fa-minus-circle',
       handler: () => {
 
         var record = this.getSelectionModel().getSelection()[0];
@@ -221,6 +229,7 @@ Ext.define('Admin.Space.Collection', {
 
     items.push({
       text: 'Select',
+      iconCls: 'fa fa-search',
       menu: Admin.Space.Indexes.iterators.map((text, iterator) => {
         return {
           text: text,

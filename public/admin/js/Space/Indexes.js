@@ -25,6 +25,7 @@ Ext.define('Admin.Space.Indexes', {
 
   tbar: [{
     text: 'Add',
+    iconCls: 'fa fa-plus-circle',
     handler() {
       var indexes = this.up('space-indexes');
       var win = Ext.create('Ext.window.Window', {
@@ -117,6 +118,7 @@ Ext.define('Admin.Space.Indexes', {
     }
   }, {
     text: 'Search',
+    iconCls: 'fa fa-search',
     disabled: true,
     name: 'search-button',
     handler() {
@@ -135,6 +137,7 @@ Ext.define('Admin.Space.Indexes', {
     text: 'Remove',
     disabled: true,
     name: 'remove-button',
+    iconCls: 'fa fa-minus-circle',
     handler() {
       var params = Ext.apply({
         name: this.up('space-indexes').getSelectionModel().getSelection()[0].get('name')

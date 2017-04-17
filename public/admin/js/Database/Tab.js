@@ -6,6 +6,8 @@ Ext.define('Admin.Database.Tab', {
   closable: true,
   border: false,
 
+  iconCls: 'fa fa-database',
+
   requires: [
     'Admin.Database.Info',
     'Admin.Database.Spaces',

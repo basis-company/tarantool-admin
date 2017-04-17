@@ -25,6 +25,7 @@ Ext.define('Admin.Home.Connections', {
   tbar: [{
     text: 'Connect',
     name: 'connect-button',
+    iconCls: 'fa fa-link',
     disabled: true,
     handler() {
       var connection = this.up('grid').getSelectionModel().getSelection()[0].data;
@@ -32,6 +33,7 @@ Ext.define('Admin.Home.Connections', {
     }
   }, {
     text: 'Remove all',
+    iconCls: 'fa fa-ban',
     handler() {
       this.up('home-tab').clearConnections();
     }

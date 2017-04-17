@@ -46,6 +46,7 @@ Ext.define('Admin.Home.New', {
   bbar: [{
     text: 'Connect',
     name: 'connect-button',
+    iconCls: 'fa fa-link',
     formBind: true,
     handler() {
       this.up('home-tab').createConnection();

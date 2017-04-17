@@ -1,0 +1,22 @@
+.x-tab.x-tab-active.x-tab-default {
+    border-color: #aaa;
+    background-color: #ddd;
+}
+
+.x-tab-default-top {
+    border-radius: 0px;
+}
+
+.x-tab.x-tab-active.x-tab-default .x-tab-inner-default,
+.x-tab.x-tab-active.x-tab-default .x-tab-icon-el {
+    color: #000;
+}
+
+.x-window-header-title-default,
+.x-panel-header-title-default {
+    color: #555;
+}
+
+.x-btn-default-toolbar-small {
+    border-radius: 0px;
+}

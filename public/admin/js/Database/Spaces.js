@@ -4,6 +4,7 @@ Ext.define('Admin.Database.Spaces', {
 
   name: 'spaces',
   title: 'Spaces',
+  iconCls: 'fa fa-bars',
 
   refreshSpaces: function() {
     dispatch('database.spaces', this.up('database-tab').params)
@@ -109,12 +110,14 @@ Ext.define('Admin.Database.Spaces', {
   
   tbar: [{
     text: 'Create',
+    iconCls: 'fa fa-plus',
     handler() {
       this.up('database-spaces').createSpace();
     }
   }, {
     text: 'Open',
     name: 'open-button',
+    iconCls: 'fa fa-table',
     disabled: true,
     handler() {
       this.up('database-spaces').showSpace(this.up('grid').getSelectionModel().getSelection()[0].get('name'));
@@ -122,6 +125,7 @@ Ext.define('Admin.Database.Spaces', {
   }, {
     text: 'Truncate',
     name: 'truncate-button',
+    iconCls: 'fa fa-trash-o',
     disabled: true,
     handler() {
       this.up('database-spaces').truncateSpace(this.up('grid').getSelectionModel().getSelection()[0].get('name'));
@@ -129,6 +133,7 @@ Ext.define('Admin.Database.Spaces', {
   }, {
     text: 'Drop',
     name: 'drop-button',
+    iconCls: 'fa fa-ban',
     disabled: true,
     handler() {
       this.up('database-spaces').dropSpace(this.up('grid').getSelectionModel().getSelection()[0].get('name'));

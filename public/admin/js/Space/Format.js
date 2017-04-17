@@ -17,6 +17,7 @@ Ext.define('Admin.Space.Format', {
 
   tbar: [{
     text: 'Add',
+    iconCls: 'fa fa-plus-circle',
     handler() {
       var win = Ext.create('Ext.window.Window', {
         modal: true,
@@ -72,6 +73,7 @@ Ext.define('Admin.Space.Format', {
   }, {
     disabled: true,
     name: 'remove-button',
+    iconCls: 'fa fa-minus-circle',
     text: 'Remove',
     handler() {
       var params = Ext.apply({

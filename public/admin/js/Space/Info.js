@@ -10,6 +10,8 @@ Ext.define('Admin.Space.Info', {
 
   layout: 'hbox',
 
+  iconCls: 'fa fa-info',
+
   listeners: {
     activate() {
       this.reloadInfo();
