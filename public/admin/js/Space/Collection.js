@@ -2,7 +2,7 @@ Ext.define('Admin.Space.Collection', {
 
   extend: 'Ext.grid.Panel',
 
-  title: 'Collection',
+  title: 'Data',
 
   requires: [
     'Admin.data.proxy.PagingDispatch',
@@ -36,6 +36,10 @@ Ext.define('Admin.Space.Collection', {
         var fields = [];
         result.format.forEach(p => fields.push(p.name));
 
+        this.fields = fields;
+        this.format = result.format;
+        this.indexes = result.indexes;
+
         var store = Ext.create('Ext.data.ArrayStore', {
           fields: fields,
           proxy: 'pagingdispatch',
@@ -56,15 +60,121 @@ Ext.define('Admin.Space.Collection', {
         });
 
         if(this.params.index !== undefined) {
-          this.updateSearchToolbar(result.indexes.filter(i => i.iid == this.params.index)[0], fields);
+          this.createSearchToolbar();
+        } else {
+          this.createCrudToolbar();
         }
 
         this.reconfigure(store, columns);
       });
   },
 
+  createEntityWindow(entity) {
 
-  updateSearchToolbar(index, fields) {
+    var id;
+
+    var primary = this.indexes[0].parts.map(p => this.fields[p[0]])
+
+    if(entity) {
+      var key = primary.map(f => entity.get(f));
+      id = key.length == 1 ? key[0] : "[" + key.join(', ') + "]";
+    }
+
+    var required = Ext.Array.unique(Ext.Array.flatten(this.indexes.map(index => index.parts.map(p => p[0]))))
+
+    var win = Ext.create('Ext.window.Window', {
+      title: !entity ? 'New row' : 'Update ' + id,
+      modal: true,
+      items: [{
+        xtype: 'form',
+        bodyPadding: 10,
+        items: this.format.map((field, id) => {
+          var item = {
+            name: field.name,
+            xtype: 'textfield',
+            labelAlign: 'right',
+            fieldLabel: field.name,
+            allowBlank: !Ext.Array.contains(required, id)
+          };
+          if(field.type != 'str') {
+            Ext.apply(item, {
+              xtype: 'numberfield',
+              showSpinner: false,
+              minValue: 0,
+            });
+          }
+          if(entity) {
+            item.value = entity.get(field.name);
+            if(primary.indexOf(field.name) !== -1) {
+              item.readOnly = true;
+            }
+          }
+          return item;
+        }),
+        bbar: ['->', {
+          text: !entity ? 'Create' : 'Update',
+          formBind: true,
+          handler: () => {
+
+            var job = entity ? 'entity.update' : 'entity.create';
+            var params = Ext.apply({
+              values: win.down('form').getValues()
+            }, this.params);
+
+            dispatch(job, params).then(() => {
+              win.close();
+              this.store.load();
+            })
+          }
+        }]
+      }]
+    });
+
+    win.show();
+  },
+
+  createCrudToolbar() {
+
+    var items = ['-', {
+      text: 'Create',
+      handler: () => this.createEntityWindow()
+    }, {
+      text: 'Update',
+      disabled: true,
+      handler: () => this.createEntityWindow(this.getSelectionModel().getSelection()[0])
+    }, {
+      text: 'Delete',
+      disabled: true,
+      handler: () => {
+
+        var record = this.getSelectionModel().getSelection()[0];
+
+        var id = {};
+        this.indexes[0].parts.forEach(p => {
+          id[this.fields[p[0]]] = record.get(this.fields[p[0]]);
+        })
+
+        var params = Ext.apply({id: id}, this.params);
+
+        dispatch('entity.remove', params)
+          .then(() => this.store.load())
+      }
+    }];
+
+    this.down('pagingtoolbar').insert(11, items);
+    this.on('selectionchange', (sm, sel) => {
+      this.down('[text=Update]').setDisabled(!sel.length);
+      this.down('[text=Delete]').setDisabled(!sel.length);
+    });
+
+    this.on('itemdblclick', (record) => {
+      this.down('[text=Update]').handler();
+    })
+  },
+
+  createSearchToolbar() {
+
+    var index = this.indexes.filter(i => i.iid == this.params.index)[0];
 
     this.setTitle('Index: ' + index.name.split('_').map(Ext.util.Format.capitalize).join(''));
 
@@ -73,7 +183,7 @@ Ext.define('Admin.Space.Collection', {
     index.parts.forEach(p => {
       items.push({
         xtype: 'label',
-        text: fields[p[0]]
+        text: this.fields[p[0]]
       });
 
       var field = {
@@ -90,7 +200,7 @@ Ext.define('Admin.Space.Collection', {
       }
 
       items.push(Ext.apply(field, {
-        name: fields[p[0]],
+        name: this.fields[p[0]],
         width: 70,
         labelAlign: 'right',
         enableKeyEvents: true,
