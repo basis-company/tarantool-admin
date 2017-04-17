@@ -83,8 +83,8 @@ Ext.define('Admin.Database.Spaces', {
     },
     selectionchange(sm, sel) {
       this.down('[name=open-button]').setDisabled(!sel.length);
-      this.down('[name=drop-button]').setDisabled(!sel.length);
-      this.down('[name=truncate-button]').setDisabled(!sel.length);
+      this.down('[name=drop-button]').setDisabled(!sel.length || sel[0].get('owner'));
+      this.down('[name=truncate-button]').setDisabled(!sel.length || sel[0].get('owner'));
     }
   },
   
