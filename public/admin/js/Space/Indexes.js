@@ -6,7 +6,7 @@ Ext.define('Admin.Space.Indexes', {
   flex: 1,
 
   store: {
-    fields: ['name', 'type', 'parts', 'opts']
+    fields: ['iid', 'name', 'type', 'parts', 'opts']
   },
 
   listeners: {
@@ -107,11 +107,12 @@ Ext.define('Admin.Space.Indexes', {
     name: 'search-button',
     handler() {
       var params = Ext.apply({
-        name: this.up('space-indexes').getSelectionModel().getSelection()[0].get('name')
+        index: this.up('space-indexes').getSelectionModel().getSelection()[0].get('iid')
       }, this.up('space-tab').params);
 
       var view = Ext.create('Admin.Space.Collection', {
-        params: params
+        params: params,
+        autoLoad: false
       });
       this.up('space-tab').add(view);
       this.up('space-tab').setActiveItem(view);
