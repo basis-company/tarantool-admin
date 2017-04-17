@@ -30,43 +30,48 @@ Ext.define('Admin.Space.Collection', {
       this.on('reconfigure', () => this.store.load());
     }
 
-    dispatch('space.info', this.params)
-      .then(result => {
+    this.on({
+      single: true,
+      activate: () => {
+        dispatch('space.info', this.params)
+          .then(result => {
 
-        var fields = [];
-        result.format.forEach(p => fields.push(p.name));
+            var fields = [];
+            result.format.forEach(p => fields.push(p.name));
 
-        this.fields = fields;
-        this.format = result.format;
-        this.indexes = result.indexes;
+            this.fields = fields;
+            this.format = result.format;
+            this.indexes = result.indexes;
 
-        var store = Ext.create('Ext.data.ArrayStore', {
-          fields: fields,
-          proxy: 'pagingdispatch',
-          listeners: {
-            load: () => columns.forEach((c, n) => this.view.autoSizeColumn(n))
-          }
-        });
+            var store = Ext.create('Ext.data.ArrayStore', {
+              fields: fields,
+              proxy: 'pagingdispatch',
+              listeners: {
+                load: () => columns.forEach((c, n) => this.view.autoSizeColumn(n))
+              }
+            });
 
-        store.proxy.job = 'space.select';
-        store.proxy.params = this.params;
+            store.proxy.job = 'space.select';
+            store.proxy.params = this.params;
 
-        var columns = fields.map(f => {
-          return {
-            dataIndex: f,
-            header: f,
-            width: 50,
-          }
-        });
+            var columns = fields.map(f => {
+              return {
+                dataIndex: f,
+                header: f,
+                width: 50,
+              }
+            });
 
-        if(this.params.index !== undefined) {
-          this.createSearchToolbar();
-        } else {
-          this.createCrudToolbar();
-        }
+            if(this.params.index !== undefined) {
+              this.createSearchToolbar();
+            } else {
+              this.createCrudToolbar();
+            }
 
-        this.reconfigure(store, columns);
-      });
+            this.reconfigure(store, columns);
+          });
+      }
+    })
   },
 
   createEntityWindow(entity) {
