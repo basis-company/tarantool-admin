@@ -14,14 +14,23 @@ Ext.define('Admin.Home.Tab', {
     },
     render: function() {
       this.refreshConnections();
-      // this.showDatabase(this.down('home-connections').store.getAt(0).data);
+      var connections = this.down('home-connections');
+      if(connections.store.getCount() == 1) {
+
+        this.showDatabase(connections.store.getAt(0).data);
+      }
 
     }
   },
 
   showDatabase(params) {
     var view = Ext.create('Admin.Database.Tab', {
-      params: params
+      params: {
+        hostname: params.hostname,
+        port: params.port,
+        username: params.username,
+        password: params.password,
+      }
     });
     this.up('tabpanel').add(view)
     this.up('tabpanel').setActiveItem(view);
