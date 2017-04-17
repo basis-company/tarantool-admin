@@ -2,7 +2,7 @@ Ext.define('Admin.Space.Tab', {
 
   extend: 'Ext.tab.Panel',  
   title: 'Space',
-  activeTab: 1,
+  activeTab: 0,
 
   closable: true,
 

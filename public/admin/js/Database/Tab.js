@@ -2,7 +2,7 @@ Ext.define('Admin.Database.Tab', {
 
   extend: 'Ext.tab.Panel',
   title: 'Database',
-  activeTab: 1,
+  activeTab: 0,
   closable: true,
   border: false,
 
