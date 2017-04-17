@@ -34,7 +34,7 @@ Ext.define('Admin.Space.Format', {
             fieldLabel: 'Type',
             allowBlank: false,
             name: 'type',
-            value: 'str',
+            value: 'unsigned',
 
             xtype: 'combobox',
             editable: false,
