@@ -67,10 +67,13 @@ Ext.define('Admin.Database.Spaces', {
     dispatch('space.drop', this.spaceParams(space))
       .then(() => {
         this.refreshSpaces();
+        this.up('database-tab').items.each(item => {
+          if(item.params && item.params.space == space) {
+            this.up('database-tab').remove(item);
+          }
+        })
       })
   },
-
-
 
   listeners: {
     activate: function() {
