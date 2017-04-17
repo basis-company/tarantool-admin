@@ -24,8 +24,8 @@ abstract class Job
             }
 
             $connection = new StreamConnection('tcp://'.$this->hostname.':'.$this->port, [
-                'socket_timeout' => 2,
-                'connect_timeout' => 1
+                'socket_timeout' => 30,
+                'connect_timeout' => 30
             ]);
 
             $this->_client = new Client($connection, new PurePacker());
