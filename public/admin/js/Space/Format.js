@@ -11,7 +11,6 @@ Ext.define('Admin.Space.Format', {
 
   listeners: {
     selectionchange(sm, sel) {
-      this.down('[name=edit-button]').setDisabled(!sel.length);
       this.down('[name=remove-button]').setDisabled(!sel.length);
     }
   },
@@ -32,12 +31,21 @@ Ext.define('Admin.Space.Format', {
             xtype: 'textfield',
             name: 'name'
           }, {
-            selectOnFocus: true,
             fieldLabel: 'Type',
-            xtype: 'textfield',
             allowBlank: false,
             name: 'type',
-            value: 'str'
+            value: 'str',
+
+            xtype: 'combobox',
+            editable: false,
+            queryMode: 'local',
+            displayField: 'type',
+            valueField: 'type',
+            store: {
+              xtype: 'arraystore',
+              fields: ['type'],
+              data: ['unsigned', 'str'].map(v => [v])
+            }
           }],
           bbar: ['->', {
             formBind: true,
@@ -63,10 +71,6 @@ Ext.define('Admin.Space.Format', {
     }
   }, {
     disabled: true,
-    name: 'edit-button',
-    text: 'Edit',
-  }, {
-    disabled: true,
     name: 'remove-button',
     text: 'Remove',
     handler() {
@@ -76,10 +80,8 @@ Ext.define('Admin.Space.Format', {
 
       dispatch('space.removeProperty', params)
         .then(() => {
-          win.close();
           this.up('space-info').reloadInfo();
         })
-
     }
   }],
 

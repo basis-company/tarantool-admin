@@ -65,11 +65,21 @@ Ext.define('Admin.Space.Indexes', {
             allowBlank: false,
             name: 'name'
           }, {
+
             fieldLabel: 'Type',
-            xtype: 'textfield',
-            allowBlank: false,
             value: 'TREE',
             name: 'type',
+
+            xtype: 'combobox',
+            editable: false,
+            queryMode: 'local',
+            displayField: 'type',
+            valueField: 'type',
+            store: {
+              xtype: 'arraystore',
+              fields: ['type'],
+              data: ['TREE', 'HASH', 'BITSET', 'RTREE'].map(v => [v])
+            }
           }, {
             xtype: 'checkboxfield',
             boxLabel: 'Unique index',
