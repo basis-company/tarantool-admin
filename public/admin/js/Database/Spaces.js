@@ -109,6 +109,12 @@ Ext.define('Admin.Database.Spaces', {
   },
   
   tbar: [{
+    text: 'Refresh',
+    iconCls: 'fa fa-refresh',
+    handler() {
+      this.up('database-spaces').refreshSpaces();
+    }
+  }, '-', {
     text: 'Create',
     iconCls: 'fa fa-plus',
     handler() {
