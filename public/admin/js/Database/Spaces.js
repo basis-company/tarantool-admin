@@ -52,11 +52,20 @@ Ext.define('Admin.Database.Spaces', {
   },
 
   showSpace(space) {
-    var view = Ext.create('Admin.Space.Tab', {
-      params: this.spaceParams(space)
+    var exists = false;
+    this.up('database-tab').items.each(item => {
+      if(item.params && item.params.space == space) {
+        this.up('database-tab').setActiveItem(item);
+        exists = true;
+      }
     });
-    this.up('database-tab').add(view);
-    this.up('database-tab').setActiveItem(view);
+    if(!exists) {
+      var view = Ext.create('Admin.Space.Tab', {
+        params: this.spaceParams(space)
+      });
+      this.up('database-tab').add(view);
+      this.up('database-tab').setActiveItem(view);
+    }
   },
 
   truncateSpace(space) {
