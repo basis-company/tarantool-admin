@@ -2,6 +2,8 @@
 
 namespace Jobs\Space;
 
+use Exception;
+
 class Select extends Job
 {
     public $index = 0;
@@ -14,9 +16,14 @@ class Select extends Job
             ->select($this->key, $this->index, $this->limit, $this->offset, $this->iterator)
             ->getData();
 
-        $total = $this->getMapper()->getClient()
-            ->evaluate("return box.space.$this->space.index[$this->index]:count(...)", [$this->key])
-            ->getData();
+        try {
+            $total = $this->getMapper()->getClient()
+                ->evaluate("return box.space.$this->space.index[$this->index]:count(...)", [$this->key])
+                ->getData();
+
+        } catch(Exception $e) {
+
+        }
 
         return compact('data', 'total');
     }
