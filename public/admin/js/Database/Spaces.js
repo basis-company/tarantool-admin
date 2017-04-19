@@ -10,7 +10,10 @@ Ext.define('Admin.Database.Spaces', {
     dispatch('database.spaces', this.up('database-tab').params)
       .then(result => {
         this.store.loadData(result.spaces);
-        // this.showSpace('tester');
+        this.store.clearFilter();
+        if(!this.down('[name=system-spaces]').value) {
+          this.store.filterBy(r => !r.get('owner'));
+        }
       });
   },
 
@@ -111,16 +114,29 @@ Ext.define('Admin.Database.Spaces', {
       this.down('[name=truncate-button]').setDisabled(!sel.length || sel[0].get('owner'));
     }
   },
-  
+
   store: {
-    fields: ['id', 'name', 'engine', 'count'],
+    fields: ['id', 'name', 'engine', 'count', {
+      name: 'owner',
+      type: 'integer'
+    }],
     sorters: [{property:'name', direction: 'ASC'}]
   },
-  
+
   tbar: [{
     text: 'Refresh',
     iconCls: 'fa fa-refresh',
     handler() {
+      this.up('database-spaces').refreshSpaces();
+    }
+  }, {
+    text: 'Show system',
+    iconCls: 'fa fa-circle-o',
+    name: 'system-spaces',
+    value: false,
+    handler() {
+      this.setIconCls(!this.value ? 'fa fa-check-circle-o' : 'fa fa-circle-o');
+      this.value = this.iconCls == 'fa fa-check-circle-o';
       this.up('database-spaces').refreshSpaces();
     }
   }, '-', {
