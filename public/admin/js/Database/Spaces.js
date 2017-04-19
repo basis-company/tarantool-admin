@@ -72,31 +72,47 @@ Ext.define('Admin.Database.Spaces', {
   },
 
   truncateSpace(space) {
-    dispatch('space.truncate', this.spaceParams(space))
-      .then(() => {
-        this.refreshSpaces();
-        this.up('database-tab').items.each(item => {
-          if(item.params && item.params.space == space) {
-            item.items.each(item => {
-              if(item.xtype == 'space-collection') {
-                item.store.load();
-              }
+    Ext.MessageBox.confirm(
+      'Danger!',
+      'Are you sure to truncate space ' + space + '?<br/>This operation can not be undone',
+      answer => {
+        if(answer == 'yes') {
+          dispatch('space.truncate', this.spaceParams(space))
+            .then(() => {
+              this.refreshSpaces();
+              this.up('database-tab').items.each(item => {
+                if(item.params && item.params.space == space) {
+                  item.items.each(item => {
+                    if(item.xtype == 'space-collection') {
+                      item.store.load();
+                    }
+                  })
+                }
+              })
             })
-          }
-        })
-      })
+        }
+      }
+    );
   },
 
   dropSpace(space) {
-    dispatch('space.drop', this.spaceParams(space))
-      .then(() => {
-        this.refreshSpaces();
-        this.up('database-tab').items.each(item => {
-          if(item.params && item.params.space == space) {
-            this.up('database-tab').remove(item);
-          }
-        })
-      })
+    Ext.MessageBox.confirm(
+      'Danger!',
+      'Are you sure to drop space ' + space + '?<br/>This operation can not be undone',
+      answer => {
+        if(answer == 'yes') {
+          dispatch('space.drop', this.spaceParams(space))
+            .then(() => {
+              this.refreshSpaces();
+              this.up('database-tab').items.each(item => {
+                if(item.params && item.params.space == space) {
+                  this.up('database-tab').remove(item);
+                }
+              })
+            })
+        }
+      }
+    );
   },
 
   listeners: {
