@@ -2,7 +2,6 @@ Ext.define('Admin.Database.Tab', {
 
   extend: 'Ext.tab.Panel',
   title: 'Database',
-  activeTab: 0,
   closable: true,
   border: false,
 
@@ -12,6 +11,15 @@ Ext.define('Admin.Database.Tab', {
     'Admin.Database.Info',
     'Admin.Database.Spaces',
   ],
+
+  listeners: {
+    tabchange(tabs, tab) {
+      var tabIndex = tabs.items.indexOf(tab);
+      if(tabIndex == 0 || tabIndex == 1) {
+        localStorage.setItem('database-default-item', tabIndex);
+      }
+    }
+  },
 
   initComponent() {
 
@@ -26,6 +34,8 @@ Ext.define('Admin.Database.Tab', {
     if(params.port != 3301) {
       this.title += ' : ' + params.port;
     }
+
+    this.activeTab = +localStorage.getItem('database-default-item') || 0;
 
     this.callParent(arguments);
 
