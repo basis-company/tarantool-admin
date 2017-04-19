@@ -6,7 +6,7 @@ services:
     restart: always
     build: .
     ports:
-      - "37331:80"
+      - "8000:80"
     volumes:
       - ./src:/var/www/html/src
       - ./public/admin:/var/www/html/admin
