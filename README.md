@@ -12,3 +12,7 @@ Open [http://localhost:8000](http://localhost:8000) in your browser.
 * Change current directory: `cd tarantool-admin`
 * Build and run `docker-compose up`
 * Open [http://localhost:8000](http://localhost:8000) in your browser.
+
+## Demo
+Short demo of web ui is available on youtube:  
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=5-FXr7gOk0w" target="_blank"><img src="http://img.youtube.com/vi/5-FXr7gOk0w/0.jpg" alt="Short demo" width="240" height="180" border="10" /></a>
