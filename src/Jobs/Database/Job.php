@@ -12,6 +12,8 @@ abstract class Job
 {
     public $hostname;
     public $port;
+    public $username;
+    public $password;
 
     private $_client;
     private $_mapper;
@@ -23,12 +25,14 @@ abstract class Job
                 throw new Exception("Invalid params");
             }
 
+
             $connection = new StreamConnection('tcp://'.$this->hostname.':'.$this->port, [
                 'socket_timeout' => 30,
                 'connect_timeout' => 30
             ]);
 
             $this->_client = new Client($connection, new PurePacker());
+            $this->_client->authenticate($this->username ?: 'guest', $this->password);
         }
 
         return $this->_client;
