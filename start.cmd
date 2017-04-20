@@ -1,1 +1,1 @@
-cd c:\software\github\tarantool-admin.php && docker-compose up --build -d
+docker-compose up --build -d
