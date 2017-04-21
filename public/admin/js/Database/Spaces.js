@@ -12,7 +12,7 @@ Ext.define('Admin.Database.Spaces', {
         this.store.loadData(result.spaces);
         this.store.clearFilter();
         if(!this.down('[name=system-spaces]').value) {
-          this.store.filterBy(r => !r.get('owner'));
+          this.store.filterBy(r => r.get('id') >= 512);
         }
       });
   },
@@ -132,7 +132,10 @@ Ext.define('Admin.Database.Spaces', {
   },
 
   store: {
-    fields: ['id', 'name', 'engine', 'count', {
+    fields: [{
+      id: 'id',
+      type: 'integer'
+    }, 'name', 'engine', 'count', {
       name: 'owner',
       type: 'integer'
     }],
