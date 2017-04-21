@@ -10,6 +10,7 @@ Ext.define('Admin.Home.Connections', {
     },
     selectionchange(sm, sel) {
       this.down('[name=connect-button]').setDisabled(!sel.length);
+      this.down('[name=remove-button]').setDisabled(!sel.length);
     }
   },
 
@@ -31,6 +32,16 @@ Ext.define('Admin.Home.Connections', {
       var connection = this.up('grid').getSelectionModel().getSelection()[0].data;
       this.up('home-tab').showDatabase(connection);
     }
+  }, {
+    text: 'Remove',
+    name: 'remove-button',
+    iconCls: 'fa fa-trash',
+    disabled: true,
+    handler() {
+      var connection = this.up('grid').getSelectionModel().getSelection()[0].data;
+      this.up('home-tab').removeConnection(connection);
+    }
+
   }, {
     text: 'Remove all',
     iconCls: 'fa fa-ban',

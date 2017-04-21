@@ -1,6 +1,6 @@
 Ext.define('Admin.Home.Tab', {
 
-  extend: 'Ext.panel.Panel',  
+  extend: 'Ext.panel.Panel',
   title: 'Home',
   iconCls: 'fa fa-home',
 
@@ -78,6 +78,22 @@ Ext.define('Admin.Home.Tab', {
     }
   },
 
+  removeConnection(connection) {
+
+    var connections = Ext.JSON.decode(localStorage.getItem('connections')) || [];
+
+    connections
+      .filter(candidate => {
+        var diffeences = ['hostname', 'port', 'username', 'password'].filter((k, i) => candidate[i] != connection[k]);
+        return diffeences.length == 0
+      })
+      .forEach(todo => Ext.Array.remove(connections, todo));
+
+    localStorage.setItem('connections', Ext.JSON.encode(connections));
+
+    this.refreshConnections();
+  },
+
   clearConnections() {
     localStorage.removeItem('connections');
     this.refreshConnections();
@@ -86,7 +102,7 @@ Ext.define('Admin.Home.Tab', {
   items: [{
     xtype: 'home-new',
   }, {
-    xtype: 'home-connections' 
+    xtype: 'home-connections'
   }]
 
 });
