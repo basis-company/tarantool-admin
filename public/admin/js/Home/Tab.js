@@ -25,16 +25,24 @@ Ext.define('Admin.Home.Tab', {
   },
 
   showDatabase(params) {
-    var view = Ext.create('Admin.Database.Tab', {
-      params: {
-        hostname: params.hostname,
-        port: params.port,
-        username: params.username,
-        password: params.password,
+    var params = {
+      hostname: params.hostname,
+      port: params.port,
+      username: params.username,
+      password: params.password,
+    };
+    var exists = false;
+    this.up('tabpanel').items.each(item => {
+      if(item.params && Ext.JSON.encode(item.params) == Ext.JSON.encode(params)) {
+        this.up('tabpanel').setActiveItem(item);
+        exists = true;
       }
-    });
-    this.up('tabpanel').add(view)
-    this.up('tabpanel').setActiveItem(view);
+    })
+    if(!exists) {
+      var view = Ext.create('Admin.Database.Tab', {params: params});
+      this.up('tabpanel').add(view)
+      this.up('tabpanel').setActiveItem(view);
+    }
   },
 
 
