@@ -143,10 +143,29 @@ Ext.define('Admin.Space.Indexes', {
         name: this.up('space-indexes').getSelectionModel().getSelection()[0].get('name')
       }, this.up('space-tab').params);
 
-      dispatch('space.removeIndex', params)
-        .then(() => {
-          this.up('space-info').reloadInfo();
-        })
+      var store = this.up('space-indexes').store;
+      var recordIndex = store.findExact('name', params.name);
+
+      var removeIndex = () => {
+        dispatch('space.removeIndex', params)
+          .then(() => {
+            this.up('space-info').reloadInfo();
+          })
+      };
+
+      if(store.getAt(recordIndex).get('iid') > 0) {
+        removeIndex();
+      } else {
+        Ext.MessageBox.confirm(
+          'Danger!',
+          'Are you sure to drop primary key ' + params.name + ' in space ' + params.space + '?<br/>All tuples will be deleted, this operation can not be undone',
+          answer => {
+            if(answer == 'yes') {
+              removeIndex();
+            }
+          }
+        );
+      }
     }
   }],
 
