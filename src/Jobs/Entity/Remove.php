@@ -10,14 +10,9 @@ class Remove extends Job
 
     public function run()
     {
-        $pk = [];
-        $space = $this->getSpace();
+        $entity = $this->getSpace()->getRepository()
+            ->findOne(get_object_vars($this->id));
 
-        foreach($space->getPrimaryIndex()->parts as $part) {
-            $pk[] = $this->id->{$space->getFormat()[$part[0]]['name']};
-        }
-
-        $entity = $space->getRepository()->findOne($pk);
         $this->getMapper()->remove($entity);
     }
 }
