@@ -6,13 +6,17 @@ Ext.define('Admin.Database.Spaces', {
   title: 'Spaces',
   iconCls: 'fa fa-bars',
 
+  isUserSpace(record) {
+    return record.get('id') >= 512
+  },
+
   refreshSpaces: function() {
     dispatch('database.spaces', this.up('database-tab').params)
       .then(result => {
         this.store.loadData(result.spaces);
         this.store.clearFilter();
         if(!this.down('[name=system-spaces]').value) {
-          this.store.filterBy(r => r.get('id') >= 512);
+          this.store.filterBy(this.isUserSpace)
         }
       });
   },
@@ -126,8 +130,8 @@ Ext.define('Admin.Database.Spaces', {
     },
     selectionchange(sm, sel) {
       this.down('[name=open-button]').setDisabled(!sel.length);
-      this.down('[name=drop-button]').setDisabled(!sel.length || sel[0].get('owner'));
-      this.down('[name=truncate-button]').setDisabled(!sel.length || sel[0].get('owner'));
+      this.down('[name=drop-button]').setDisabled(!sel.length || !this.isUserSpace(sel[0]));
+      this.down('[name=truncate-button]').setDisabled(!sel.length || !this.isUserSpace(sel[0]));
     }
   },
 
