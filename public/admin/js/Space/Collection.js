@@ -151,7 +151,7 @@ Ext.define('Admin.Space.Collection', {
       handler: () => this.createEntityWindow()
     }, {
       text: 'Update',
-      iconCls: 'fa fa-gg-circle',
+      iconCls: 'fa fa-pencil',
       disabled: true,
       handler: () => this.createEntityWindow(this.getSelectionModel().getSelection()[0])
     }, {
