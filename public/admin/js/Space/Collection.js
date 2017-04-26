@@ -172,6 +172,23 @@ Ext.define('Admin.Space.Collection', {
         dispatch('entity.remove', params)
           .then(() => this.store.load())
       }
+    }, '-', {
+      text: 'Search',
+      iconCls: 'fa fa-search',
+      menu: this.indexes.map(index => {
+        return {
+          text: index.name,
+          handler: () => {
+            var params = Ext.apply({index:index.iid}, this.up('space-tab').params);
+            var view = Ext.create('Admin.Space.Collection', {
+              params: params,
+              autoLoad: false
+            });
+            this.up('space-tab').add(view);
+            this.up('space-tab').setActiveItem(view);
+          }
+        }
+      })
     }];
 
     this.down('pagingtoolbar').insert(11, items);
@@ -256,5 +273,7 @@ Ext.define('Admin.Space.Collection', {
 
     this.down('pagingtoolbar').remove(10);
     this.down('pagingtoolbar').insert(10, items);
+
+    this.down('textfield').focus();
   }
 });
