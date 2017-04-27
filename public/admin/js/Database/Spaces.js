@@ -5,6 +5,7 @@ Ext.define('Admin.Database.Spaces', {
   name: 'spaces',
   title: 'Spaces',
   iconCls: 'fa fa-bars',
+  border: false,
 
   isUserSpace(record) {
     return record.get('id') >= 512
