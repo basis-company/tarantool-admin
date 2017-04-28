@@ -76,7 +76,11 @@ Ext.define('Admin.Space.Collection', {
             this.indexes = result.indexes;
 
             var store = Ext.create('Ext.data.ArrayStore', {
-              fields: fields,
+              model: Ext.define(null, {
+                extend: 'Ext.data.Model',
+                fields: fields,
+                idProperty: '_'
+              }),
               proxy: 'pagingdispatch',
               listeners: {
                 load: () => {
