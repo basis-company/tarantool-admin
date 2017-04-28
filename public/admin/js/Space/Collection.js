@@ -183,14 +183,18 @@ Ext.define('Admin.Space.Collection', {
       text: 'Update',
       iconCls: 'fa fa-pencil',
       disabled: true,
-      handler: () => this.createEntityWindow(this.getSelectionModel().getSelected().startCell.record)
+      handler: () => {
+        var selected = this.getSelectionModel().getSelected();
+        var record = selected.startCell ? selected.startCell.record : selected.selectedRecords.items[0];
+        this.createEntityWindow(record)
+      }
     }, {
       text: 'Delete',
       disabled: true,
       iconCls: 'fa fa-minus-circle',
       handler: () => {
-
-        var record = this.getSelectionModel().getSelected().startCell.record;
+        var selected = this.getSelectionModel().getSelected();
+        var record = selected.startCell ? selected.startCell.record : selected.selectedRecords.items[0];
         var id = {};
         this.indexes[0].parts.forEach(p => {
           id[this.fields[p[0]]] = record.get(this.fields[p[0]]);
