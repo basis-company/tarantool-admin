@@ -14,6 +14,16 @@ Ext.define('Admin.Space.Collection', {
   tbar: {
     xtype: 'pagingtoolbar',
     displayInfo: true,
+    items: ['-', {
+      iconCls: 'fa fa-download',
+      disabled: true,
+      name: 'export',
+      text: 'Export',
+      handler() {
+        dispatch('export.csv', this.up('grid').store.proxy.params)
+          .then(result => window.location = "/"+result.path)
+      }
+    }]
   },
 
   autoLoad: true,
@@ -52,7 +62,10 @@ Ext.define('Admin.Space.Collection', {
               fields: fields,
               proxy: 'pagingdispatch',
               listeners: {
-                load: () => columns.forEach((c, n) => this.view.autoSizeColumn(n))
+                load: () => {
+                  columns.forEach((c, n) => this.view.autoSizeColumn(n))
+                  this.down('[name=export]').setDisabled(!this.store.getCount());
+                }
               }
             });
 
@@ -121,7 +134,7 @@ Ext.define('Admin.Space.Collection', {
           }
           return item;
         }),
-        bbar: ['->', {
+        bbar: ['-', {
           text: !entity ? 'Create' : 'Update',
           formBind: true,
           handler: () => {
@@ -208,7 +221,7 @@ Ext.define('Admin.Space.Collection', {
 
     this.setTitle('Index: ' + index.name.split('_').map(Ext.util.Format.capitalize).join(''));
 
-    var items = [];
+    var items = ['-'];
 
     index.parts.forEach(p => {
       items.push({

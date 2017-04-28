@@ -19,7 +19,7 @@ class Select extends Job
         try {
             $total = $this->getMapper()->getClient()
                 ->evaluate("return box.space.$this->space.index[$this->index]:count(...)", [$this->key])
-                ->getData();
+                ->getData()[0];
 
         } catch(Exception $e) {
 
