@@ -11,6 +11,14 @@ Ext.define('Admin.Space.Collection', {
     'Admin.Space.Indexes',
   ],
 
+  selModel: {
+     type: 'spreadsheet'
+  },
+
+  plugins: {
+      ptype: 'clipboard',
+  },
+
   tbar: {
     xtype: 'pagingtoolbar',
     displayInfo: true,
