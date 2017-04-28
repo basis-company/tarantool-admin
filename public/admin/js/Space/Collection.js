@@ -12,7 +12,16 @@ Ext.define('Admin.Space.Collection', {
   ],
 
   selModel: {
-     type: 'spreadsheet'
+     type: 'spreadsheet',
+     columnSelect: true,
+     listeners: {
+      selectionchange(grid, sel) {
+        if(this.view.grid.down('[text=Update]')) {
+          this.view.grid.down('[text=Update]').setDisabled(!sel.length);
+          this.view.grid.down('[text=Delete]').setDisabled(!sel.length);
+        }
+      }
+     }
   },
 
   plugins: {
@@ -213,10 +222,6 @@ Ext.define('Admin.Space.Collection', {
     }];
 
     this.down('pagingtoolbar').insert(11, items);
-    this.on('selectionchange', (sm, sel) => {
-      this.down('[text=Update]').setDisabled(!sel.length);
-      this.down('[text=Delete]').setDisabled(!sel.length);
-    });
 
     this.on('itemdblclick', (record) => {
       this.down('[text=Update]').handler();
