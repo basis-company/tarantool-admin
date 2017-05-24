@@ -1,6 +1,6 @@
 <?php
 
-namespace Jobs\Database;
+namespace Job\Database;
 
 class Spaces extends Job
 {

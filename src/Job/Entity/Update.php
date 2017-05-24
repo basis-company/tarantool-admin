@@ -1,8 +1,8 @@
 <?php
 
-namespace Jobs\Entity;
+namespace Job\Entity;
 
-use Jobs\Space\Job;
+use Job\Space\Job;
 
 class Update extends Job
 {

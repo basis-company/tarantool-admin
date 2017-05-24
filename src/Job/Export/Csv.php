@@ -1,9 +1,9 @@
 <?php
 
-namespace Jobs\Export;
+namespace Job\Export;
 
 use Exception;
-use Jobs\Space\Select;
+use Job\Space\Select;
 use Basis\Filesystem;
 
 class Csv extends Select

@@ -1,6 +1,6 @@
 <?php
 
-namespace Jobs\Space;
+namespace Job\Space;
 
 class Info extends Job
 {

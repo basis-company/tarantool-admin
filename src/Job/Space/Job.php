@@ -1,9 +1,9 @@
 <?php
 
-namespace Jobs\Space;
+namespace Job\Space;
 
 use Exception;
-use Jobs\Database\Job as DatabaseJob;
+use Job\Database\Job as DatabaseJob;
 
 abstract class Job extends DatabaseJob
 {

@@ -1,8 +1,8 @@
 <?php
 
-namespace Jobs\Space;
+namespace Job\Space;
 
-class Drop extends Job
+class Truncate extends Job
 {
     public function run()
     {
@@ -11,6 +11,6 @@ class Drop extends Job
             throw new Exception('Disabled for system spaces');
         }
 
-        $this->getClient()->evaluate('box.space.'.$space->getName().':drop()');
+        $this->getClient()->evaluate('box.space.'.$space->getName().':truncate()');
     }
 }

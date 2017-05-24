@@ -1,4 +1,4 @@
-FROM php:7.1.3-apache
+FROM php:7.1.5-apache
 
 WORKDIR /var/www/html
 
@@ -14,5 +14,7 @@ RUN php composer.phar install --no-dev
 ADD public /var/www/html
 ADD src /var/www/html/src
 RUN php composer.phar dump-autoload -o
+RUN cp vendor/basis-company/framework/resources/default/.htaccess .
+RUN cp vendor/basis-company/framework/resources/default/server.php .
 
 RUN rm composer.*
