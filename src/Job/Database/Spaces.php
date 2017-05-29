@@ -10,7 +10,7 @@ class Spaces extends Job
 
         $spaces = [];
         foreach($mapper->find('_vspace') as $space) {
-            if(!$space->owner) {
+            if($space->engine != 'sysview') {
                 $space->count = $mapper->getClient()->evaluate("return box.space.$space->name:count()")->getData()[0];
             }
             $spaces[] = $space;
