@@ -118,6 +118,12 @@ Ext.define('Admin.Space.Collection', {
                 dataIndex: f,
                 header: f,
                 width: 50,
+                renderer: (v) => {
+                  if(Ext.isObject(v)) {
+                    return Ext.JSON.encode(v);
+                  }
+                  return v;
+                }
               }
             });
 
