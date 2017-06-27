@@ -8,6 +8,8 @@ RUN apt-get update && apt-get install -y --force-yes zlib1g-dev git \
 && curl -sS https://getcomposer.org/installer | php \
 && a2enmod rewrite
 
+RUN echo "ServerName tarantool-admin" > /etc/apache2/conf-enabled/server-name.conf
+
 ADD composer.json /var/www/html
 RUN php composer.phar install --no-dev
 
