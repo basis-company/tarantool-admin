@@ -190,6 +190,9 @@ Ext.define('Admin.Space.Indexes', {
     flex: 1,
     renderer(v) {
       var format = this.up('space-info').down('space-format').store;
+      if(!format.getCount()) {
+        return v.map(info => info[0]).join(', ');
+      }
       return v.map(info => format.getAt(info[0]).get('name')).join(', ');
     }
   }]

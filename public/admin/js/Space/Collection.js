@@ -84,8 +84,27 @@ Ext.define('Admin.Space.Collection', {
               proxy: 'pagingdispatch',
               listeners: {
                 load: () => {
-                  columns.forEach((c, n) => this.view.autoSizeColumn(n))
                   this.down('[name=export]').setDisabled(!this.store.getCount());
+                  var maxSize = 0;
+                  if(result.fake) {
+                    this.store.getRange().forEach(r => {
+                      if(Ext.Object.getSize(r.data) > maxSize) {
+                        maxSize = Ext.Object.getSize(r.data);
+                      }
+                    });
+                  }
+                  columns.forEach((c, n) => {
+                    if(result.fake) {
+                      if(n >= maxSize-1) {
+                        this.getColumns()[n+1].hide();
+                      } else {
+                        this.getColumns()[n+1].show();
+                      }
+                    }
+                  });
+                  columns.forEach((c, n) => {
+                    this.view.autoSizeColumn(n);
+                  });
                 }
               }
             });
@@ -95,6 +114,7 @@ Ext.define('Admin.Space.Collection', {
 
             var columns = fields.map(f => {
               return {
+                hidden: result.fake,
                 dataIndex: f,
                 header: f,
                 width: 50,

@@ -1,6 +1,6 @@
 Ext.define('Admin.Space.Format', {
 
-  extend: 'Ext.grid.Panel',  
+  extend: 'Ext.grid.Panel',
 
   title: 'Format',
   width: 300,

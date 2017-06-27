@@ -1,6 +1,6 @@
 Ext.define('Admin.Space.Info', {
 
-  extend: 'Ext.panel.Panel',  
+  extend: 'Ext.panel.Panel',
   title: 'Info',
 
   requires: [
@@ -22,7 +22,9 @@ Ext.define('Admin.Space.Info', {
     dispatch('space.info', this.up('space-tab').params)
       .then(result => {
         result.indexes.forEach(i => delete(i.id));
-        this.down('space-format').store.loadData(result.format);
+        if(!result.fake) {
+          this.down('space-format').store.loadData(result.format);
+        }
         this.down('space-indexes').store.loadData(result.indexes);
       })
       .catch(e => this.up('space-tab').close());
