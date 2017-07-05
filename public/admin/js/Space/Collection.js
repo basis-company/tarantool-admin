@@ -38,7 +38,7 @@ Ext.define('Admin.Space.Collection', {
       text: 'Export',
       handler() {
         dispatch('export.csv', this.up('grid').store.proxy.params)
-          .then(result => window.location = "/"+result.path)
+          .then(result => window.location = "/"+result.path);
       }
     }]
   },
@@ -124,33 +124,32 @@ Ext.define('Admin.Space.Collection', {
                   }
                   return v;
                 }
-              }
+              };
             });
 
+            this.createCrudToolbar();
             if(this.params.index !== undefined) {
               this.createSearchToolbar();
-            } else {
-              this.createCrudToolbar();
             }
 
             this.reconfigure(store, columns);
           });
       }
-    })
+    });
   },
 
   createEntityWindow(entity) {
 
     var id;
 
-    var primary = this.indexes[0].parts.map(p => this.fields[p[0]])
+    var primary = this.indexes[0].parts.map(p => this.fields[p[0]]);
 
     if(entity) {
       var key = primary.map(f => entity.get(f));
       id = key.length == 1 ? key[0] : "[" + key.join(', ') + "]";
     }
 
-    var required = Ext.Array.unique(Ext.Array.flatten(this.indexes.map(index => index.parts.map(p => p[0]))))
+    var required = Ext.Array.unique(Ext.Array.flatten(this.indexes.map(index => index.parts.map(p => p[0]))));
 
     var win = Ext.create('Ext.window.Window', {
       title: !entity ? 'New row' : 'Update ' + id,
@@ -194,7 +193,7 @@ Ext.define('Admin.Space.Collection', {
             dispatch(job, params).then(() => {
               win.close();
               this.store.load();
-            })
+            });
           }
         }]
       }]
@@ -216,7 +215,7 @@ Ext.define('Admin.Space.Collection', {
       handler: () => {
         var selected = this.getSelectionModel().getSelected();
         var record = selected.startCell ? selected.startCell.record : selected.selectedRecords.items[0];
-        this.createEntityWindow(record)
+        this.createEntityWindow(record);
       }
     }, {
       text: 'Delete',
@@ -228,37 +227,41 @@ Ext.define('Admin.Space.Collection', {
         var id = {};
         this.indexes[0].parts.forEach(p => {
           id[this.fields[p[0]]] = record.get(this.fields[p[0]]);
-        })
+        });
 
         var params = Ext.apply({id: id}, this.params);
 
         dispatch('entity.remove', params)
-          .then(() => this.store.load())
+          .then(() => this.store.load());
       }
-    }, '-', {
-      text: 'Search',
-      iconCls: 'fa fa-search',
-      menu: this.indexes.map(index => {
-        return {
-          text: index.name,
-          handler: () => {
-            var params = Ext.apply({index:index.iid}, this.up('space-tab').params);
-            var view = Ext.create('Admin.Space.Collection', {
-              params: params,
-              autoLoad: false
-            });
-            this.up('space-tab').add(view);
-            this.up('space-tab').setActiveItem(view);
-          }
-        }
-      })
     }];
+
+    if(this.params.index === undefined) {
+      items.push('-', {
+        text: 'Search',
+        iconCls: 'fa fa-search',
+        menu: this.indexes.map(index => {
+          return {
+            text: index.name,
+            handler: () => {
+              var params = Ext.apply({index:index.iid}, this.up('space-tab').params);
+              var view = Ext.create('Admin.Space.Collection', {
+                params: params,
+                autoLoad: false
+              });
+              this.up('space-tab').add(view);
+              this.up('space-tab').setActiveItem(view);
+            }
+          };
+        })
+      });
+    }
 
     this.down('pagingtoolbar').insert(11, items);
 
     this.on('itemdblclick', (record) => {
       this.down('[text=Update]').handler();
-    })
+    });
   },
 
   createSearchToolbar() {
@@ -267,7 +270,10 @@ Ext.define('Admin.Space.Collection', {
 
     this.setTitle('Index: ' + index.name.split('_').map(Ext.util.Format.capitalize).join(''));
 
-    var items = ['-'];
+    var items = [{
+      xtype: 'label',
+      text: 'Query'
+    },' '];
 
     index.parts.forEach(p => {
       items.push({
@@ -285,7 +291,7 @@ Ext.define('Admin.Space.Collection', {
           xtype: 'numberfield',
           showSpinner: false,
           minValue: 0,
-        })
+        });
       }
 
       items.push(Ext.apply(field, {
@@ -312,27 +318,28 @@ Ext.define('Admin.Space.Collection', {
           handler: () => {
             this.down('[text=' + text +']').up('button').setText(text + ' iterator');
             var params = [];
-            this.down('pagingtoolbar').items.findBy(item => {
+            this.down('[name=search-toolbar]').items.findBy(item => {
               if(item.searchField) {
-                if(item.value === "" || item.value == undefined) {
+                if(item.value === "" || item.value === undefined) {
                   return true;
                 }
                 params.push(item.value);
               }
-            })
+            });
             this.store.proxy.params.key = [0];
-            this.store.proxy.params.iterator = iterator
+            this.store.proxy.params.iterator = iterator;
 
-            this.store.proxy.params.key = params
+            this.store.proxy.params.key = params;
             this.store.load();
           }
-        }
+        };
       })
     });
 
-    this.down('pagingtoolbar').remove(10);
-    this.down('pagingtoolbar').insert(10, items);
-
-    this.down('textfield').focus();
+    this.addDocked({
+      xtype: 'toolbar',
+      name:  'search-toolbar',
+      items: items,
+    }, 0);
   }
 });
