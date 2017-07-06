@@ -152,22 +152,6 @@ Ext.define('Admin.Database.Spaces', {
   },
 
   tbar: [{
-    text: 'Refresh',
-    iconCls: 'fa fa-refresh',
-    handler() {
-      this.up('database-spaces').refreshSpaces();
-    }
-  }, {
-    text: 'Show system',
-    iconCls: 'fa fa-circle-o',
-    name: 'system-spaces',
-    value: false,
-    handler() {
-      this.setIconCls(!this.value ? 'fa fa-check-circle-o' : 'fa fa-circle-o');
-      this.value = this.iconCls == 'fa fa-check-circle-o';
-      this.up('database-spaces').refreshSpaces();
-    }
-  }, {
     xtype: 'filter-field',
   }, {
     text: 'Create',
@@ -198,6 +182,22 @@ Ext.define('Admin.Database.Spaces', {
     disabled: true,
     handler() {
       this.up('database-spaces').dropSpace(this.up('grid').getSelectionModel().getSelection()[0].get('name'));
+    }
+  }, '->', {
+    text: 'Show system',
+    iconCls: 'fa fa-circle-o',
+    name: 'system-spaces',
+    value: false,
+    handler() {
+      this.setIconCls(!this.value ? 'fa fa-check-circle-o' : 'fa fa-circle-o');
+      this.value = this.iconCls == 'fa fa-check-circle-o';
+      this.up('database-spaces').refreshSpaces();
+    }
+  }, {
+    text: 'Refresh',
+    iconCls: 'fa fa-refresh',
+    handler() {
+      this.up('database-spaces').refreshSpaces();
     }
   }],
   columns:[{
