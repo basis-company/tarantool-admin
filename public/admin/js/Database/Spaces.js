@@ -8,17 +8,13 @@ Ext.define('Admin.Database.Spaces', {
   border: false,
 
   isUserSpace(record) {
-    return record.get('id') >= 512
+    return record.get('id') >= 512;
   },
 
   refreshSpaces: function() {
     dispatch('database.spaces', this.up('database-tab').params)
       .then(result => {
         this.store.loadData(result.spaces);
-        this.store.clearFilter();
-        if(!this.down('[name=system-spaces]').value) {
-          this.store.filterBy(this.isUserSpace)
-        }
       });
   },
 
@@ -121,6 +117,14 @@ Ext.define('Admin.Database.Spaces', {
   },
 
   listeners: {
+    render: function() {
+      this.store.addFilter((record) => {
+        if(this.down('[name=system-spaces]').value) {
+          return true;
+        }
+        return this.isUserSpace(record);
+      });
+    },
     activate: function() {
       if(!this.store.getCount()) {
         this.refreshSpaces();
@@ -163,7 +167,9 @@ Ext.define('Admin.Database.Spaces', {
       this.value = this.iconCls == 'fa fa-check-circle-o';
       this.up('database-spaces').refreshSpaces();
     }
-  }, '-', {
+  }, {
+    xtype: 'filter-field',
+  }, {
     text: 'Create',
     iconCls: 'fa fa-plus',
     handler() {

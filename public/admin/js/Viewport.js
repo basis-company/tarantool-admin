@@ -2,7 +2,10 @@ Ext.define('Admin.Viewport', {
 
   extend: 'Ext.Viewport',
 
-  requires: ['Admin.Home.Tab'],
+  requires: [
+    'Admin.Home.Tab',
+    'Admin.field.Filter',
+  ],
 
   initComponent() {
     window.dispatch = this.dispatch.bind(this);
