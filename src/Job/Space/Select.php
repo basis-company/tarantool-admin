@@ -12,17 +12,23 @@ class Select extends Job
 
     public function run()
     {
+        $key = [];
+        foreach ($this->key as $value) {
+            if (is_null($value)) {
+                break;
+            }
+            $key[] = $value;
+        }
+
         $data = $this->getMapper()->getClient()->getSpace($this->space)
-            ->select($this->key, $this->index, $this->limit, $this->offset, $this->iterator)
+            ->select($key, $this->index, $this->limit, $this->offset, $this->iterator)
             ->getData();
 
         try {
             $total = $this->getMapper()->getClient()
                 ->evaluate("return box.space.$this->space.index[$this->index]:count(...)", [$this->key])
                 ->getData()[0];
-
-        } catch(Exception $e) {
-
+        } catch (Exception $e) {
         }
 
         return compact('data', 'total');
