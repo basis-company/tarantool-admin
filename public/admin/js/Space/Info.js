@@ -23,6 +23,7 @@ Ext.define('Admin.Space.Info', {
       .then(result => {
         result.indexes.forEach(i => delete(i.id));
         if(!result.fake) {
+          result.format.forEach((r, i) => r.index = i);
           this.down('space-format').store.loadData(result.format);
         }
         this.down('space-indexes').store.loadData(result.indexes);

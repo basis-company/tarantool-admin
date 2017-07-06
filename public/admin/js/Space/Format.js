@@ -6,7 +6,7 @@ Ext.define('Admin.Space.Format', {
   width: 300,
 
   store: {
-    fields: ['name', 'type'],
+    fields: ['index', 'name', 'type'],
   },
 
   listeners: {
@@ -66,7 +66,7 @@ Ext.define('Admin.Space.Format', {
             }
           }]
         }]
-      })
+      });
       win.show();
       win.down('textfield').focus();
     }
@@ -83,11 +83,16 @@ Ext.define('Admin.Space.Format', {
       dispatch('space.removeProperty', params)
         .then(() => {
           this.up('space-info').reloadInfo();
-        })
+        });
     }
   }],
 
   columns: [{
+    header: '#',
+    width: 30,
+    sortable: false,
+    dataIndex: 'index'
+  },{
     header: 'Name',
     width: 150,
     dataIndex: 'name'
