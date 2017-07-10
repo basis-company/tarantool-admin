@@ -2,7 +2,7 @@ Ext.define('Admin.field.Filter', {
 
   extend: 'Ext.form.field.Text',
   xtype: 'filter-field',
-  emptyText: 'List filter',
+  emptyText: 'filter',
   enableKeyEvents: true,
 
   listeners: {
