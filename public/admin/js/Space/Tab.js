@@ -27,7 +27,7 @@ Ext.define('Admin.Space.Tab', {
         if(result.indexes.length) {
           this.setActiveTab(+localStorage.getItem('space-default-item') || 0);
         }
-      })
+      });
   },
 
   items:[{

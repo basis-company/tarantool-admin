@@ -2,7 +2,10 @@ Ext.define('Admin.Database.Info', {
 
   extend: 'Ext.panel.Panel',
   title: 'Info',
-  layout: 'hbox',
+  layout: {
+    type: 'hbox',
+    align: 'stretch',
+  },
   border: false,
   iconCls: 'fa fa-info',
 
@@ -10,6 +13,7 @@ Ext.define('Admin.Database.Info', {
     activate() {
       dispatch('database.info', this.up('database-tab').params)
         .then(result => {
+          this.down('[name=info]').setSource(result.info);
           this.down('[name=slab]').setSource(result.slab);
           this.down('[name=stat]').store.loadData(Ext.Object.getKeys(result.stat).map(k => {
             return {
@@ -23,12 +27,30 @@ Ext.define('Admin.Database.Info', {
     },
   },
 
+
   items: [{
+    width: 200,
+    title: 'Info',
+    name: 'info',
+    xtype: 'propertygrid',
+    nameColumnWidth: 80,
+    listeners: {
+      beforeedit: function (e) { return false; }
+    },
+    source: {},
+    customRenderers: {
+      quota_used: Ext.util.Format.fileSize,
+    }
+  }, {
     width: 250,
     title: 'Slab',
     name: 'slab',
     xtype: 'propertygrid',
+    border: false,
     nameColumnWidth: 150,
+    listeners: {
+      beforeedit: function (e) { return false; }
+    },
     source: {},
     customRenderers: {
       arena_size: Ext.util.Format.fileSize,
@@ -42,6 +64,7 @@ Ext.define('Admin.Database.Info', {
     title: 'Stat',
     flex: 1,
     name: 'stat',
+    readonly: true,
     xtype: 'grid',
     store: {
       fields: ['action', 'rps', 'total']
