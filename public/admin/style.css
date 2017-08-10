@@ -20,3 +20,7 @@
 .x-btn-default-toolbar-small {
     border-radius: 0px;
 }
+
+.x-btn-icon-el-default-toolbar-small {
+    padding-top: 2px;
+}

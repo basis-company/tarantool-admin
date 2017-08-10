@@ -28,19 +28,19 @@ Ext.define('Admin.Space.Collection', {
       ptype: 'clipboard',
   },
 
-  tbar: {
-    xtype: 'pagingtoolbar',
-    displayInfo: true,
-    items: ['-', {
-      iconCls: 'fa fa-download',
-      disabled: true,
-      name: 'export',
-      text: 'Export',
-      handler() {
-        dispatch('export.csv', this.up('grid').store.proxy.params)
-          .then(result => window.location = "/"+result.path);
-      }
-    }]
+  tbar: [{
+    iconCls: 'fa fa-chevron-left',
+  }, {
+    xtype: 'label',
+    name: 'paging-info',
+  }, {
+    iconCls: 'fa fa-chevron-right',
+  }],
+
+  listeners: {
+    afterrenderer() {
+      console.log('renderer');
+    },
   },
 
   autoLoad: true,
@@ -50,6 +50,10 @@ Ext.define('Admin.Space.Collection', {
     if(!this.params) {
       this.params = this.up('space-tab').params;
     }
+
+    this.tbar = Ext.create('Admin.space.toolbar.Collection', {
+      params: this.params
+    });
 
     if(this.params.index !== undefined) {
       this.closable = true;
@@ -61,6 +65,10 @@ Ext.define('Admin.Space.Collection', {
     if(this.autoLoad) {
       this.on('reconfigure', () => this.store.load());
     }
+
+    this.on('itemdblclick', (record) => {
+      this.down('[text=Update]').handler();
+    });
 
     this.on({
       single: true,
@@ -105,6 +113,7 @@ Ext.define('Admin.Space.Collection', {
                   columns.forEach((c, n) => {
                     this.view.autoSizeColumn(n);
                   });
+                  this.down('toolbar-collection').updateState();
                 }
               }
             });
@@ -127,9 +136,13 @@ Ext.define('Admin.Space.Collection', {
               };
             });
 
-            this.createCrudToolbar();
+            this.down('toolbar-collection').applyMeta();
+
             if(this.params.index !== undefined) {
-              this.createSearchToolbar();
+              console.log('search toolbar added');
+              this.addDocked(Ext.create('Admin.space.toolbar.Search', {
+                collection: this
+              }), 0);
             }
 
             this.reconfigure(store, columns);
@@ -198,148 +211,6 @@ Ext.define('Admin.Space.Collection', {
         }]
       }]
     });
-
     win.show();
   },
-
-  createCrudToolbar() {
-
-    var items = ['-', {
-      text: 'Create',
-      iconCls: 'fa fa-plus-circle',
-      handler: () => this.createEntityWindow()
-    }, {
-      text: 'Update',
-      iconCls: 'fa fa-pencil',
-      disabled: true,
-      handler: () => {
-        var selected = this.getSelectionModel().getSelected();
-        var record = selected.startCell ? selected.startCell.record : selected.selectedRecords.items[0];
-        this.createEntityWindow(record);
-      }
-    }, {
-      text: 'Delete',
-      disabled: true,
-      iconCls: 'fa fa-minus-circle',
-      handler: () => {
-        var selected = this.getSelectionModel().getSelected();
-        var record = selected.startCell ? selected.startCell.record : selected.selectedRecords.items[0];
-        var id = {};
-        this.indexes[0].parts.forEach(p => {
-          id[this.fields[p[0]]] = record.get(this.fields[p[0]]);
-        });
-
-        var params = Ext.apply({id: id}, this.params);
-
-        dispatch('entity.remove', params)
-          .then(() => this.store.load());
-      }
-    }];
-
-    if(this.params.index === undefined) {
-      items.push('-', {
-        text: 'Search',
-        iconCls: 'fa fa-search',
-        menu: this.indexes.map(index => {
-          return {
-            text: index.name,
-            handler: () => {
-              var params = Ext.apply({index:index.iid}, this.up('space-tab').params);
-              var view = Ext.create('Admin.Space.Collection', {
-                params: params,
-                autoLoad: false
-              });
-              this.up('space-tab').add(view);
-              this.up('space-tab').setActiveItem(view);
-            }
-          };
-        })
-      });
-    }
-
-    this.down('pagingtoolbar').insert(11, items);
-
-    this.on('itemdblclick', (record) => {
-      this.down('[text=Update]').handler();
-    });
-  },
-
-  createSearchToolbar() {
-
-    var index = this.indexes.filter(i => i.iid == this.params.index)[0];
-
-    this.setTitle('Index: ' + index.name.split('_').map(Ext.util.Format.capitalize).join(''));
-
-    var items = [{
-      xtype: 'label',
-      text: 'Query'
-    },' '];
-
-    index.parts.forEach(p => {
-      items.push({
-        xtype: 'label',
-        text: this.fields[p[0]]
-      });
-
-      var field = {
-        xtype: 'textfield',
-        searchField: true,
-      };
-
-      if(['str', 'string'].indexOf(p[1].toLowerCase()) == -1) {
-        Ext.apply(field, {
-          xtype: 'numberfield',
-          showSpinner: false,
-          minValue: 0,
-        });
-      }
-
-      items.push(Ext.apply(field, {
-        name: this.fields[p[0]],
-        width: 70,
-        labelAlign: 'right',
-        enableKeyEvents: true,
-        listeners: {
-          specialkey(field, e) {
-            if(e.getKey() == e.ENTER) {
-              field.up('space-collection').down('[text=EQ]').handler();
-            }
-          }
-        }
-      }));
-    });
-
-    items.push({
-      text: 'Select',
-      iconCls: 'fa fa-search',
-      menu: Admin.Space.Indexes.iterators.map((text, iterator) => {
-        return {
-          text: text,
-          handler: () => {
-            this.down('[text=' + text +']').up('button').setText(text + ' iterator');
-            var params = [];
-            this.down('[name=search-toolbar]').items.findBy(item => {
-              if(item.searchField) {
-                if(item.value === "" || item.value === undefined) {
-                  return true;
-                }
-                params.push(item.value);
-              }
-            });
-            this.store.proxy.params.key = [0];
-            this.store.proxy.params.iterator = iterator;
-
-            this.store.proxy.params.key = params;
-            this.store.load();
-          }
-        };
-      })
-    });
-
-    this.addDocked({
-      xtype: 'toolbar',
-      name:  'search-toolbar',
-      items: items,
-    }, 0);
-  }
 });
