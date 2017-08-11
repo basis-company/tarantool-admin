@@ -15,6 +15,8 @@ Ext.define('Admin.space.toolbar.Collection', {
     var pageCount = Math.ceil(store.getTotalCount() / store.pageSize);
     var currentPage = store.currentPage;
 
+    this.down('[name=record-count]').setValue(store.getTotalCount());
+
     var stats = this.down('[name=paging-stats]');
     var prev = this.down('[name=previous-page]');
     var next = this.down('[name=next-page]');
@@ -85,6 +87,13 @@ Ext.define('Admin.space.toolbar.Collection', {
         .then(result => window.location = "/"+result.path);
     }
   }, '->', {
+    xtype: 'numberfield',
+    readOnly: true,
+    name: 'record-count',
+    fieldLabel: 'Rows',
+    width:      120,
+    labelWidth: 40,
+  }, ' ',{
     xtype:    'numberfield',
     minValue:   0,
     value:      25,
@@ -100,7 +109,7 @@ Ext.define('Admin.space.toolbar.Collection', {
         localStorage.setItem('admin-page-size', v);
       }
     }
-  }, {
+  }, ' ', {
     iconCls: 'fa fa-chevron-left',
     name: 'previous-page',
     handler() {
