@@ -125,6 +125,11 @@ Ext.define('Admin.Space.toolbar.Collection', {
     handler() {
       this.up('grid').store.nextPage();
     }
+  }, {
+    iconCls: 'fa fa-refresh',
+    handler() {
+      this.up('grid').store.load();
+    }
   }],
 
   applyMeta() {
