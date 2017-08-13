@@ -100,5 +100,10 @@ Ext.define('Admin.Space.Format', {
     header: 'Type',
     dataIndex: 'type',
     flex: 1
+  }, {
+    header: 'Reference',
+    dataIndex: 'reference',
+    hidden: true,
+    flex: 1
   }]
 });
