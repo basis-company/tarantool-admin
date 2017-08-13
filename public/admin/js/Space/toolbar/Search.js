@@ -1,4 +1,4 @@
-Ext.define('Admin.space.toolbar.Search', {
+Ext.define('Admin.Space.toolbar.Search', {
   extend: 'Ext.toolbar.Toolbar',
 
   initComponent() {

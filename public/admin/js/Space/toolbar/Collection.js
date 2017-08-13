@@ -1,4 +1,4 @@
-Ext.define('Admin.space.toolbar.Collection', {
+Ext.define('Admin.Space.toolbar.Collection', {
 
   extend: 'Ext.toolbar.Toolbar',
   xtype: 'toolbar-collection',

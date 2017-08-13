@@ -51,7 +51,7 @@ Ext.define('Admin.Space.Collection', {
       this.params = this.up('space-tab').params;
     }
 
-    this.tbar = Ext.create('Admin.space.toolbar.Collection', {
+    this.tbar = Ext.create('Admin.Space.toolbar.Collection', {
       params: this.params
     });
 
@@ -140,7 +140,7 @@ Ext.define('Admin.Space.Collection', {
 
             if(this.params.index !== undefined) {
               console.log('search toolbar added');
-              this.addDocked(Ext.create('Admin.space.toolbar.Search', {
+              this.addDocked(Ext.create('Admin.Space.toolbar.Search', {
                 collection: this
               }), 0);
             }
