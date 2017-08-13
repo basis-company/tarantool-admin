@@ -44,7 +44,7 @@ Ext.define('Admin.Home.New', {
     checked: true,
     name: 'remember'
   }],
-  bbar: [{
+  tbar: [{
     text: 'Connect',
     name: 'connect-button',
     iconCls: 'fa fa-link',
