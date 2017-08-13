@@ -17,6 +17,7 @@ Ext.define('Admin.Viewport', {
     region: 'center',
     xtype: 'tabpanel',
     border: false,
+  layout: 'fit',
     items: [{
       xtype: 'home-tab'
     }]

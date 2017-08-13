@@ -4,6 +4,10 @@ Ext.define('Admin.Home.Tab', {
   title: 'Home',
   iconCls: 'fa fa-home',
   border: false,
+  layout: {
+    type: 'hbox',
+    align: 'stretch',
+  },
 
   requires: [
     'Admin.Home.New',

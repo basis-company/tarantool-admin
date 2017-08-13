@@ -3,6 +3,7 @@ Ext.define('Admin.Home.Connections', {
   extend: 'Ext.grid.Panel',
 
   title: 'Local Storage connections',
+  flex: 1,
 
   listeners: {
     itemdblclick(view, record) {

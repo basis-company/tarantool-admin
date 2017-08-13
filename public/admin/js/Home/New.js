@@ -4,6 +4,7 @@ Ext.define('Admin.Home.New', {
 
   title: 'New connection',
   bodyPadding: 10,
+  border: false,
 
   defaults: {
     xtype: 'textfield',
