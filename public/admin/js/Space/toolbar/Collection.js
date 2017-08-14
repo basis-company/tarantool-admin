@@ -15,27 +15,29 @@ Ext.define('Admin.Space.toolbar.Collection', {
     var pageCount = Math.ceil(store.getTotalCount() / store.pageSize);
     var currentPage = store.currentPage;
 
-    this.down('[name=record-count]').setValue(store.getTotalCount());
+    this.down('[name=row-counter]').setText(store.getTotalCount());
 
     var stats = this.down('[name=paging-stats]');
+    var first = this.down('[name=first-page]');
     var prev = this.down('[name=previous-page]');
+    var current = this.down('[name=current-page]');
+    var delimeter = this.down('[name=current-page-delimiter]');
+    var total = this.down('[name=total-pages]');
     var next = this.down('[name=next-page]');
+    var last = this.down('[name=last-page]');
 
     if(pageCount <= 1) {
-      stats.hide();
-      prev.hide();
-      next.hide();
-      return;
+      [first, prev, current, delimeter, total, next, last].forEach(b => b.hide());
 
     } else {
-      stats.show();
-      prev.show();
-      next.show();
+      [first, prev, current, delimeter, total, next, last].forEach(b => b.show());
+      first.setDisabled(currentPage == 1);
+      prev.setDisabled(currentPage == 1);
+      current.setValue(currentPage);
+      total.setText(pageCount);
+      next.setDisabled(currentPage == pageCount);
+      last.setDisabled(currentPage == pageCount);
     }
-
-    stats.setText(currentPage + ' / ' + pageCount);
-    prev.setDisabled(currentPage == 1);
-    next.setDisabled(currentPage == pageCount);
   },
 
   items: [{
@@ -87,20 +89,23 @@ Ext.define('Admin.Space.toolbar.Collection', {
         .then(result => window.location = "/"+result.path);
     }
   }, '->', {
-    xtype: 'numberfield',
-    readOnly: true,
-    name: 'record-count',
-    fieldLabel: 'Rows',
-    width:      120,
-    labelWidth: 40,
+    xtype:      'label',
+    text:       'Rows',
+  }, {
+    xtype: 'label',
+    name: 'row-counter',
+    text: '0',
   }, ' ',{
     xtype:    'numberfield',
     minValue:   0,
     value:      25,
-    width:      140,
+    width:      120,
     labelWidth: 65,
+    labelAlign: 'right',
     fieldLabel: 'Page size',
     name:        'pageSize',
+    hideTrigger: true,
+    keyNavEnabled: false,
     listeners: {
       buffer: 500,
       change(field, v) {
@@ -110,20 +115,46 @@ Ext.define('Admin.Space.toolbar.Collection', {
       }
     }
   }, ' ', {
+    iconCls: 'fa fa-backward',
+    name: 'first-page',
+    handler() {
+      this.up('grid').store.loadPage(1);
+    }
+  }, {
     iconCls: 'fa fa-chevron-left',
     name: 'previous-page',
     handler() {
       this.up('grid').store.previousPage();
     }
   }, {
+    xtype: 'numberfield',
+    name: 'current-page',
+    width: 95,
+    hideTrigger: true,
+    keyNavEnabled: false,
+    labelWidth: 40,
+    labelAlign: 'right',
+    fieldLabel: 'Page',
+    value: 1,
+  }, {
     xtype: 'label',
-    name: 'paging-stats',
-    padding: 1,
+    name: 'current-page-delimiter',
+    text: '/',
+  }, {
+    xtype: 'label',
+    name: 'total-pages',
+    text: '1',
   }, {
     iconCls: 'fa fa-chevron-right',
     name: 'next-page',
     handler() {
       this.up('grid').store.nextPage();
+    }
+  }, {
+    iconCls: 'fa fa-forward',
+    name: 'last-page',
+    handler() {
+      this.up('grid').store.loadPage(this.up('grid').down('[name=total-pages]').text);
     }
   }, {
     iconCls: 'fa fa-refresh',
