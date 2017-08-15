@@ -38,9 +38,24 @@ Ext.define('Admin.Space.Collection', {
   }],
 
   listeners: {
-    afterrenderer() {
-      console.log('renderer');
+    columnresize(table, column, width) {
+      if(width != 50) {
+        var config = table.grid.getWidthConfig();
+        config[column.fullColumnIndex] = width;
+        localStorage.setItem(table.grid.params.space+'_width', Ext.JSON.encode(config));
+      }
     },
+  },
+
+  getWidthConfig() {
+    var config = localStorage.getItem(this.params.space+'_width');
+    if(config) {
+      config = Ext.JSON.decode(config);
+    }
+    if(!config) {
+      config = [];
+    }
+    return config;
   },
 
   autoLoad: true,
@@ -83,6 +98,8 @@ Ext.define('Admin.Space.Collection', {
             this.format = result.format;
             this.indexes = result.indexes;
 
+            var config = this.getWidthConfig();
+
             var store = Ext.create('Ext.data.ArrayStore', {
               model: Ext.define(null, {
                 extend: 'Ext.data.Model',
@@ -110,9 +127,11 @@ Ext.define('Admin.Space.Collection', {
                       }
                     }
                   });
-                  columns.forEach((c, n) => {
-                    this.view.autoSizeColumn(n);
-                  });
+                  if(Ext.Object.getSize(config) === 0) {
+                    columns.forEach((c, n) => {
+                      this.view.autoSizeColumn(n);
+                    });
+                  }
                   this.down('toolbar-collection').updateState();
                 }
               }
@@ -121,12 +140,12 @@ Ext.define('Admin.Space.Collection', {
             store.proxy.job = 'space.select';
             store.proxy.params = this.params;
 
-            var columns = fields.map(f => {
+            var columns = fields.map((f, i) => {
               return {
                 hidden: result.fake,
                 dataIndex: f,
                 header: f,
-                width: 50,
+                width: +config[i+1] || 50,
                 renderer: (v) => {
                   if(Ext.isObject(v)) {
                     return Ext.JSON.encode(v);
@@ -139,7 +158,6 @@ Ext.define('Admin.Space.Collection', {
             this.down('toolbar-collection').applyMeta();
 
             if(this.params.index !== undefined) {
-              console.log('search toolbar added');
               this.addDocked(Ext.create('Admin.Space.toolbar.Search', {
                 collection: this
               }), 0);
