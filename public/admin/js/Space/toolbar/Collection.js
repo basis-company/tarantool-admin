@@ -15,7 +15,7 @@ Ext.define('Admin.Space.toolbar.Collection', {
     var pageCount = Math.ceil(store.getTotalCount() / store.pageSize);
     var currentPage = store.currentPage;
 
-    this.down('[name=row-counter]').setText(store.getTotalCount());
+    this.down('[name=row-counter]').setValue(store.getTotalCount());
 
     var stats = this.down('[name=paging-stats]');
     var first = this.down('[name=first-page]');
@@ -89,12 +89,14 @@ Ext.define('Admin.Space.toolbar.Collection', {
         .then(result => window.location = "/"+result.path);
     }
   }, '->', {
-    xtype:      'label',
-    text:       'Rows',
-  }, {
-    xtype: 'label',
-    name: 'row-counter',
-    text: '0',
+    fieldLabel: 'Total rows',
+    labelAlign: 'right',
+    labelWidth: 65,
+    name:       'row-counter',
+    readOnly:   true,
+    value:      0,
+    width:      140,
+    xtype:      'numberfield',
   }, ' ',{
     xtype:    'numberfield',
     minValue:   0,
