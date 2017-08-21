@@ -105,6 +105,7 @@ Ext.define('Admin.Space.toolbar.Collection', {
     labelWidth: 65,
     labelAlign: 'right',
     fieldLabel: 'Page size',
+    selectOnFocus: true,
     name:        'pageSize',
     hideTrigger: true,
     keyNavEnabled: false,
@@ -137,7 +138,14 @@ Ext.define('Admin.Space.toolbar.Collection', {
     labelWidth: 40,
     labelAlign: 'right',
     fieldLabel: 'Page',
+    selectOnFocus: true,
     value: 1,
+    listeners: {
+      buffer: 500,
+      change(field, v) {
+        this.up('grid').store.loadPage(v || 1);
+      }
+    }
   }, {
     xtype: 'label',
     name: 'current-page-delimiter',
