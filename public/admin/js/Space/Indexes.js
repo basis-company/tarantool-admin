@@ -13,6 +13,14 @@ Ext.define('Admin.Space.Indexes', {
     fields: ['iid', 'name', 'type', 'parts', 'opts']
   },
 
+  selModel: {
+    type: 'spreadsheet',
+    rowNumbererHeaderWidth: 0,
+  },
+  plugins: {
+    ptype: 'clipboard',
+  },
+
   listeners: {
     selectionchange(sm, sel) {
       this.down('[name=remove-button]').setDisabled(!sel.length);

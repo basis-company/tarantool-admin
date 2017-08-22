@@ -87,6 +87,14 @@ Ext.define('Admin.Space.Format', {
     }
   }],
 
+  selModel: {
+    type: 'spreadsheet',
+    rowNumbererHeaderWidth: 0,
+  },
+  plugins: {
+    ptype: 'clipboard',
+  },
+
   columns: [{
     header: '#',
     width: 35,
