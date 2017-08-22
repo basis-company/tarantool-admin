@@ -147,7 +147,7 @@ Ext.define('Admin.Space.Collection', {
                 header: f,
                 width: +config[i+1] || 50,
                 renderer: (v) => {
-                  if(Ext.isObject(v)) {
+                  if(Ext.isObject(v) || (Ext.isArray(v) && v[0] && Ext.isObject(v[0]))) {
                     return Ext.JSON.encode(v);
                   }
                   return v;
