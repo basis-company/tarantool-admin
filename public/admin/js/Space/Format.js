@@ -89,9 +89,10 @@ Ext.define('Admin.Space.Format', {
 
   columns: [{
     header: '#',
-    width: 30,
-    sortable: false,
-    dataIndex: 'index'
+    width: 35,
+    align: 'center',
+    dataIndex: 'index',
+    renderer: v => v + 1,
   },{
     header: 'Name',
     width: 150,
