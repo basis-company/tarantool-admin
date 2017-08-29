@@ -240,8 +240,25 @@ Ext.define('Admin.Space.Collection', {
           handler: () => {
 
             var job = entity ? 'entity.update' : 'entity.create';
+            var currentValues = win.down('form').getValues();
+            var values = {};
+
+            Ext.Object.each(currentValues, (k, v) => {
+              if(v != initialValues[k]) {
+                values[k] = v;
+              }
+            });
+
+            if(!Ext.Object.getSize(values)) {
+              return win.close();
+            }
+
+            if(entity) {
+              primary.forEach(f =>  values[f] = entity.get(f));
+            }
+
             var params = Ext.apply({
-              values: win.down('form').getValues()
+              values: values
             }, this.params);
 
             dispatch(job, params).then(() => {
@@ -253,5 +270,7 @@ Ext.define('Admin.Space.Collection', {
       }]
     });
     win.show();
+
+    var initialValues = win.down('form').getValues();
   },
 });
