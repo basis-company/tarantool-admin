@@ -182,36 +182,59 @@ Ext.define('Admin.Space.Collection', {
 
     var required = Ext.Array.unique(Ext.Array.flatten(this.indexes.map(index => index.parts.map(p => p[0]))));
 
+    var items = this.format.map((field, id) => {
+      var item = {
+        name: field.name,
+        xtype: 'textfield',
+        labelAlign: 'right',
+        fieldLabel: field.name,
+        allowBlank: !Ext.Array.contains(required, id)
+      };
+      if(field.type != 'str') {
+        Ext.apply(item, {
+          xtype: 'numberfield',
+          showSpinner: false,
+          minValue: 0,
+        });
+      }
+      if(entity) {
+        item.value = entity.get(field.name);
+        if(primary.indexOf(field.name) !== -1) {
+          item.readOnly = true;
+        }
+      }
+      return item;
+    });
+
+    var columnsCount = 1;
+    var itemsPerColumn = items.length;
+    while(itemsPerColumn >= 16) {
+      itemsPerColumn /= 2;
+      columnsCount++;
+    }
+
+    itemsPerColumn = Math.ceil(itemsPerColumn);
+
+    var columns = [];
+    if(columnsCount > 0) {
+      var i;
+      for(i = 0; i < columnsCount; i++) {
+        columns.push({
+          border: false,
+          items: Ext.Array.slice(items, i*itemsPerColumn, (i+1) * itemsPerColumn)
+        });
+      }
+    }
+
     var win = Ext.create('Ext.window.Window', {
-      title: !entity ? 'New row' : 'Update ' + id,
+      title: !entity ? 'New ' + this.params.space : 'Update ' + this.params.space + ' ' + id,
       modal: true,
       items: [{
         xtype: 'form',
+        layout: 'column',
         bodyPadding: 10,
-        items: this.format.map((field, id) => {
-          var item = {
-            name: field.name,
-            xtype: 'textfield',
-            labelAlign: 'right',
-            fieldLabel: field.name,
-            allowBlank: !Ext.Array.contains(required, id)
-          };
-          if(field.type != 'str') {
-            Ext.apply(item, {
-              xtype: 'numberfield',
-              showSpinner: false,
-              minValue: 0,
-            });
-          }
-          if(entity) {
-            item.value = entity.get(field.name);
-            if(primary.indexOf(field.name) !== -1) {
-              item.readOnly = true;
-            }
-          }
-          return item;
-        }),
-        bbar: ['-', {
+        items: columns.length > 0 ? columns : items,
+        bbar: ['->', {
           text: !entity ? 'Create' : 'Update',
           formBind: true,
           handler: () => {
