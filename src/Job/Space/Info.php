@@ -2,6 +2,8 @@
 
 namespace Job\Space;
 
+use Exception;
+
 class Info extends Job
 {
     public function run()
@@ -22,6 +24,17 @@ class Info extends Job
                     'name' => "".$value,
                     'type' => 'str',
                 ];
+            }
+        }
+
+        foreach ($indexes as $i => $index) {
+            $spaceName = $space->getName();
+            $id = $index['iid'];
+            try {
+                $indexes[$i]['size'] = $this->getClient()->evaluate("return box.space.$spaceName.index[$id]:bsize()")->getData()[0];
+            } catch (Exception $e) {
+                // no bsize
+                break;
             }
         }
 

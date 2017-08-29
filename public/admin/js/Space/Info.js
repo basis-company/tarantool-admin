@@ -30,6 +30,9 @@ Ext.define('Admin.Space.Info', {
           this.down('space-format').setWidth(hasReferences ? 380 : 300);
         }
         this.down('space-indexes').store.loadData(result.indexes);
+        var indexSizeExists = result.indexes.filter(f => !!f.size).length;
+        this.down('space-indexes').getColumns()[3].setHidden(!indexSizeExists);
+
       })
       .catch(e => this.up('space-tab').close());
   },

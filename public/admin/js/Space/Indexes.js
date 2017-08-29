@@ -187,6 +187,12 @@ Ext.define('Admin.Space.Indexes', {
     align: 'center',
     width: 70
   }, {
+    dataIndex: 'size',
+    header: 'Size',
+    align: 'right',
+    width: 70,
+    renderer: v => v ? Ext.util.Format.fileSize(v) : '-',
+  }, {
     dataIndex: 'opts',
     header: 'Unique',
     align: 'center',
