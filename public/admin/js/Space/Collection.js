@@ -194,7 +194,6 @@ Ext.define('Admin.Space.Collection', {
         Ext.apply(item, {
           xtype: 'numberfield',
           showSpinner: false,
-          minValue: 0,
         });
       }
       if(entity) {
