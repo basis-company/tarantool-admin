@@ -14,7 +14,7 @@ ADD composer.json /var/www/html
 RUN php composer.phar install --no-dev
 
 ADD public /var/www/html
-ADD src /var/www/html/src
+ADD php /var/www/html/php
 RUN mkdir admin/downloads &&  chown www-data admin/downloads && chgrp www-data admin/downloads
 RUN php composer.phar dump-autoload -o
 RUN cp vendor/basis-company/framework/resources/default/.htaccess .
