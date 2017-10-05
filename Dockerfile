@@ -19,5 +19,3 @@ RUN mkdir admin/downloads &&  chown www-data admin/downloads && chgrp www-data a
 RUN php composer.phar dump-autoload -o
 RUN cp vendor/basis-company/framework/resources/default/.htaccess .
 RUN cp vendor/basis-company/framework/resources/default/server.php .
-
-RUN rm composer.*
