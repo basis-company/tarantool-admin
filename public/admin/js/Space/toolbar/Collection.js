@@ -80,6 +80,22 @@ Ext.define('Admin.Space.toolbar.Collection', {
     disabled: true,
     menu:     []
   }, {
+    text: 'Truncate',
+    iconCls: 'fa fa-trash-o',
+    handler() {
+
+      var space = this.up('grid').store.proxy.params.space;
+
+      // > database tabs
+      //  > collection
+      //  > space tabs
+      //   > {collection}
+
+      this.up('tabpanel').up('tabpanel')
+        .down('[name=spaces]')
+        .truncateSpace(space);
+    }
+  }, {
     iconCls:  'fa fa-download',
     disabled: true,
     name:     'export',
