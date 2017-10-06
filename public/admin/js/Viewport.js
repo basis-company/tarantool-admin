@@ -5,6 +5,7 @@ Ext.define('Admin.Viewport', {
   requires: [
     'Admin.Home.Tab',
     'Admin.field.Filter',
+    'Admin.overrides.Toolbar',
   ],
 
   initComponent() {
