@@ -32,7 +32,7 @@ class Admin
 
             return [
                 'success' => true,
-                'data' => $runner->dispatch($data->job, get_object_vars($data->params)),
+                'data' => $runner->dispatch(strtolower($data->job), get_object_vars($data->params)),
             ];
 
         } catch(Exception $e) {
