@@ -15,6 +15,8 @@ class Admin
 
     public function api(Runner $runner)
     {
+        header('Content-Type: application/json');
+
         try {
             if(!array_key_exists('rpc', $_REQUEST)) {
                 throw new Exception("No rpc defined");
@@ -37,7 +39,8 @@ class Admin
 
             return [
                 'success' => false,
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
+                'trace' => $e->getTrace(),
             ];
         }
     }
