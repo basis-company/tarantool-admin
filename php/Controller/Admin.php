@@ -16,6 +16,8 @@ class Admin
     public function api(Runner $runner)
     {
         header('Content-Type: application/json');
+        ini_set('display_errors', 'on');
+        error_reporting(E_ALL);
 
         try {
             if(!array_key_exists('rpc', $_REQUEST)) {
