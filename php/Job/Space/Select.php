@@ -20,14 +20,15 @@ class Select extends Job
             $key[] = $value;
         }
 
-        $data = $this->getMapper()->getClient()->getSpace($this->space)
-            ->select($key, $this->index, $this->limit, $this->offset, $this->iterator)
-            ->getData();
-
         try {
+            $data = $this->getMapper()->getClient()->getSpace($this->space)
+                ->select($key, $this->index, $this->limit, $this->offset, $this->iterator)
+                ->getData();
+
             $total = $this->getMapper()->getClient()
                 ->evaluate("return box.space.$this->space.index[$this->index]:count(...)", [$key])
                 ->getData()[0];
+
         } catch (Exception $e) {
         }
 
