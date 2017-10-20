@@ -7,7 +7,7 @@ class Truncate extends Job
     public function run()
     {
         $space = $this->getSpace();
-        if($space->owner) {
+        if($space->getId() < 512) {
             throw new Exception('Disabled for system spaces');
         }
 
