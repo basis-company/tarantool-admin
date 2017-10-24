@@ -2,6 +2,7 @@
 
 namespace Job\Entity;
 
+use Basis\Converter;
 use Exception;
 use Job\Space\Job;
 
@@ -9,7 +10,7 @@ class Update extends Job
 {
     public $values;
 
-    public function run()
+    public function run(Converter $converter)
     {
         $pk = [];
         $space = $this->getSpace();
@@ -47,6 +48,9 @@ class Update extends Job
             $entity = $space->getRepository()->findOne($pk);
             foreach ($this->values as $k => $v) {
                 $entity->$k = $v;
+                if(is_object($v)) {
+                    $entity->$k = $converter->toArray($v);
+                }
             }
             $this->getMapper()->save($entity);
         }
