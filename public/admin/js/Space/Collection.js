@@ -181,6 +181,7 @@ Ext.define('Admin.Space.Collection', {
     }
 
     var required = Ext.Array.unique(Ext.Array.flatten(this.indexes.map(index => index.parts.map(p => p[0]))));
+    var complexTypes = [];
 
     var items = this.format.map((field, id) => {
       var item = {
@@ -190,6 +191,9 @@ Ext.define('Admin.Space.Collection', {
         fieldLabel: field.name,
         allowBlank: !Ext.Array.contains(required, id)
       };
+      if(field.type == '*') {
+        complexTypes.push(field.name);
+      }
       if (['unsigned', 'UNSIGNED', 'num', 'NUM'].indexOf(field.type) != -1) {
         Ext.apply(item, {
           xtype: 'numberfield',
@@ -198,6 +202,12 @@ Ext.define('Admin.Space.Collection', {
       }
       if(entity) {
         item.value = entity.get(field.name);
+        if(Ext.isObject(item.value) || Ext.isArray(item.value)) {
+          if (complexTypes.indexOf(field.name) == -1) {
+            complexTypes.push(field.name);
+          }
+          item.value = Ext.JSON.encode(item.value);
+        }
         if(primary.indexOf(field.name) !== -1) {
           item.readOnly = true;
         }
@@ -241,6 +251,13 @@ Ext.define('Admin.Space.Collection', {
             var job = entity ? 'entity.update' : 'entity.create';
             var currentValues = win.down('form').getValues();
             var values = {};
+            complexTypes.forEach(name => {
+              try {
+                currentValues[name] = Ext.JSON.decode(currentValues[name]);
+              } catch (e) {
+                currentValues[name] = null;
+              }
+            });
 
             Ext.Object.each(currentValues, (k, v) => {
               if(v != initialValues[k]) {
