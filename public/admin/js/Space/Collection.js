@@ -190,7 +190,7 @@ Ext.define('Admin.Space.Collection', {
         fieldLabel: field.name,
         allowBlank: !Ext.Array.contains(required, id)
       };
-      if(field.type != 'str') {
+      if (['unsigned', 'UNSIGNED', 'num', 'NUM'].indexOf(field.type) != -1) {
         Ext.apply(item, {
           xtype: 'numberfield',
           showSpinner: false,
