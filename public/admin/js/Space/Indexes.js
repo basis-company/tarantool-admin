@@ -91,7 +91,7 @@ Ext.define('Admin.Space.Indexes', {
             store: {
               xtype: 'arraystore',
               fields: ['type'],
-              data: ['TREE', 'HASH', 'BITSET', 'RTREE'].map(v => [v])
+              data: ['tree', 'hash', 'bitset', 'rtree'].map(v => [v])
             }
           }, {
             xtype: 'checkboxfield',
