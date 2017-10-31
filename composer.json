@@ -3,7 +3,7 @@
     "license": "MIT",
     "require": {
         "php": "^7.0",
-        "basis-company/framework" : "^3.2.12"
+        "basis-company/framework" : "^3.2.16"
     },
     "require-dev": {
         "phpunit/phpunit": "6.0.10"
