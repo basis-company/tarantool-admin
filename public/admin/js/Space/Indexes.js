@@ -23,8 +23,8 @@ Ext.define('Admin.Space.Indexes', {
 
   listeners: {
     selectionchange(sm, sel) {
-      this.down('[name=remove-button]').setDisabled(!sel.length);
-      this.down('[name=search-button]').setDisabled(!sel.length);
+      this.down('[name=remove-button]').setDisabled(!sel.view.selection);
+      this.down('[name=search-button]').setDisabled(!sel.view.selection);
     },
     itemdblclick() {
       this.down('[name=search-button]').handler();
@@ -131,7 +131,7 @@ Ext.define('Admin.Space.Indexes', {
     name: 'search-button',
     handler() {
       var params = Ext.apply({
-        index: this.up('space-indexes').getSelectionModel().getSelection()[0].get('iid')
+        index: this.up('space-indexes').selModel.getCellContext().view.selection.get('iid')
       }, this.up('space-tab').params);
 
       var view = Ext.create('Admin.Space.Collection', {
@@ -148,7 +148,7 @@ Ext.define('Admin.Space.Indexes', {
     iconCls: 'fa fa-minus-circle',
     handler() {
       var params = Ext.apply({
-        name: this.up('space-indexes').getSelectionModel().getSelection()[0].get('name')
+        name: this.up('space-indexes').selModel.getCellContext().view.selection.get('name')
       }, this.up('space-tab').params);
 
       var store = this.up('space-indexes').store;
