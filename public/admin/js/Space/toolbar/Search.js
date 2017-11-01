@@ -1,5 +1,6 @@
 Ext.define('Admin.Space.toolbar.Search', {
   extend: 'Ext.toolbar.Toolbar',
+  border: false,
 
   initComponent() {
     var grid = this.collection;
