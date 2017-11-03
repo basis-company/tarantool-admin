@@ -77,6 +77,11 @@ Ext.define('Admin.Home.Tab', {
     var connections = Ext.JSON.decode(localStorage.getItem('connections')) || [];
     return dispatch('admin.connections')
       .then(result => {
+        if(result.readOnly) {
+          this.down('home-new').hide();
+              grid.down('[name=remove-button]').hide();
+              grid.down('[name=remove-all]').hide();
+        }
         connections = Ext.Array.unique(connections.concat(result.connections));
         if(!connections.length) {
           grid.hide();

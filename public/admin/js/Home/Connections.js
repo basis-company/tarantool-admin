@@ -45,6 +45,7 @@ Ext.define('Admin.Home.Connections', {
 
   }, {
     text: 'Remove all',
+    name: 'remove-all',
     iconCls: 'fa fa-ban',
     handler() {
       this.up('home-tab').clearConnections();
