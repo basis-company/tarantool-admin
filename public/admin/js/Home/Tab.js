@@ -19,13 +19,13 @@ Ext.define('Admin.Home.Tab', {
       this.down('[name=hostname]').focus();
     },
     render: function() {
-      this.refreshConnections();
-      var connections = this.down('home-connections');
-      if(connections.store.getCount() == 1) {
-
-        this.showDatabase(connections.store.getAt(0).data);
-      }
-
+      this.refreshConnections()
+        .then(() => {
+          var connections = this.down('home-connections');
+          if(connections.store.getCount() == 1) {
+            this.showDatabase(connections.store.getAt(0).data);
+          }
+        });
     }
   },
 
@@ -61,7 +61,7 @@ Ext.define('Admin.Home.Tab', {
 
       if(connection.remember) {
         var connections = Ext.JSON.decode(localStorage.getItem('connections')) || [];
-        connections.push([connection.hostname, connection.port, connection.username, connection.password]);
+        connections.push(this.getConnectionString(connection.hostname, connection.port, connection.username, connection.password));
         localStorage.setItem('connections', Ext.JSON.encode(connections));
         this.refreshConnections();
       }
@@ -75,31 +75,26 @@ Ext.define('Admin.Home.Tab', {
     grid.store.loadData([]);
 
     var connections = Ext.JSON.decode(localStorage.getItem('connections')) || [];
-    if(!connections.length) {
-      grid.hide();
+    return dispatch('admin.connections')
+      .then(result => {
+        connections = Ext.Array.unique(connections.concat(result.connections));
+        if(!connections.length) {
+          grid.hide();
 
-    } else {
-      grid.show();
-      grid.store.loadData(connections.map(info => {
-        return {
-          hostname: info[0],
-          port: info[1],
-          username: info[2],
-          password: info[3],
+        } else {
+          grid.show();
+          grid.store.loadData(connections.map(string => this.parseConnectionString(string)));
         }
-      }))
-    }
+      });
   },
 
   removeConnection(connection) {
 
     var connections = Ext.JSON.decode(localStorage.getItem('connections')) || [];
 
+    var connectionString = this.getConnectionString(connection.hostname, connection.port, connection.username, connection.password);
     connections
-      .filter(candidate => {
-        var diffeences = ['hostname', 'port', 'username', 'password'].filter((k, i) => candidate[i] != connection[k]);
-        return diffeences.length == 0
-      })
+      .filter(candidate => candidate === connectionString)
       .forEach(todo => Ext.Array.remove(connections, todo));
 
     localStorage.setItem('connections', Ext.JSON.encode(connections));
@@ -110,6 +105,60 @@ Ext.define('Admin.Home.Tab', {
   clearConnections() {
     localStorage.removeItem('connections');
     this.refreshConnections();
+  },
+
+  getConnectionString(hostname, port, username, password) {
+    var connection = '';
+    if (!port) {
+      port = 3301;
+    }
+    if (username && username != 'guest') {
+      connection += username;
+    }
+    if (password && password !== '') {
+      if(!connection.length) {
+        connection = 'guest';
+      }
+      connection += ':' + password;
+    }
+    connection = connection.length ? connection + '@' + hostname : hostname;
+    if (port && port != 3301) {
+      connection += ':' + port;
+    }
+
+    return connection;
+  },
+
+  parseConnectionString(connection) {
+    var hostname = null;
+    var port = 3301;
+    var username = 'guest';
+    var password = '';
+
+    var hostport = connection;
+    var userpass = null;
+
+    if (connection.indexOf('@') !== -1) {
+      [userpass, hostport] = connection.split('@');
+    } else {
+      hostport = connection;
+    }
+
+    if (hostport.indexOf(':') !== -1) {
+      [hostname, port] = hostport.split(':');
+    } else {
+      hostname = hostport;
+    }
+
+    if (userpass) {
+      if (userpass.indexOf(':') !== -1) {
+        [username, password] = userpass.split(':');
+      } else {
+        username = userpass;
+      }
+    }
+
+    return {hostname, port, username, password};
   },
 
   items: [{
