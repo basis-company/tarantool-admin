@@ -57,10 +57,24 @@ Ext.define('Admin.Home.Connections', {
     width: 150,
   }, {
     header: 'Port',
-    dataIndex: 'port'
+    dataIndex: 'port',
+    align: 'center',
+    renderer(v, el) {
+      if(v == 3301) {
+        el.style = "color: #999";
+      }
+      return v;
+    }
   }, {
     header: 'Username',
-    dataIndex: 'username'
+    dataIndex: 'username',
+    align: 'center',
+    renderer(v, el) {
+      if(v == 'guest') {
+        el.style = "color: #999";
+      }
+      return v;
+    }
   }]
 
 });
