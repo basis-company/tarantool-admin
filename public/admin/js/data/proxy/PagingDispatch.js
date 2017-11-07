@@ -16,8 +16,8 @@
       .then(response => {
         var resultSet = new Ext.data.ResultSet({
           total: response.total,
-          count: response.data.length,
-          records: response.data.map(row => {
+          count: (response.data || []).length,
+          records: (response.data || []).map(row => {
             return operation._scope.model.create(row);
           }),
         });
