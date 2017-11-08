@@ -156,10 +156,11 @@ Ext.define('Admin.Space.toolbar.Collection', {
     fieldLabel: 'Page',
     selectOnFocus: true,
     value: 1,
+    enableKeyEvents: true,
     listeners: {
       buffer: 500,
-      change(field, v) {
-        this.up('grid').store.loadPage(v || 1);
+      keyup(field) {
+        this.up('grid').store.loadPage(field.value || 1);
       }
     }
   }, {
