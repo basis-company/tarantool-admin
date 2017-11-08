@@ -2,7 +2,7 @@ Ext.define('Admin.Home.Connections', {
 
   extend: 'Ext.grid.Panel',
 
-  title: 'Local Storage connections',
+  title: 'Persisted Tarantool connections',
   flex: 1,
 
   listeners: {
