@@ -11,7 +11,7 @@ Ext.define('Admin.Space.Format', {
 
   listeners: {
     selectionchange(sm, sel) {
-      this.down('[name=remove-button]').setDisabled(!sel.length);
+      this.down('[name=remove-button]').setDisabled(!sel.view.selection);
     }
   },
 
@@ -77,7 +77,7 @@ Ext.define('Admin.Space.Format', {
     text: 'Remove',
     handler() {
       var params = Ext.apply({
-        name: this.up('grid').getSelectionModel().getSelection()[0].get('name'),
+        name: this.up('grid').selModel.getCellContext().view.selection.get('name'),
       }, this.up('space-tab').params);
 
       dispatch('space.removeProperty', params)
