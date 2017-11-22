@@ -38,11 +38,10 @@ class Admin
             ];
 
         } catch(Exception $e) {
-
             return [
                 'success' => false,
                 'message' => $e->getMessage(),
-                'trace' => $e->getTrace(),
+                'trace' => explode(PHP_EOL, $e->getTraceAsString()),
             ];
         }
     }
