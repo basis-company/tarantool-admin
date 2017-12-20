@@ -25,6 +25,8 @@ Ext.define('Admin.Home.Connections', {
   },
 
   tbar: [{
+    xtype: 'filter-field',
+  }, {
     text: 'Connect',
     name: 'connect-button',
     iconCls: 'fa fa-link',
