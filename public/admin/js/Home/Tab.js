@@ -22,8 +22,11 @@ Ext.define('Admin.Home.Tab', {
       this.refreshConnections()
         .then(() => {
           var connections = this.down('home-connections');
-          if(connections.store.getCount() == 1) {
+          var counter = connections.store.getCount();
+          if(counter == 1) {
             this.showDatabase(connections.store.getAt(0).data);
+          } else if (counter > 1) {
+            this.down('filter-field').focus();
           }
         });
     }
