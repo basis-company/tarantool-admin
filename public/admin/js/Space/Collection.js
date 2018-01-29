@@ -200,6 +200,11 @@ Ext.define('Admin.Space.Collection', {
           showSpinner: false,
         });
       }
+      if (['boolean', 'BOOLEAN'].indexOf(field.type) != -1) {
+        Ext.apply(item, {
+          xtype: 'checkbox',
+        });
+      }
       if(entity) {
         item.value = entity.get(field.name);
         if(Ext.isObject(item.value) || Ext.isArray(item.value)) {
@@ -262,6 +267,17 @@ Ext.define('Admin.Space.Collection', {
             Ext.Object.each(currentValues, (k, v) => {
               if(v != initialValues[k]) {
                 values[k] = v;
+              }
+            });
+            Ext.Object.each(initialValues, (k, v) => {
+              if(v != currentValues[k]) {
+                values[k] = v;
+              }
+            });
+
+            Ext.ComponentQuery.query('checkbox', win.down('form')).forEach((checkbox) => {
+              if (Ext.isDefined(values[checkbox.name])) {
+                values[checkbox.name] = checkbox.getValue();
               }
             });
 

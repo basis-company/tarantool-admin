@@ -45,7 +45,7 @@ Ext.define('Admin.Space.Format', {
             store: {
               xtype: 'arraystore',
               fields: ['type'],
-              data: ['unsigned', 'str', '*'].map(v => [v])
+              data: ['unsigned', 'str', 'boolean', '*'].map(v => [v])
             }
           }],
           bbar: ['->', {
