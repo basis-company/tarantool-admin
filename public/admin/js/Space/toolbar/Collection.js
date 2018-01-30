@@ -48,7 +48,7 @@ Ext.define('Admin.Space.toolbar.Collection', {
     }
   }, {
     text:     'Update',
-    iconCls:  'fa fa-pencil',
+    iconCls:  'fa fa-edit',
     disabled: true,
     handler() {
       var selected = this.up('grid').getSelectionModel().getSelected();
@@ -81,7 +81,7 @@ Ext.define('Admin.Space.toolbar.Collection', {
     menu:     []
   }, {
     text: 'Truncate',
-    iconCls: 'fa fa-trash-o',
+    iconCls: 'fa fa-trash',
     handler() {
 
       var space = this.up('grid').store.proxy.params.space;
@@ -184,7 +184,7 @@ Ext.define('Admin.Space.toolbar.Collection', {
       this.up('grid').store.loadPage(this.up('grid').down('[name=total-pages]').text);
     }
   }, {
-    iconCls: 'fa fa-refresh',
+    iconCls: 'fa fa-sync',
     handler() {
       this.up('grid').store.load();
     }

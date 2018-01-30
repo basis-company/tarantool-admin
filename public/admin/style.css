@@ -1,3 +1,7 @@
+.fa,
+.far {
+    font-size: 13px;
+}
 .x-tab.x-tab-active.x-tab-default {
     border-color: #aaa;
     background-color: #ddd;

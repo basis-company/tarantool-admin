@@ -12,7 +12,7 @@ Ext.define('Admin.Space.Tab', {
   },
 
   closable: true,
-  iconCls: 'fa fa-hdd-o',
+  iconCls: 'fa fa-hdd',
 
   requires: [
     'Admin.Space.Collection',

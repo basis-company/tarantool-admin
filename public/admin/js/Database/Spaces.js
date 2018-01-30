@@ -170,7 +170,7 @@ Ext.define('Admin.Database.Spaces', {
   }, {
     text: 'Truncate',
     name: 'truncate-button',
-    iconCls: 'fa fa-trash-o',
+    iconCls: 'fa fa-trash',
     disabled: true,
     handler() {
       this.up('database-spaces').truncateSpace(this.up('grid').getSelectionModel().getSelection()[0].get('name'));
@@ -185,17 +185,17 @@ Ext.define('Admin.Database.Spaces', {
     }
   }, '->', {
     text: 'Show system',
-    iconCls: 'fa fa-circle-o',
+    iconCls: 'far fa-circle',
     name: 'system-spaces',
     value: false,
     handler() {
-      this.setIconCls(!this.value ? 'fa fa-check-circle-o' : 'fa fa-circle-o');
-      this.value = this.iconCls == 'fa fa-check-circle-o';
+      this.setIconCls(!this.value ? 'far fa-check-circle' : 'far fa-circle');
+      this.value = this.iconCls == 'far fa-check-circle';
       this.up('database-spaces').refreshSpaces();
     }
   }, {
     text: 'Refresh',
-    iconCls: 'fa fa-refresh',
+    iconCls: 'fa fa-sync',
     handler() {
       this.up('database-spaces').refreshSpaces();
     }
