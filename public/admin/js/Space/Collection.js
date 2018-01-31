@@ -264,13 +264,13 @@ Ext.define('Admin.Space.Collection', {
               }
             });
 
-            Ext.Object.each(currentValues, (k, v) => {
-              if(v != initialValues[k]) {
+            Ext.Object.each(initialValues, (k, v) => {
+              if(v != currentValues[k]) {
                 values[k] = v;
               }
             });
-            Ext.Object.each(initialValues, (k, v) => {
-              if(v != currentValues[k]) {
+            Ext.Object.each(currentValues, (k, v) => {
+              if(v != initialValues[k]) {
                 values[k] = v;
               }
             });
