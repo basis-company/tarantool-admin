@@ -6,6 +6,8 @@ use Exception;
 
 class Select extends Job
 {
+    public $limit = 0;
+    public $offset = 0;
     public $index = 0;
     public $key = [];
     public $iterator = 2;
