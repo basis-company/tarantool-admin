@@ -256,6 +256,13 @@ Ext.define('Admin.Space.Collection', {
             var job = entity ? 'entity.update' : 'entity.create';
             var currentValues = win.down('form').getValues();
             var values = {};
+            items.forEach(item => {
+              if (item.xtype == 'checkbox') {
+                if (!currentValues[item.fieldLabel]) {
+                  currentValues[item.fieldLabel] = false;
+                }
+              }
+            });
             complexTypes.forEach(name => {
               try {
                 currentValues[name] = Ext.JSON.decode(currentValues[name]);
