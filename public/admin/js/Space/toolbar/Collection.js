@@ -129,7 +129,7 @@ Ext.define('Admin.Space.toolbar.Collection', {
       buffer: 500,
       change(field, v) {
         this.up('grid').store.setPageSize(v);
-        this.up('grid').store.load();
+        this.up('grid').store.loadPage(1);
         localStorage.setItem('admin-page-size', v);
       }
     }
