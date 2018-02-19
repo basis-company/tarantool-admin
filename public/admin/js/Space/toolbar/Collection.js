@@ -4,6 +4,7 @@ Ext.define('Admin.Space.toolbar.Collection', {
   xtype: 'toolbar-collection',
 
   initComponent() {
+    this.items = this.getDefaultItems();
     this.callParent(arguments);
     if(localStorage.getItem('admin-page-size')) {
       this.down('[name=pageSize]').setValue(localStorage.getItem('admin-page-size'));
@@ -40,155 +41,157 @@ Ext.define('Admin.Space.toolbar.Collection', {
     }
   },
 
-  items: [{
-    text:    'Create',
-    iconCls: 'fa fa-plus-circle',
-    handler() {
-      this.up('grid').createEntityWindow();
-    }
-  }, {
-    text:     'Update',
-    iconCls:  'fa fa-edit',
-    disabled: true,
-    handler() {
-      var selected = this.up('grid').getSelectionModel().getSelected();
-      var record = selected.startCell ? selected.startCell.record : selected.selectedRecords.items[0];
-      this.up('grid').createEntityWindow(record);
-    }
-  }, {
-    text:     'Delete',
-    disabled: true,
-    iconCls:  'fa fa-minus-circle',
-    handler() {
-      var grid = this.up('grid');
-      var selected = grid.getSelectionModel().getSelected();
-      var record = selected.startCell ? selected.startCell.record : selected.selectedRecords.items[0];
-      var id = {};
-      grid.indexes[0].parts.forEach(p => {
-        id[grid.fields[p[0]]] = record.get(grid.fields[p[0]]);
-      });
+  getDefaultItems() {
+    return [{
+      text:    'Create',
+      iconCls: 'fa fa-plus-circle',
+      handler() {
+        this.up('grid').createEntityWindow();
+      }
+    }, {
+      text:     'Update',
+      iconCls:  'fa fa-edit',
+      disabled: true,
+      handler() {
+        var selected = this.up('grid').getSelectionModel().getSelected();
+        var record = selected.startCell ? selected.startCell.record : selected.selectedRecords.items[0];
+        this.up('grid').createEntityWindow(record);
+      }
+    }, {
+      text:     'Delete',
+      disabled: true,
+      iconCls:  'fa fa-minus-circle',
+      handler() {
+        var grid = this.up('grid');
+        var selected = grid.getSelectionModel().getSelected();
+        var record = selected.startCell ? selected.startCell.record : selected.selectedRecords.items[0];
+        var id = {};
+        grid.indexes[0].parts.forEach(p => {
+          id[grid.fields[p[0]]] = record.get(grid.fields[p[0]]);
+        });
 
-      var params = Ext.apply({id: id}, grid.params);
+        var params = Ext.apply({id: id}, grid.params);
 
-      dispatch('entity.remove', params)
-        .then(() => grid.store.load());
-    }
-  }, {
-    text:     'Search',
-    iconCls:  'fa fa-search',
-    name:     'search',
-    disabled: true,
-    menu:     []
-  }, {
-    text: 'Truncate',
-    iconCls: 'fa fa-trash',
-    handler() {
+        dispatch('entity.remove', params)
+          .then(() => grid.store.load());
+      }
+    }, {
+      text:     'Search',
+      iconCls:  'fa fa-search',
+      name:     'search',
+      disabled: true,
+      menu:     []
+    }, {
+      text: 'Truncate',
+      iconCls: 'fa fa-trash',
+      handler() {
 
-      var space = this.up('grid').store.proxy.params.space;
+        var space = this.up('grid').store.proxy.params.space;
 
-      // > database tabs
-      //  > collection
-      //  > space tabs
-      //   > {collection}
+        // > database tabs
+        //  > collection
+        //  > space tabs
+        //   > {collection}
 
-      this.up('tabpanel').up('tabpanel')
-        .down('[name=spaces]')
-        .truncateSpace(space);
-    }
-  }, {
-    iconCls:  'fa fa-download',
-    disabled: true,
-    name:     'export',
-    text:     'Export',
-    handler() {
-      dispatch('export.csv', this.up('grid').store.proxy.params)
-        .then(result => window.location = "/"+result.path);
-    }
-  }, '->', {
-    fieldLabel: 'Total rows',
-    labelAlign: 'right',
-    labelWidth: 65,
-    name:       'row-counter',
-    readOnly:   true,
-    value:      0,
-    width:      20,
-    xtype:      'numberfield',
-  }, ' ',{
-    xtype:    'numberfield',
-    minValue:   0,
-    value:      25,
-    width:      20,
-    labelWidth: 65,
-    labelAlign: 'right',
-    fieldLabel: 'Page size',
-    selectOnFocus: true,
-    name:        'pageSize',
-    hideTrigger: true,
-    keyNavEnabled: false,
-    listeners: {
-      buffer: 500,
-      change(field, v) {
-        this.up('grid').store.setPageSize(v);
+        this.up('tabpanel').up('tabpanel')
+          .down('[name=spaces]')
+          .truncateSpace(space);
+      }
+    }, {
+      iconCls:  'fa fa-download',
+      disabled: true,
+      name:     'export',
+      text:     'Export',
+      handler() {
+        dispatch('export.csv', this.up('grid').store.proxy.params)
+          .then(result => window.location = "/"+result.path);
+      }
+    }, '->', {
+      fieldLabel: 'Total rows',
+      labelAlign: 'right',
+      labelWidth: 65,
+      name:       'row-counter',
+      readOnly:   true,
+      value:      0,
+      width:      20,
+      xtype:      'numberfield',
+    }, ' ',{
+      xtype:    'numberfield',
+      minValue:   0,
+      value:      25,
+      width:      20,
+      labelWidth: 65,
+      labelAlign: 'right',
+      fieldLabel: 'Page size',
+      selectOnFocus: true,
+      name:        'pageSize',
+      hideTrigger: true,
+      keyNavEnabled: false,
+      listeners: {
+        buffer: 500,
+        change(field, v) {
+          this.up('grid').store.setPageSize(v);
+          this.up('grid').store.loadPage(1);
+          localStorage.setItem('admin-page-size', v);
+        }
+      }
+    }, ' ', {
+      iconCls: 'fa fa-backward',
+      name: 'first-page',
+      handler() {
         this.up('grid').store.loadPage(1);
-        localStorage.setItem('admin-page-size', v);
       }
-    }
-  }, ' ', {
-    iconCls: 'fa fa-backward',
-    name: 'first-page',
-    handler() {
-      this.up('grid').store.loadPage(1);
-    }
-  }, {
-    iconCls: 'fa fa-chevron-left',
-    name: 'previous-page',
-    handler() {
-      this.up('grid').store.previousPage();
-    }
-  }, {
-    xtype: 'numberfield',
-    name: 'current-page',
-    width: 20,
-    hideTrigger: true,
-    keyNavEnabled: false,
-    labelWidth: 40,
-    labelAlign: 'right',
-    fieldLabel: 'Page',
-    selectOnFocus: true,
-    value: 1,
-    enableKeyEvents: true,
-    listeners: {
-      buffer: 500,
-      keyup(field) {
-        this.up('grid').store.loadPage(field.value || 1);
+    }, {
+      iconCls: 'fa fa-chevron-left',
+      name: 'previous-page',
+      handler() {
+        this.up('grid').store.previousPage();
       }
-    }
-  }, {
-    xtype: 'label',
-    name: 'current-page-delimiter',
-    text: '/',
-  }, {
-    xtype: 'label',
-    name: 'total-pages',
-    text: '1',
-  }, {
-    iconCls: 'fa fa-chevron-right',
-    name: 'next-page',
-    handler() {
-      this.up('grid').store.nextPage();
-    }
-  }, {
-    iconCls: 'fa fa-forward',
-    name: 'last-page',
-    handler() {
-      this.up('grid').store.loadPage(this.up('grid').down('[name=total-pages]').text);
-    }
-  }, {
-    iconCls: 'fa fa-sync',
-    handler() {
-      this.up('grid').store.load();
-    }
-  }],
+    }, {
+      xtype: 'numberfield',
+      name: 'current-page',
+      width: 20,
+      hideTrigger: true,
+      keyNavEnabled: false,
+      labelWidth: 40,
+      labelAlign: 'right',
+      fieldLabel: 'Page',
+      selectOnFocus: true,
+      value: 1,
+      enableKeyEvents: true,
+      listeners: {
+        buffer: 500,
+        keyup(field) {
+          this.up('grid').store.loadPage(field.value || 1);
+        }
+      }
+    }, {
+      xtype: 'label',
+      name: 'current-page-delimiter',
+      text: '/',
+    }, {
+      xtype: 'label',
+      name: 'total-pages',
+      text: '1',
+    }, {
+      iconCls: 'fa fa-chevron-right',
+      name: 'next-page',
+      handler() {
+        this.up('grid').store.nextPage();
+      }
+    }, {
+      iconCls: 'fa fa-forward',
+      name: 'last-page',
+      handler() {
+        this.up('grid').store.loadPage(this.up('grid').down('[name=total-pages]').text);
+      }
+    }, {
+      iconCls: 'fa fa-sync',
+      handler() {
+        this.up('grid').store.load();
+      }
+    }];
+  },
 
   applyMeta() {
 
