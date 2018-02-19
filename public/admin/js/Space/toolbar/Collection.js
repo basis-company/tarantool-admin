@@ -117,7 +117,7 @@ Ext.define('Admin.Space.toolbar.Collection', {
       xtype:      'numberfield',
     }, ' ',{
       xtype:    'numberfield',
-      minValue:   0,
+      minValue:   1,
       value:      25,
       width:      20,
       labelWidth: 65,
@@ -130,8 +130,14 @@ Ext.define('Admin.Space.toolbar.Collection', {
       listeners: {
         buffer: 500,
         change(field, v) {
-          this.up('grid').store.setPageSize(v);
-          this.up('grid').store.loadPage(1);
+          if (!v) {
+            return this.setValue(1);
+          }
+          var store = this.up('grid').store;
+          if (store.pageSize != v) {
+            this.up('grid').store.setPageSize(v);
+            this.up('grid').store.loadPage(1);
+          }
           localStorage.setItem('admin-page-size', v);
         }
       }
