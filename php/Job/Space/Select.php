@@ -34,6 +34,16 @@ class Select extends Job
         } catch (Exception $e) {
         }
 
+        if (!json_encode($data)) {
+            foreach ($data as $i => $tuple) {
+                foreach ($tuple as $k => $v) {
+                    if (is_string($v) && !json_encode($v)) {
+                        $data[$i][$k] = '!!binary '.base64_encode($v);
+                    }
+                }
+            }
+        }
+
         return compact('data', 'total');
     }
 }
