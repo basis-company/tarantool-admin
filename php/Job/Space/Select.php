@@ -22,6 +22,8 @@ class Select extends Job
             $key[] = $value;
         }
 
+        $data = null;
+
         try {
             $data = $this->getMapper()->getClient()->getSpace($this->space)
                 ->select($key, $this->index, $this->limit, $this->offset, $this->iterator)
@@ -32,6 +34,9 @@ class Select extends Job
                 ->getData()[0];
 
         } catch (Exception $e) {
+            if (!$data) {
+                throw $e;
+            }
         }
 
         if (!json_encode($data)) {
