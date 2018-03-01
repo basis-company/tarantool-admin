@@ -22,6 +22,7 @@ Ext.define('Admin.Space.Info', {
     dispatch('space.info', this.up('space-tab').params)
       .then(result => {
         result.indexes.forEach(i => delete(i.id));
+        this.down('space-format').store.loadData([]);
         if(!result.fake) {
           result.format.forEach((r, i) => r.index = i);
           this.down('space-format').store.loadData(result.format);
