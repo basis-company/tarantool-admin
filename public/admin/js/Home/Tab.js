@@ -78,7 +78,7 @@ Ext.define('Admin.Home.Tab', {
     grid.store.loadData([]);
 
     var connections = Ext.JSON.decode(localStorage.getItem('connections')) || [];
-    return dispatch('admin.connections')
+    return dispatch('admin.configuration')
       .then(result => {
         if(result.readOnly) {
           this.down('home-new').hide();

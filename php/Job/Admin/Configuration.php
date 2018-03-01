@@ -2,7 +2,7 @@
 
 namespace Job\Admin;
 
-class Connections
+class Configuration
 {
     public function run()
     {
