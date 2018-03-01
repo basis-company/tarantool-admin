@@ -9,6 +9,7 @@ Ext.define('Admin.Database.Tab', {
 
   requires: [
     'Admin.Database.Info',
+    'Admin.Database.Query',
     'Admin.Database.Spaces',
   ],
 
@@ -43,6 +44,8 @@ Ext.define('Admin.Database.Tab', {
 
   items: [{
     xtype: 'database-info'
+  }, {
+    xtype: 'database-query'
   }, {
     xtype: 'database-spaces'
   }]
