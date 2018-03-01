@@ -35,94 +35,15 @@ Ext.define('Admin.Space.Indexes', {
     text: 'Add',
     iconCls: 'fa fa-plus-circle',
     handler() {
-      var indexes = this.up('space-indexes');
-      var win = Ext.create('Ext.window.Window', {
-        modal: true,
-        title: 'New index',
-        items: [{
-          xtype: 'form',
-          bodyPadding: 10,
-          defaults: {
-            width: 300,
-            fieldLabel: 80,
-          },
-          items: [{
-            fieldLabel: 'Fields',
-            xtype: 'tagfield',
-            displayField: 'name',
-            name: 'fields',
-            valueField: 'index',
-            store: {
-              fields: ['index', 'name'],
-              data: this.up('space-info').down('space-format').store.getRange().map((r, index) => {
-                return {
-                  index: index,
-                  name: r.get('name')
-                };
-              })
-            },
-            listeners: {
-              select() {
-                var nameField = win.down('[name=name]');
-                var fieldsField = win.down('[name=fields]');
-                var format = indexes.up('space-info').down('space-format').store;
-                if(!nameField.edited) {
-                  var name = fieldsField.value.map(i => format.getAt(i).get('name')).join('_');
-                  nameField.setValue(name);
-                }
-              }
-            }
-          }, {
-            fieldLabel: 'Name',
-            xtype: 'textfield',
-            allowBlank: false,
-            name: 'name'
-          }, {
-
-            fieldLabel: 'Type',
-            value: 'TREE',
-            name: 'type',
-
-            xtype: 'combobox',
-            editable: false,
-            queryMode: 'local',
-            displayField: 'type',
-            valueField: 'type',
-            store: {
-              xtype: 'arraystore',
-              fields: ['type'],
-              data: ['tree', 'hash', 'bitset', 'rtree'].map(v => [v])
-            }
-          }, {
-            xtype: 'checkboxfield',
-            boxLabel: 'Unique index',
-            checked: true,
-            fieldLabel: '',
-            name: 'unique',
-          }],
-          bbar: ['->', {
-            formBind: true,
-            text: 'Create',
-            handler: () => {
-              var values = win.down('form').getValues();
-              var params = Ext.apply({
-                name: values.name,
-                fields: values.fields,
-                type: values.type,
-                unique: !!values.unique,
-              }, this.up('space-tab').params);
-
-              dispatch('space.createIndex', params)
-                .then(() => {
-                  win.close();
-                  this.up('space-info').reloadInfo();
-                });
-            }
-          }]
-        }]
-      })
-      win.show();
-      win.down('textfield').focus();
+      if (!this.up('space-info').down('space-format').store.getRange().length) {
+        return Ext.MessageBox.confirm("Error", "No format is defined!<br/>Do you want to continue?", (btn) => {
+          if (btn == 'yes') {
+            this.up('space-indexes').createNewIndex();
+          }
+        });
+      } else {
+        this.up('space-indexes').createNewIndex();
+      }
     }
   }, {
     text: 'Search',
@@ -209,5 +130,115 @@ Ext.define('Admin.Space.Indexes', {
       }
       return v.map(info => format.getAt(info[0]).get('name')).join(', ');
     }
-  }]
+  }],
+
+  createNewIndex() {
+    var indexes = this;
+    var fields = this.up('space-info').down('space-format').store.getRange();
+    var win = Ext.create('Ext.window.Window', {
+      modal: true,
+      title: 'New index',
+      items: [{
+        xtype: 'form',
+        bodyPadding: 10,
+        defaults: {
+          width: 300,
+          fieldLabel: 80,
+        },
+        items: [{
+          fieldLabel: 'Fields',
+          xtype: 'tagfield',
+          displayField: 'name',
+          name: 'fields',
+          valueField: 'index',
+          hidden: !fields.length,
+          store: {
+            fields: ['index', 'name'],
+            data: fields.map((r, index) => {
+              return {
+                index: index,
+                name: r.get('name')
+              };
+            })
+          },
+          listeners: {
+            select() {
+              var nameField = win.down('[name=name]');
+              var fieldsField = win.down('[name=fields]');
+              var format = indexes.up('space-info').down('space-format').store;
+              if(!nameField.edited) {
+                var name = fieldsField.value.map(i => format.getAt(i).get('name')).join('_');
+                nameField.setValue(name);
+              }
+            }
+          }
+        }, {
+          fieldLabel: 'Name',
+          xtype: 'textfield',
+          allowBlank: false,
+          name: 'name'
+        }, {
+          fieldLabel: 'Parts',
+          xtype: 'textfield',
+          name: 'parts',
+          hidden: fields.length > 0,
+          emptyText: '[[1, \'unsigned\'], [5, \'string\']]',
+        }, {
+          fieldLabel: 'Type',
+          value: 'TREE',
+          name: 'type',
+          xtype: 'combobox',
+          editable: false,
+          queryMode: 'local',
+          displayField: 'type',
+          valueField: 'type',
+          store: {
+            xtype: 'arraystore',
+            fields: ['type'],
+            data: ['tree', 'hash', 'bitset', 'rtree'].map(v => [v])
+          }
+        }, {
+          xtype: 'checkboxfield',
+          boxLabel: 'Unique index',
+          checked: true,
+          fieldLabel: '',
+          name: 'unique',
+        }],
+        bbar: ['->', {
+          formBind: true,
+          text: 'Create',
+          handler: () => {
+            var values = win.down('form').getValues();
+            var params = Ext.apply({
+              name: values.name,
+              fields: values.fields,
+              type: values.type,
+              parts: values.parts,
+              unique: !!values.unique,
+            }, this.up('space-tab').params);
+
+            if (!params.fields && params.parts) {
+              try {
+                params.parts = Ext.JSON.decode(params.parts)
+              } catch (e) {
+                return Ext.MessageBox.alert('Error!', "Invalid parts!<br/>" + e.message);
+              }
+            }
+
+            if (!params.parts && !params.fields) {
+              return Ext.MessageBox.alert("Error!", "No fields defined in index");
+            }
+
+            dispatch('space.createIndex', params)
+              .then(() => {
+                win.close();
+                this.up('space-info').reloadInfo();
+              });
+          }
+        }]
+      }]
+    })
+    win.show();
+    win.down('textfield').focus();
+  }
 });
