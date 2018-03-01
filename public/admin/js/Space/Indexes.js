@@ -3,7 +3,7 @@ Ext.define('Admin.Space.Indexes', {
   extend: 'Ext.grid.Panel',
 
   title: 'Indexes',
-  flex: 1,
+  flex: 2,
 
   statics: {
     iterators: ['EQ', 'REQ', 'ALL', 'LT', 'LE', 'GE', 'GT', 'BITS_ALL_SET', 'BITS_ANY_SET', 'BITS_ALL_NOT_SET', 'OVERLAPS', 'NEIGHBOR'],

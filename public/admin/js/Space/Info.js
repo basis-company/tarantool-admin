@@ -27,7 +27,7 @@ Ext.define('Admin.Space.Info', {
           result.format.forEach((r, i) => r.index = i);
           this.down('space-format').store.loadData(result.format);
           var hasReferences = result.format.filter(f => !!f.reference).length;
-          this.down('space-format').getColumns()[4].setHidden(!hasReferences);
+          this.down('space-format').getColumns()[5].setHidden(!hasReferences);
           this.down('space-format').setWidth(hasReferences ? 380 : 300);
         }
         this.down('space-indexes').store.loadData(result.indexes);

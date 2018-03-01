@@ -3,10 +3,10 @@ Ext.define('Admin.Space.Format', {
   extend: 'Ext.grid.Panel',
 
   title: 'Format',
-  width: 300,
+  flex: 1,
 
   store: {
-    fields: ['index', 'name', 'type'],
+    fields: ['index', 'name', 'type', 'is_nullable'],
   },
 
   listeners: {
@@ -47,6 +47,11 @@ Ext.define('Admin.Space.Format', {
               fields: ['type'],
               data: ['unsigned', 'str', 'boolean', '*'].map(v => [v])
             }
+          }, {
+            xtype: 'checkboxfield',
+            fieldLabel: 'Is nullable',
+            checked: true,
+            name: 'is_nullable',
           }],
           bbar: ['->', {
             formBind: true,
@@ -56,6 +61,7 @@ Ext.define('Admin.Space.Format', {
               var params = Ext.apply({
                 name: values.name,
                 type: values.type,
+                is_nullable: !!values.is_nullable,
               }, this.up('space-tab').params);
 
               dispatch('space.addProperty', params)
@@ -103,12 +109,20 @@ Ext.define('Admin.Space.Format', {
     renderer: v => v + 1,
   },{
     header: 'Name',
-    width: 150,
-    dataIndex: 'name'
+    dataIndex: 'name',
+    flex: 1,
   }, {
     header: 'Type',
     dataIndex: 'type',
-    flex: 1
+    width: 80,
+  }, {
+    header: 'Nullable',
+    dataIndex: 'is_nullable',
+    width: 80,
+    align: 'center',
+    renderer(v, e, r) {
+      return v ? '<span class="fa fa-check" style="font-size:14px;"></span>' : '-';
+    }
   }, {
     header: 'Reference',
     dataIndex: 'reference',

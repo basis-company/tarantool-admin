@@ -8,6 +8,7 @@ class AddProperty extends Job
 {
     public $name;
     public $type;
+    public $is_nullable;
 
     public function run()
     {
@@ -17,6 +18,6 @@ class AddProperty extends Job
             throw new Exception("Property $this->name exists");
         }
 
-        $space->addProperty($this->name, $this->type);
+        $space->addProperty($this->name, $this->type, $this->is_nullable);
     }
 }
