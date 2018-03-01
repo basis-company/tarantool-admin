@@ -13,6 +13,7 @@ Application can be configured via environment:
 * TARANTOOL_TCP_NODELAY - disable Nagle TCP algorithm
 * TARANTOOL_CONNECTIONS - comma-separated connection strings
 * TARANTOOL_CONNECTIONS_READONLY - disable connections editor
+* TARANTOOL_DATABASE_QUERY - enable Query database tab
 
 ## You can build and run docker image yourself.
 * Clone repository: `git clone https://github.com/basis-company/tarantool-admin.git`

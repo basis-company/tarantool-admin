@@ -85,6 +85,9 @@ Ext.define('Admin.Home.Tab', {
               grid.down('[name=remove-button]').hide();
               grid.down('[name=remove-all]').hide();
         }
+        Ext.require('Admin.Database.Tab', function() {
+          Admin.Database.Tab.prototype.items[1].hidden = !result.query;
+        });
         if (Ext.isArray(result.connections) && result.connections[0].length) {
           connections = Ext.Array.unique(connections.concat(result.connections));
         }
