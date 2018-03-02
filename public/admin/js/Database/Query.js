@@ -14,7 +14,6 @@ Ext.define('Admin.Database.Query', {
     single: true,
     afterlayout() {
       this.down('textarea').focus();
-      this.down('[text=Execute]').handler();
     },
   },
 
