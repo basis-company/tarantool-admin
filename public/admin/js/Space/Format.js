@@ -50,7 +50,7 @@ Ext.define('Admin.Space.Format', {
           }, {
             xtype: 'checkboxfield',
             fieldLabel: 'Is nullable',
-            checked: true,
+            checked: false,
             name: 'is_nullable',
           }],
           bbar: ['->', {
