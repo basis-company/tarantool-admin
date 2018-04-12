@@ -16,7 +16,9 @@ Ext.define('Admin.Home.Tab', {
 
   listeners: {
     activate: function() {
-      this.down('[name=hostname]').focus();
+      if (this.down('[name=hostname]')) {
+        this.down('[name=hostname]').focus();
+      }
     },
     render: function() {
       this.refreshConnections()
