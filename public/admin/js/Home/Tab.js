@@ -26,7 +26,8 @@ Ext.define('Admin.Home.Tab', {
           var connections = this.down('home-connections');
           var counter = connections.store.getCount();
           if(counter == 1) {
-            this.showDatabase(connections.store.getAt(0).data);
+            var connection = connections.store.getAt(0).data;
+            setTimeout(() => this.showDatabase(connection), 100);
           } else if (counter > 1) {
             this.down('filter-field').focus();
           }
