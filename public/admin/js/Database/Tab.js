@@ -16,7 +16,7 @@ Ext.define('Admin.Database.Tab', {
   listeners: {
     tabchange(tabs, tab) {
       var tabIndex = tabs.items.indexOf(tab);
-      if(tabIndex == 0 || tabIndex == 1) {
+      if (tab.xtypesChain.indexOf('admin-space-collection') === -1) {
         localStorage.setItem('database-default-item', tabIndex);
       }
     }
