@@ -38,6 +38,10 @@ Ext.define('Admin.Database.Tab', {
 
     this.activeTab = +localStorage.getItem('database-default-item') || 0;
 
+    if (this.activeTab > this.items.length) {
+      this.activeTab = 0;
+    }
+
     this.callParent(arguments);
 
   },
