@@ -42,6 +42,10 @@ Ext.define('Admin.Database.Tab', {
       this.activeTab = 0;
     }
 
+    if (this.activeTab == 1 && Admin.Database.Tab.prototype.items[1].hidden) {
+      this.activeTab = 0;
+    }
+
     this.callParent(arguments);
 
   },
