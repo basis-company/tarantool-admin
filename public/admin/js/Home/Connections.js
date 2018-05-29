@@ -41,8 +41,12 @@ Ext.define('Admin.Home.Connections', {
     iconCls: 'fa fa-trash',
     disabled: true,
     handler() {
-      var connection = this.up('grid').getSelectionModel().getSelection()[0].data;
-      this.up('home-tab').removeConnection(connection);
+      Ext.MessageBox.confirm('Confirmation', 'Are you sure want to remove selected connection?<br/>This operation has no rollback!', (btn) => {
+        if (btn == 'yes') {
+          var connection = this.up('grid').getSelectionModel().getSelection()[0].data;
+          this.up('home-tab').removeConnection(connection);
+        }
+      });
     }
 
   }, {
@@ -50,6 +54,12 @@ Ext.define('Admin.Home.Connections', {
     name: 'remove-all',
     iconCls: 'fa fa-ban',
     handler() {
+      Ext.MessageBox.confirm('Confirmation', 'Are you sure want to remove all connections?<br/>This operation has no rollback!', (btn) => {
+        if (btn == 'yes') {
+          var connection = this.up('grid').getSelectionModel().getSelection()[0].data;
+          this.up('home-tab').removeConnection(connection);
+        }
+      });
       this.up('home-tab').clearConnections();
     }
   }],
