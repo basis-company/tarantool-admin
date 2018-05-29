@@ -189,7 +189,8 @@ Ext.define('Admin.Space.Collection', {
         xtype: 'textfield',
         labelAlign: 'right',
         fieldLabel: field.name,
-        allowBlank: !Ext.Array.contains(required, id)
+        allowBlank: !Ext.Array.contains(required, id),
+        flex: 1,
       };
       if(field.type == '*') {
         complexTypes.push(field.name);
@@ -230,11 +231,17 @@ Ext.define('Admin.Space.Collection', {
     itemsPerColumn = Math.ceil(itemsPerColumn);
 
     var columns = [];
-    if(columnsCount > 0) {
+    if(columnsCount > 1) {
       var i;
       for(i = 0; i < columnsCount; i++) {
         columns.push({
           border: false,
+          flex: 1,
+          columnWidth: .5,
+          layout: {
+            type: 'vbox',
+            align: 'stretch'
+          },
           items: Ext.Array.slice(items, i*itemsPerColumn, (i+1) * itemsPerColumn)
         });
       }
@@ -243,11 +250,15 @@ Ext.define('Admin.Space.Collection', {
     var win = Ext.create('Ext.window.Window', {
       title: !entity ? 'New ' + this.params.space : 'Update ' + this.params.space + ' ' + id,
       modal: true,
+      layout: 'fit',
       items: [{
         xtype: 'form',
-        layout: 'column',
+        layout: columns.length > 1 ? 'column' : {
+          type: 'vbox',
+          align: 'stretch'
+        },
         bodyPadding: 10,
-        items: columns.length > 0 ? columns : items,
+        items: columns.length > 1 ? columns : items,
         bbar: ['->', {
           text: !entity ? 'Create' : 'Update',
           formBind: true,
