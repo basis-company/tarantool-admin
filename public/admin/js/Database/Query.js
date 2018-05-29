@@ -74,7 +74,40 @@ Ext.define('Admin.Database.Query', {
               data: element,
             };
           } else {
-            item.html = Ext.JSON.encode(element);
+            var getChildren = function(object) {
+              return Ext.Object.getKeys(object).sort().map(key => {
+                var node = {
+                  key: key,
+                  value: object[key]
+                };
+                if (Ext.isObject(node.value)) {
+                  node.children = getChildren(node.value)
+                  node.value = '...';
+                } else {
+                  node.leaf = true;
+                }
+                return node;
+              })
+            };
+            Ext.apply(item, {
+              xtype: 'treepanel',
+              rootVisible: false,
+              root: {
+                text: 'root',
+                expanded: true,
+                children: getChildren(element)
+              },
+              columns: [{
+                text: 'Key',
+                dataIndex: 'key',
+                width: 200,
+                xtype: 'treecolumn',
+              }, {
+                text: 'Value',
+                flex: 1,
+                dataIndex: 'value',
+              }],
+            })
           }
           return item;
         })
