@@ -18,6 +18,7 @@
           total: response.total,
           count: (response.data || []).length,
           records: (response.data || []).map(row => {
+            Ext.Array.insert(row, 0, [Ext.id()]);
             return operation._scope.model.create(row);
           }),
         });

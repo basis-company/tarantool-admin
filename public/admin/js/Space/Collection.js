@@ -103,7 +103,7 @@ Ext.define('Admin.Space.Collection', {
             var store = Ext.create('Ext.data.ArrayStore', {
               model: Ext.define(null, {
                 extend: 'Ext.data.Model',
-                fields: fields,
+                fields: ['_'].concat(fields),
                 idProperty: '_'
               }),
               proxy: 'pagingdispatch',
