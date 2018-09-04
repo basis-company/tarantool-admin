@@ -43,10 +43,14 @@ Ext.define('Admin.Database.Query', {
       var returns = script.split('return ')[1].split(',').map(v => v.trim());
       this.removeAll();
       this.add(Ext.create('Ext.tab.Panel', {
+        bbar: ['->', {
+          text: 'Query execution time: ' + Ext.util.Format.number(result.timing, "0.0") + ' ms',
+          xtype: 'label',
+        }],
         layout: 'fit',
-        items: result.map((element, i) => {
+        items: result.result.map((element, i) => {
           var item = {
-            title: returns.length == result.length ? returns[i] : i+1,
+            title: returns.length == result.result.length ? returns[i] : i+1,
             layout: 'fit',
           };
           if (Ext.isArray(element) && Ext.isArray(element[0]) && !Ext.isArray(element[0][0])) {
@@ -123,7 +127,7 @@ Ext.define('Admin.Database.Query', {
         var script = this.up('database-query').down('textarea').getValue();
         dispatch('database.execute', Ext.apply({code: script}, this.up('database-tab').params))
           .then(result => {
-            this.up('database-query').down('[name=result]').showResult(script, result.result);
+            this.up('database-query').down('[name=result]').showResult(script, result);
           });
       },
     }],
