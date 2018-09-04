@@ -11,8 +11,8 @@ class Spaces extends Job
         $mapper = $this->getMapper();
 
         $spaces = [];
-        foreach($mapper->find('_vspace') as $space) {
-            if($space->engine != 'sysview') {
+        foreach ($mapper->find('_vspace') as $space) {
+            if (!in_array($space->engine, ['sysview', 'blackhole', 'vinyl'])) {
                 $space->count = $mapper->getClient()->evaluate("return box.space.$space->name:count()")->getData()[0];
             }
             try {
