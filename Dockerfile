@@ -2,7 +2,7 @@ FROM php:apache
 
 WORKDIR /var/www/html
 
-RUN apt-get update && apt-get install -y git wget zip zlib1g-dev \
+RUN apt-get update && apt-get install -y git wget zip zlib1g-dev libzip-dev \
 && docker-php-ext-install zip \
 && docker-php-ext-install opcache \
 && curl -sS https://getcomposer.org/installer | php \
