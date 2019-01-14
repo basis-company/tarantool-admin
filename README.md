@@ -20,6 +20,7 @@ Application can be configured via environment:
 * Change current directory: `cd tarantool-admin`
 * Build and run `docker-compose up`
 * Open [http://localhost:8000](http://localhost:8000) in your browser.
+* If you need database, add tarantool instance to docker-compose file.
 
 ## Youtube demo
 Short demo of web ui is available on youtube:
