@@ -1,5 +1,5 @@
 # Tarantool admin
-This application can be used to manage schema and data in tarantool database.
+This application can be used to manage schema and data in tarantool database using web gui.  
 Feel free to contribute any way.
 
 ## Running existing build [![Docker Repository on Quay](https://quay.io/repository/basis-company/tarantool-admin/status "Docker Repository on Quay")](https://quay.io/repository/basis-company/tarantool-admin)
@@ -23,6 +23,6 @@ Application can be configured via environment:
 * If you need database, add tarantool instance to docker-compose file.
 
 ## Youtube demo
-Short demo of web ui is available on youtube:
+Short demo of ui is available on youtube:
 
 <a href="https://www.youtube.com/watch?v=ApPbFvcozPE" target="_blank"><img src="http://img.youtube.com/vi/ApPbFvcozPE/0.jpg" alt="Short demo" width="240" height="180" border="10" /></a>
