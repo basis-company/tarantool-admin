@@ -22,6 +22,4 @@ RUN mkdir admin/downloads -p && chown www-data admin/downloads && chgrp www-data
 RUN php composer.phar dump-autoload -o
 RUN cp vendor/basis-company/framework/resources/default/.htaccess . \
 && cp vendor/basis-company/framework/resources/default/server.php . \
-&& cd /var/www/html/admin \
-&& ln -s ../client-libraries/ext-6.2.0 ext-6.2.0 \
-&& ln -s ../client-libraries/fontawesome-free-5.0.6 fontawesome-free-5.0.6
+&& cd /var/www/html/admin
