@@ -30,8 +30,9 @@ class Info extends Job
         foreach ($indexes as $i => $index) {
             $spaceName = $space->getName();
             $id = $index['iid'];
+            $name = $index['name'];
             try {
-                $indexes[$i]['size'] = $this->getClient()->evaluate("return box.space.$spaceName.index[$id]:bsize()")->getData()[0];
+                $indexes[$i]['size'] = $this->getClient()->call("box.space.$spaceName.index.$name:bsize")->getData()[0];
             } catch (Exception $e) {
                 // no bsize
                 break;

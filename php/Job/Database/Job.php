@@ -20,11 +20,10 @@ abstract class Job
 
     public function getClient()
     {
-        if(!$this->_client) {
-            if(!$this->hostname || !$this->port) {
+        if (!$this->_client) {
+            if (!$this->hostname || !$this->port) {
                 throw new Exception("Invalid params");
             }
-
 
             $connection = new StreamConnection('tcp://'.$this->hostname.':'.$this->port, [
                 'socket_timeout' => 30,
@@ -40,7 +39,7 @@ abstract class Job
 
     public function getMapper()
     {
-        if(!$this->_mapper) {
+        if (!$this->_mapper) {
             $this->_mapper = new Mapper($this->getClient());
         }
 

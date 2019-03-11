@@ -48,7 +48,7 @@ class Update extends Job
             $entity = $space->getRepository()->findOne($pk);
             foreach ($this->values as $k => $v) {
                 $entity->$k = $v;
-                if(is_object($v)) {
+                if (is_object($v)) {
                     $entity->$k = $converter->toArray($v);
                 }
             }

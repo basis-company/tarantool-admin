@@ -2,16 +2,27 @@
 
 namespace Job\Database;
 
+use Exception;
+
 class Info extends Job
 {
     public function run()
     {
-        $mapper = $this->getMapper();
+        $client = $this->getMapper()->getClient();
 
-        $info = $mapper->getClient()->evaluate('return box.info()')->getData()[0];
-        $stat = $mapper->getClient()->evaluate('return box.stat()')->getData()[0];
-        $slab = $mapper->getClient()->evaluate('return box.slab.info()')->getData()[0];
+        $stats = [
+            'info' => 'box.info',
+            'stat' => 'box.stat',
+            'slab' => 'box.slab.info',
+        ];
 
-        return compact('info', 'stat', 'slab');
+        $info = [];
+        foreach ($stats as $k => $function) {
+            try {
+                $info[$k] = $client->call($function)->getData()[0];
+            } catch (Exception $e) {}
+        }
+
+        return $info;
     }
 }

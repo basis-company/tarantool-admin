@@ -12,11 +12,11 @@ class Spaces extends Job
 
         $spaces = [];
         foreach ($mapper->find('_vspace') as $space) {
-            if (!in_array($space->engine, ['sysview', 'blackhole', 'vinyl'])) {
-                $space->count = $mapper->getClient()->evaluate("return box.space.$space->name:count()")->getData()[0];
-            }
             try {
-                $space->bsize = $mapper->getClient()->evaluate("return box.space.$space->name:bsize()")->getData()[0];
+                if (!in_array($space->engine, ['sysview', 'blackhole', 'vinyl'])) {
+                    $space->count = $mapper->getClient()->call("box.space.$space->name:count")->getData()[0];
+                }
+                $space->bsize = $mapper->getClient()->call("box.space.$space->name:bsize")->getData()[0];
             } catch (Exception $e) {
             }
             $spaces[] = $space;

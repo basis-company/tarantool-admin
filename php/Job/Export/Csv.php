@@ -33,7 +33,7 @@ class Csv extends Select
         $page = 0;
         $this->offset = 0;
 
-        while(!$page || count($data) < $total) {
+        while (!$page || count($data) < $total) {
 
             $result = parent::run();
 
@@ -48,7 +48,7 @@ class Csv extends Select
         }
 
         $fields = [];
-        foreach($this->getSpace()->getFormat() as $field) {
+        foreach ($this->getSpace()->getFormat() as $field) {
             $fields[] = $field['name'];
         }
 
@@ -58,13 +58,13 @@ class Csv extends Select
         $fs = $this->fs;
 
         $dir = $fs->getPath($folder);
-        if(!is_dir($dir)) {
+        if (!is_dir($dir)) {
             mkdir($dir);
 
         } else {
-            foreach($fs->listFiles($folder) as $file) {
+            foreach ($fs->listFiles($folder) as $file) {
                 $path = $fs->getPath($folder.'/'.$file);
-                if(filemtime($path) < time() - $this->keepFiles) {
+                if (filemtime($path) < time() - $this->keepFiles) {
                     unlink($path);
                 }
             }

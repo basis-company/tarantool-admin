@@ -12,7 +12,7 @@ class RemoveProperty extends Job
     {
         $space = $this->getSpace();
 
-        if(!$space->hasProperty($this->name)) {
+        if (!$space->hasProperty($this->name)) {
             throw new Exception("Property $this->name nnot exists");
         }
 
