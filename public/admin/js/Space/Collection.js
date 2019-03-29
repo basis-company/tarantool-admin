@@ -217,6 +217,9 @@ Ext.define('Admin.Space.Collection', {
         if(primary.indexOf(field.name) !== -1) {
           item.readOnly = true;
         }
+        if (item.xtype == 'numberfield' && item.value >= Math.pow(2, 32)) {
+          item.xtype = 'textfield';
+        }
       }
       return item;
     });

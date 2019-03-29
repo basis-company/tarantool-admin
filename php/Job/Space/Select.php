@@ -29,6 +29,14 @@ class Select extends Job
                 ->select($key, $this->index, $this->limit, $this->offset, $this->iterator)
                 ->getData();
 
+            foreach ($data as $x => $tuple) {
+                foreach ($tuple as $y => $value) {
+                    if (is_numeric($value) && $value > 2^32 -1) {
+                        $data[$x][$y] = (string) $value;
+                    }
+                }
+            }
+
             $total = $this->getMapper()->getClient()
                 ->evaluate("return box.space.$this->space.index[$this->index]:count(...)", [$key])
                 ->getData()[0];
