@@ -9,4 +9,7 @@ services:
       - "8000:80"
     volumes:
       - ./src:/var/www/html/src
-      - ./public/admin:/var/www/html/admin
+      - ./public/admin/js:/var/www/html/admin/js
+      - ./public/admin/index.php:/var/www/html/admin/index.php
+      - ./public/admin/style.css:/var/www/html/admin/style.css
+
