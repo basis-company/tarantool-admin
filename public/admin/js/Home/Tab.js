@@ -39,6 +39,7 @@ Ext.define('Admin.Home.Tab', {
   showDatabase(params) {
     var params = {
       hostname: params.hostname,
+      socket: params.socket,
       port: params.port,
       username: params.username,
       password: params.password,
@@ -154,6 +155,16 @@ Ext.define('Admin.Home.Tab', {
 
     var hostport = connection;
     var userpass = null;
+
+    if (connection.indexOf('unix://') === 0) {
+      var socket = connection;
+      if (connection.indexOf('@') !== -1) {
+        socket = connection.split('@')[1];
+        let auth = connection.split('@')[0].split('unix://')[1];
+        [username, password] = auth.split(':');
+      }
+      return { socket, username, password };
+    }
 
     if (connection.indexOf('@') !== -1) {
       [userpass, hostport] = connection.split('@');

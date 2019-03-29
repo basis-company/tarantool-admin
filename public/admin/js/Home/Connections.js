@@ -68,6 +68,9 @@ Ext.define('Admin.Home.Connections', {
     header: 'Hostname',
     align: 'center',
     width: 150,
+    renderer(v, e, r) {
+      return v || r.get('socket');
+    }
   }, {
     header: 'Port',
     dataIndex: 'port',

@@ -10,6 +10,8 @@ use Tarantool\Client\Packer\PurePacker;
 
 abstract class Job
 {
+    public $socket;
+
     public $hostname;
     public $port;
     public $username;
@@ -22,10 +24,13 @@ abstract class Job
     {
         if (!$this->_client) {
             if (!$this->hostname || !$this->port) {
-                throw new Exception("Invalid params");
+                if (!$this->socket) {
+                    throw new Exception("Invalid params");
+                }
             }
 
-            $connection = new StreamConnection('tcp://'.$this->hostname.':'.$this->port, [
+            $socket = $this->socket ?: 'tcp://'.$this->hostname.':'.$this->port;
+            $connection = new StreamConnection($socket, [
                 'socket_timeout' => 30,
                 'connect_timeout' => 30
             ]);

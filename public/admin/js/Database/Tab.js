@@ -27,13 +27,18 @@ Ext.define('Admin.Database.Tab', {
     var params = this.params;
 
     this.title = '';
-    if(params.username != 'guest') {
+
+    if (params.username != 'guest') {
       this.title += params.username + ' @ ';
     }
-    this.title += params.hostname;
 
-    if(params.port != 3301) {
-      this.title += ' : ' + params.port;
+    if (params.socket) {
+      this.title += params.socket;
+    } else {
+      this.title += params.hostname;
+      if (params.port != 3301) {
+        this.title += ' : ' + params.port;
+      }
     }
 
     this.activeTab = +localStorage.getItem('database-default-item') || 0;
@@ -47,7 +52,6 @@ Ext.define('Admin.Database.Tab', {
     }
 
     this.callParent(arguments);
-
   },
 
   items: [{
