@@ -12,6 +12,7 @@ Ext.define('Admin.Home.Tab', {
   requires: [
     'Admin.Home.New',
     'Admin.Home.Connections',
+    'Admin.Database.Tab',
   ],
 
   listeners: {
