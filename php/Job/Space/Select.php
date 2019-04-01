@@ -23,6 +23,7 @@ class Select extends Job
         }
 
         $data = null;
+        $total = 0;
 
         try {
             $data = $this->getMapper()->getClient()->getSpace($this->space)
