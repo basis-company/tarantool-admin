@@ -3,6 +3,7 @@
 namespace Job\Space;
 
 use Exception;
+use Tarantool\Client\Schema\Criteria;
 
 class Select extends Job
 {
@@ -26,9 +27,20 @@ class Select extends Job
         $total = 0;
 
         try {
+            $criteria = Criteria::index($this->index)->andLimit($this->limit)->andOffset($this->offset);
+            if (count($key)) {
+                $criteria = $criteria->andKey($key);
+            }
+            $iterators = [
+                'Eq', 'Req', 'All', 'Lt', 'Le', 'Ge', 'Gt',
+                'BitsAllSet', 'BitsAnySet', 'BitsAllNotSet',
+                'Overlaps', 'Neighbour',
+            ];
+            $iteratorMethod = 'and'.$iterators[$this->iterator].'Iterator';
+            $criteria = $criteria->$iteratorMethod();
+
             $data = $this->getMapper()->getClient()->getSpace($this->space)
-                ->select($key, $this->index, $this->limit, $this->offset, $this->iterator)
-                ->getData();
+                ->select($criteria);
 
             foreach ($data as $x => $tuple) {
                 foreach ($tuple as $y => $value) {
@@ -39,8 +51,7 @@ class Select extends Job
             }
 
             $total = $this->getMapper()->getClient()
-                ->evaluate("return box.space.$this->space.index[$this->index]:count(...)", [$key])
-                ->getData()[0];
+                ->evaluate("return box.space.$this->space.index[$this->index]:count(...)", $key)[0];
 
         } catch (Exception $e) {
             if (!$data) {

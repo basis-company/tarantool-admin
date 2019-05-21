@@ -19,7 +19,7 @@ class Info extends Job
         $info = [];
         foreach ($stats as $k => $function) {
             try {
-                $info[$k] = $client->call($function)->getData()[0];
+                $info[$k] = $client->call($function)[0];
             } catch (Exception $e) {}
         }
 

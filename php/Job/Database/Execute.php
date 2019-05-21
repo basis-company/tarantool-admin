@@ -15,7 +15,7 @@ class Execute extends Job
         }
 
         $this->getMapper()->getClient()->setLogging(true);
-        $result =$this->getMapper()->getClient()->evaluate($this->code)->getData();
+        $result =$this->getMapper()->getClient()->evaluate($this->code);
         $event = array_reverse($this->getMapper()->getClient()->getLog())[0];
 
         return [

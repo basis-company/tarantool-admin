@@ -3,10 +3,9 @@
 namespace Job\Database;
 
 use Exception;
-use Tarantool\Mapper\Client;
+use Tarantool\Client\Client;
+use Tarantool\Client\Middleware\AuthMiddleware;
 use Tarantool\Mapper\Mapper;
-use Tarantool\Client\Connection\StreamConnection;
-use Tarantool\Client\Packer\PurePacker;
 
 abstract class Job
 {
@@ -29,14 +28,10 @@ abstract class Job
                 }
             }
 
-            $socket = $this->socket ?: 'tcp://'.$this->hostname.':'.$this->port;
-            $connection = new StreamConnection($socket, [
-                'socket_timeout' => 30,
-                'connect_timeout' => 30
-            ]);
-
-            $this->_client = new Client($connection, new PurePacker());
-            $this->_client->authenticate($this->username ?: 'guest', $this->password);
+            $dsn = $this->socket ?: 'tcp://'.$this->hostname.':'.$this->port;
+            $this->_client = Client::fromDsn($dsn)->withMiddleware(
+                new AuthMiddleware($this->username ?: 'guest', $this->password),
+            );
         }
 
         return $this->_client;
