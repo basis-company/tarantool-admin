@@ -14,13 +14,13 @@ class Execute extends Job
             throw new Exception("Error Processing Request");
         }
 
-        $this->getMapper()->getClient()->setLogging(true);
-        $result =$this->getMapper()->getClient()->evaluate($this->code);
-        $event = array_reverse($this->getMapper()->getClient()->getLog())[0];
+        $start = microtime(true);
+        $result = $this->getMapper()->getClient()->evaluate($this->code);
+
 
         return [
             'result' => $result,
-            'timing' => $event[0]*1000,
+            'timing' => microtime(true) - $start,
         ];
     }
 }
