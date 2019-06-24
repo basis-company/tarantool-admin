@@ -11,6 +11,6 @@ class Drop extends Job
             throw new Exception('Disabled for system spaces');
         }
 
-        $this->getClient()->evaluate('box.space.'.$space->getName().':drop()');
+        $this->getClient()->call('box.space.'.$space->getName().':drop');
     }
 }

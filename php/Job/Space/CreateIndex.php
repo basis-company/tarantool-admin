@@ -23,7 +23,7 @@ class CreateIndex extends Job
                 'unique' => $this->unique,
                 'parts' => $this->parts,
             ];
-            $space->getMapper()->getClient()->evaluate("box.space[$spaceId]:create_index('$this->name', ...)", [$options]);
+            $space->getMapper()->getClient()->call("box.space[$spaceId]:create_index", $this->name, [$options]);
 
         } elseif (is_array($this->fields)) {
             $format = $space->getFormat();
