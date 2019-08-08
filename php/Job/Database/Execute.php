@@ -17,6 +17,13 @@ class Execute extends Job
         $start = microtime(true);
         $result = $this->getMapper()->getClient()->evaluate($this->code);
 
+        foreach ($result as $k => $v) {
+            if (!is_array($v)) {
+                $result[$k] = [
+                    'scalar' => $v
+                ];
+            }
+        }
 
         return [
             'result' => $result,
