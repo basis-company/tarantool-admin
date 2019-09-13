@@ -40,7 +40,7 @@ Ext.define('Admin.Database.Query', {
     layout: 'fit',
     name: 'result',
     showResult(script, result) {
-      var returns = script.split('return ')[1].split(',').map(v => v.trim());
+      var returns = (script.split('return ')[1] || '').split(',').map(v => v.trim());
       this.removeAll();
       this.add(Ext.create('Ext.tab.Panel', {
         bbar: ['->', {
