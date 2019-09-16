@@ -147,10 +147,10 @@ Ext.define('Admin.Space.Collection', {
                 header: f,
                 width: +config[i+1] || 50,
                 renderer: (v) => {
-                  if(Ext.isObject(v) || (Ext.isArray(v) && v[0])) {
+                  if (Ext.isObject(v) || (Ext.isArray(v) && v[0])) {
                     v = Ext.JSON.encode(v);
                   }
-                  if (v.indexOf('<') !== -1) {
+                  if (Ext.isString(v) && v.indexOf('<') !== -1) {
                     v = Ext.String.htmlEncode(v);
                   }
                   return v;
