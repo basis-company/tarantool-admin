@@ -26,3 +26,4 @@ Application can be configured via environment:
 Short demo of ui is available on youtube:
 
 <a href="https://www.youtube.com/watch?v=ApPbFvcozPE" target="_blank"><img src="http://img.youtube.com/vi/ApPbFvcozPE/0.jpg" alt="Short demo" width="240" height="180" border="10" /></a>
+<a href="https://www.youtube.com/watch?v=ApPbFvcozPE" target="_blank"><img src="http://img.youtube.com/vi/ApPbFvcozPE/0.jpg" alt="Short demo" width="240" height="180" border="10" /></a>
