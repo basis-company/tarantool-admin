@@ -6,6 +6,7 @@ Feel free to contribute any way.
 Run `docker run -p 8000:80 quay.io/basis-company/tarantool-admin`
 
 Run `docker run -p 8000:80 quay.io/feriest/tarantool-admin`
+
 Open [http://localhost:8000](http://localhost:8000) in your browser.
 
 ## Configure using env
