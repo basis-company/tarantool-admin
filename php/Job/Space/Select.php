@@ -50,8 +50,15 @@ class Select extends Job
                 }
             }
 
-            $total = $this->getMapper()->getClient()
-                ->evaluate("return box.space['$this->space'].index[$this->index]:count(...)", $key)[0];
+            $indexes = $this->getMapper()->getSchema()->getSpace($this->space)->getIndexes();
+            $indexName = $indexes[$this->index]['name'];
+
+            try {
+                [$total] = $this->getMapper()->getClient()
+                    ->call("box.space.$this->space.index.$indexName:count", $key);
+            } catch (Exception $e) {
+                // ignore total calculation exception
+            }
 
         } catch (Exception $e) {
             if (!$data) {
