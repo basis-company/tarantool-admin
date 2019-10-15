@@ -102,6 +102,24 @@ Ext.define('Admin.Home.Tab', {
         } else {
           grid.show();
           grid.store.loadData(connections.map(string => this.parseConnectionString(string)));
+          debugger;
+          grid.store.data.items.forEach(row => {
+            dispatch('database.info', row.data)
+              .then(res => {
+                if (this.destroyed) {
+                  return;
+                }
+
+                if (res.slab) {
+                  row.set({
+                    quota: res.slab.quota_size ? res.slab.quota_used / res.slab.quota_size : 0,
+                    items: res.slab.items_size ? res.slab.items_used / res.slab.items_size : 0,
+                    arena: res.slab.arena_size ? res.slab.arena_used / res.slab.arena_size : 0,
+                  });
+                }
+                row.commit();
+              });
+          });
         }
       });
   },

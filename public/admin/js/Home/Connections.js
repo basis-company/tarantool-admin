@@ -91,6 +91,36 @@ Ext.define('Admin.Home.Connections', {
       }
       return v;
     }
+  },{
+    dataIndex: 'quota',
+    header: 'quota, %',
+    align: 'right',
+    renderer(v, el) {
+      if (v > 0.9) {
+        el.style = 'color: #CC1122';
+      }
+      return v ? (v*100).toFixed(2) : '-';
+    }
+  },{
+    dataIndex: 'items',
+    header: 'items, %',
+    align: 'right',
+    renderer(v, el) {
+      if (v > 0.9) {
+        el.style = 'color: #FF1122';
+      }
+      return v ? (v*100).toFixed(2) : '-';
+    }
+  },{
+    dataIndex: 'arena',
+    header: 'arena, %',
+    align: 'right',
+    renderer(v, el) {
+      if (v > 0.9) {
+        el.style = 'color: #FF1122';
+      }
+      return v ? (v*100).toFixed(2) : '-';
+    }
   }]
 
 });
