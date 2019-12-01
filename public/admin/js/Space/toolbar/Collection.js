@@ -168,7 +168,15 @@ Ext.define('Admin.Space.toolbar.Collection', {
       listeners: {
         buffer: 500,
         keyup(field) {
-          this.up('grid').store.loadPage(field.value || 1);
+          var store = this.up('grid').store;
+          var pageCount = Math.ceil(store.getTotalCount() / store.pageSize);
+          if(field.value <= pageCount && field.value >= 0) {
+            this.up('grid').store.loadPage(field.value || 1);
+          } else if(field.value > pageCount) {
+            this.up('grid').store.loadPage(pageCount);
+          } else if(field.value < 0) {
+            this.up('grid').store.loadPage(1);
+          }
         }
       }
     }, {
