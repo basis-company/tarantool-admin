@@ -4,7 +4,7 @@ namespace Job\Database;
 
 use Exception;
 use Tarantool\Client\Client;
-use Tarantool\Client\Middleware\AuthMiddleware;
+use Tarantool\Client\Middleware\AuthenticationMiddleware;
 use Tarantool\Mapper\Mapper;
 
 abstract class Job
@@ -30,7 +30,7 @@ abstract class Job
 
             $dsn = $this->socket ?: 'tcp://'.$this->hostname.':'.$this->port;
             $this->_client = Client::fromDsn($dsn)->withMiddleware(
-                new AuthMiddleware($this->username ?: 'guest', $this->password),
+                new AuthenticationMiddleware($this->username ?: 'guest', $this->password),
             );
         }
 
