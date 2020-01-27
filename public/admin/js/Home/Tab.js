@@ -94,7 +94,13 @@ Ext.define('Admin.Home.Tab', {
           Admin.Database.Tab.prototype.items[1].hidden = !result.query;
         });
         if (Ext.isArray(result.connections) && result.connections[0].length) {
-          connections = Ext.Array.unique(connections.concat(result.connections));
+          var map = {}
+          connections.concat(result.connections).forEach(string => {
+            let connection = this.parseConnectionString(string)
+            let key = connection.username + '@' + connection.hostname + ":" + connection.port;
+            map[key] = string;
+          });
+          connections = Ext.Object.getValues(map);
         }
         if(!connections.length) {
           grid.hide();
