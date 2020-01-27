@@ -109,10 +109,14 @@ Ext.define('Admin.Home.Tab', {
   removeConnection(connection) {
 
     var connections = Ext.JSON.decode(localStorage.getItem('connections')) || [];
-
     var connectionString = this.getConnectionString(connection.hostname, connection.port, connection.username, connection.password);
+    var dsn = connection.username + '@' + connection.hostname + ':' + connection.port;
+
     connections
-      .filter(candidate => candidate === connectionString)
+      .filter(candidate => {
+        var connection = this.parseConnectionString(candidate)
+        return connection.username + '@' + connection.hostname + ':' + connection.port == dsn;
+      })
       .forEach(todo => Ext.Array.remove(connections, todo));
 
     localStorage.setItem('connections', Ext.JSON.encode(connections));
