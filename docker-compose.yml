@@ -13,3 +13,13 @@ services:
       - ./public/admin/index.php:/var/www/html/admin/index.php
       - ./public/admin/style.css:/var/www/html/admin/style.css
 
+  tarantool:
+    image: "tarantool/tarantool:1"
+    restart: always
+    ports:
+      - "3301:3301"
+    healthcheck:
+      test: tarantool_is_up
+      interval: 60s
+      timeout: 15s
+      retries: 10
