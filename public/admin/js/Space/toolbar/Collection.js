@@ -27,18 +27,12 @@ Ext.define('Admin.Space.toolbar.Collection', {
     var next = this.down('[name=next-page]');
     var last = this.down('[name=last-page]');
 
-    if(pageCount <= 1) {
-      [first, prev, current, delimeter, total, next, last].forEach(b => b.hide());
-
-    } else {
-      [first, prev, current, delimeter, total, next, last].forEach(b => b.show());
-      first.setDisabled(currentPage == 1);
-      prev.setDisabled(currentPage == 1);
-      current.setValue(currentPage);
-      total.setText(pageCount);
-      next.setDisabled(currentPage == pageCount);
-      last.setDisabled(currentPage == pageCount);
-    }
+    first.setDisabled(currentPage == 1);
+    prev.setDisabled(currentPage == 1);
+    current.setValue(currentPage);
+    total.setText(pageCount);
+    next.setDisabled(currentPage == pageCount);
+    last.setDisabled(currentPage == pageCount);
   },
 
   getDefaultItems() {
