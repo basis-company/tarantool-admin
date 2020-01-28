@@ -27,17 +27,14 @@ class Select extends Job
         $total = 0;
 
         try {
-            $criteria = Criteria::index($this->index)->andLimit($this->limit)->andOffset($this->offset);
+            $criteria = Criteria::index($this->index)
+                ->andLimit($this->limit)
+                ->andOffset($this->offset)
+                ->andIterator($this->iterator);
+
             if (count($key)) {
                 $criteria = $criteria->andKey($key);
             }
-            $iterators = [
-                'Eq', 'Req', 'All', 'Lt', 'Le', 'Ge', 'Gt',
-                'BitsAllSet', 'BitsAnySet', 'BitsAllNotSet',
-                'Overlaps', 'Neighbour',
-            ];
-            $iteratorMethod = 'and'.$iterators[$this->iterator].'Iterator';
-            $criteria = $criteria->$iteratorMethod();
 
             $data = $this->getMapper()->getClient()->getSpace($this->space)
                 ->select($criteria);
