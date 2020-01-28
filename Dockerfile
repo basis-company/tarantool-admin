@@ -5,8 +5,8 @@ WORKDIR /var/www/html
 RUN apt-get update && apt-get install -y git wget zip zlib1g-dev libzip-dev libmpdec-dev \
 && docker-php-ext-install zip \
 && docker-php-ext-install opcache \
-&& pecl install decimal
-&& docker-php-ext-enable decimal
+&& pecl install decimal \
+&& docker-php-ext-enable decimal \
 && curl -sS https://getcomposer.org/installer | php \
 && a2enmod rewrite
 
