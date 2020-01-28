@@ -13,7 +13,7 @@ class Spaces extends Job
         $spaces = [];
         foreach ($mapper->find('_vspace') as $space) {
             try {
-                if (!in_array($space->engine, ['sysview', 'blackhole', 'vinyl'])) {
+                if (!in_array($space->engine, ['vinyl'])) {
                     $space->count = $mapper->getClient()->call("box.space.$space->name:count")[0];
                 }
                 $space->bsize = $mapper->getClient()->call("box.space.$space->name:bsize")[0];
