@@ -13,7 +13,7 @@ Ext.define('Admin.Space.toolbar.Collection', {
 
   updateState() {
     var store = this.up('grid').store;
-    var pageCount = Math.ceil(store.getTotalCount() / store.pageSize);
+    var pageCount = Math.ceil(store.getTotalCount() / store.pageSize) || 1;
     var currentPage = store.currentPage;
 
     this.down('[name=row-counter]').setValue(store.getTotalCount());
