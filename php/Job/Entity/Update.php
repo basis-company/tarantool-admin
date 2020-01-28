@@ -5,6 +5,7 @@ namespace Job\Entity;
 use Basis\Converter;
 use Exception;
 use Job\Space\Job;
+use Tarantool\Client\Schema\Operations;
 
 class Update extends Job
 {
@@ -14,7 +15,6 @@ class Update extends Job
     {
         $pk = [];
         $space = $this->getSpace();
-
 
         if (!count($space->getFormat())) {
             $data = [];
@@ -27,13 +27,21 @@ class Update extends Job
 
             $pk = [];
             foreach ($space->getIndexes()[0]['parts'] as $part) {
-                $pk[] = $data[$part[0]];
+                $value = $data[$part[0]];
                 unset($data[$part[0]]);
+                if (array_key_exists(1, $part) && $part[1] == 'unsigned') {
+                    $value = +$value;
+                }
+                $pk[] = $value;
             }
 
-            $operations = [];
+            $operations = null;
             foreach ($data as $index => $value) {
-                $operations[] = ['=', $index, $value];
+                if (!$operations) {
+                    $operations = Operations::set($index, $value);
+                } else {
+                    $operations = $operations->andSet($index, $value);
+                }
             }
 
             $space->getMapper()->getClient()
