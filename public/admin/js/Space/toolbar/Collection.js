@@ -16,23 +16,31 @@ Ext.define('Admin.Space.toolbar.Collection', {
     var pageCount = Math.ceil(store.getTotalCount() / store.pageSize) || 1;
     var currentPage = store.currentPage;
 
-    this.down('[name=row-counter]').setValue(store.getTotalCount());
+    if (store.proxy.lastResponse.total == null) {
+      this.down('[name=row-counter]').setValue('-');
+      this.down('[name=total-pages]').setText('-');
+    } else {
+      this.down('[name=row-counter]').setValue(store.getTotalCount());
+      this.down('[name=total-pages]').setText(pageCount);
+    }
 
-    var stats = this.down('[name=paging-stats]');
     var first = this.down('[name=first-page]');
     var prev = this.down('[name=previous-page]');
     var current = this.down('[name=current-page]');
-    var delimeter = this.down('[name=current-page-delimiter]');
-    var total = this.down('[name=total-pages]');
     var next = this.down('[name=next-page]');
     var last = this.down('[name=last-page]');
 
     first.setDisabled(currentPage == 1);
     prev.setDisabled(currentPage == 1);
     current.setValue(currentPage);
-    total.setText(pageCount);
     next.setDisabled(currentPage == pageCount);
     last.setDisabled(currentPage == pageCount);
+
+    // unknown row count
+    if (store.proxy.lastResponse.total == null) {
+      next.setDisabled(!store.proxy.lastResponse.next);
+      last.setDisabled(true);
+    }
   },
 
   getDefaultItems() {
@@ -106,9 +114,8 @@ Ext.define('Admin.Space.toolbar.Collection', {
       labelWidth: 65,
       name:       'row-counter',
       readOnly:   true,
-      value:      0,
       width:      20,
-      xtype:      'numberfield',
+      xtype:      'textfield',
     }, ' ',{
       xtype:    'numberfield',
       minValue:   1,
@@ -129,8 +136,8 @@ Ext.define('Admin.Space.toolbar.Collection', {
           }
           var store = this.up('grid').store;
           if (store.pageSize != v) {
-            this.up('grid').store.setPageSize(v);
-            this.up('grid').store.loadPage(1);
+            store.setPageSize(v);
+            store.loadPage(1);
           }
           localStorage.setItem('admin-page-size', v);
         }
@@ -164,7 +171,9 @@ Ext.define('Admin.Space.toolbar.Collection', {
         keyup(field) {
           var store = this.up('grid').store;
           var pageCount = Math.ceil(store.getTotalCount() / store.pageSize);
-          if(field.value <= pageCount && field.value >= 0) {
+          if (store.proxy.lastResponse.total == null) {
+            this.up('grid').store.loadPage(field.value || 1);
+          } else if (field.value <= pageCount && field.value >= 0) {
             this.up('grid').store.loadPage(field.value || 1);
           } else if(field.value > pageCount) {
             this.up('grid').store.loadPage(pageCount);

@@ -14,6 +14,7 @@
 
     dispatch(this.job, params)
       .then(response => {
+        this.lastResponse = response;
         var resultSet = new Ext.data.ResultSet({
           total: response.total,
           count: (response.data || []).length,

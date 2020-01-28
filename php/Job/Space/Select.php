@@ -24,7 +24,8 @@ class Select extends Job
         }
 
         $data = null;
-        $total = 0;
+        $total = null;
+        $next = false;
 
         try {
             $criteria = Criteria::index($this->index)
@@ -54,7 +55,11 @@ class Select extends Job
                 [$total] = $this->getMapper()->getClient()
                     ->call("box.space.$this->space.index.$indexName:count", $key);
             } catch (Exception $e) {
-                // ignore total calculation exception
+                $criteria = $criteria->andLimit($this->limit+1);
+                $extra = $this->getMapper()->getClient()->getSpace($this->space)
+                    ->select($criteria);
+                // next page flag
+                $next = count($extra) > count($data);
             }
 
         } catch (Exception $e) {
@@ -73,6 +78,6 @@ class Select extends Job
             }
         }
 
-        return compact('data', 'total');
+        return compact('data', 'total', 'next');
     }
 }
