@@ -52,8 +52,9 @@ class Select extends Job
                 }
             }
 
-            $indexes = $this->getMapper()->getSchema()->getSpace($this->space)->getIndexes();
-            $indexName = $indexes[$this->index]['name'];
+            $schema = $this->getMapper()->getSchema();
+            $index = $schema->getSpace($this->space)->getIndex($this->index);
+            $indexName = $index['name'];
 
             try {
                 if ($this->iterator != 0) {
