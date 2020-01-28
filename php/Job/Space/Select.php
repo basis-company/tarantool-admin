@@ -56,6 +56,9 @@ class Select extends Job
             $indexName = $indexes[$this->index]['name'];
 
             try {
+                if ($this->index != 0) {
+                    throw new Exception("No total rows for non-equals iterator type");
+                }
                 [$total] = $this->getMapper()->getClient()
                     ->call("box.space.$this->space.index.$indexName:count", $key);
             } catch (Exception $e) {
