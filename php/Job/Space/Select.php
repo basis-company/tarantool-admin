@@ -57,7 +57,7 @@ class Select extends Job
             $indexName = $index['name'];
 
             try {
-                if ($this->iterator != 0) {
+                if (!in_array($this->iterator, [0, 2])) {
                     throw new Exception("No total rows for non-equals iterator type");
                 }
                 [$total] = $this->getMapper()->getClient()
