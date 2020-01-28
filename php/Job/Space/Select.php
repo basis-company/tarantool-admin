@@ -2,6 +2,7 @@
 
 namespace Job\Space;
 
+use Decimal\Decimal;
 use Exception;
 use Tarantool\Client\Schema\Criteria;
 
@@ -42,6 +43,9 @@ class Select extends Job
 
             foreach ($data as $x => $tuple) {
                 foreach ($tuple as $y => $value) {
+                    if (is_object($value) && get_class($value) == Decimal::class) {
+                        $value = $value->toString();
+                    }
                     if (is_numeric($value) && $value > 2^32 -1) {
                         $data[$x][$y] = (string) $value;
                     }
