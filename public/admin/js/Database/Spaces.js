@@ -217,12 +217,12 @@ Ext.define('Admin.Database.Spaces', {
     header: 'Count',
     align: 'right',
     dataIndex: 'count',
-    renderer: v => v || '-'
+    renderer: v => v == null ? '-' : v,
   }, {
     header: 'Size',
     align: 'right',
     dataIndex: 'bsize',
-    renderer: v => v ? Ext.util.Format.fileSize(v) : '-'
+    renderer: v => v == null ? '-' : Ext.util.Format.fileSize(v)
   }]
 
 });
