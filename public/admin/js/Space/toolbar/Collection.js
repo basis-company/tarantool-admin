@@ -170,7 +170,7 @@ Ext.define('Admin.Space.toolbar.Collection', {
         buffer: 500,
         keyup(field) {
           var store = this.up('grid').store;
-          var pageCount = Math.ceil(store.getTotalCount() / store.pageSize);
+          var pageCount = Math.ceil(store.getTotalCount() / store.pageSize) || 1;
           if (store.proxy.lastResponse.total == null) {
             this.up('grid').store.loadPage(field.value || 1);
           } else if (field.value <= pageCount && field.value >= 0) {
