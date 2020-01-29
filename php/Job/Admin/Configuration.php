@@ -10,6 +10,7 @@ class Configuration
             'readOnly' => getenv('TARANTOOL_CONNECTIONS_READONLY') ? true : false,
             'connections' => explode(',', getenv('TARANTOOL_CONNECTIONS')),
             'query' => getenv('TARANTOOL_DATABASE_QUERY') ? true : false,
+            'version' => @include('version.php') ?: [],
         ];
     }
 }

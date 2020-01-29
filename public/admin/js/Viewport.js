@@ -21,7 +21,20 @@ Ext.define('Admin.Viewport', {
     layout: 'fit',
     items: [{
       xtype: 'home-tab'
-    }]
+    }],
+    tabBar: {
+      items: [{
+        xtype: 'tbfill'
+      }, { 
+        xtype: 'label',
+        name: 'version',
+        style: {
+          paddingTop: '4px',
+          paddingRight: '8px',
+          color: '#aaa',
+        },
+      }]
+    }
   }],
 
   dispatch(job, params) {

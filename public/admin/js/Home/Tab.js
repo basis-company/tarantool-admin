@@ -85,6 +85,10 @@ Ext.define('Admin.Home.Tab', {
     var connections = Ext.JSON.decode(localStorage.getItem('connections')) || [];
     return dispatch('admin.configuration')
       .then(result => {
+        if (result.version && result.version.tag) {
+          let version = Ext.ComponentQuery.query('[name=version]')[0]
+          version.setText('version ' + result.version.tag);
+        }
         if(result.readOnly) {
           this.down('home-new').hide();
               grid.down('[name=remove-button]').hide();
