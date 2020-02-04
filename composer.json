@@ -2,8 +2,10 @@
     "name": "basis-company/tarantool-admin",
     "license": "MIT",
     "require": {
-        "php": "^7.4",
-        "basis-company/framework" : "^3.10.15"
+        "basis-company/framework" : "^3.12.0",
+        "php": "^7.2",
+        "rybakit/msgpack": "^0.6.1",
+        "tarantool/mapper": "^4.5.18"
     },
     "authors": [{
         "name": "Dmitry Krokhin",
