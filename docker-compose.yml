@@ -4,7 +4,7 @@ services:
 
   admin:
     restart: always
-    build: .
+    image: "quay.io/basis-company/tarantool-admin"
     ports:
       - "8000:80"
     volumes:
