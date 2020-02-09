@@ -11,6 +11,13 @@ Ext.define('Admin.Space.toolbar.Collection', {
     }
   },
 
+  initEvents() {
+    this.on({
+      destroy: this.clearRefreshInterval,
+      scope: this,
+    });
+  },
+
   updateState() {
     var store = this.up('grid').store;
     var pageCount = Math.ceil(store.getTotalCount() / store.pageSize) || 1;
@@ -40,6 +47,36 @@ Ext.define('Admin.Space.toolbar.Collection', {
     if (store.proxy.lastResponse.total == null) {
       next.setDisabled(!store.proxy.lastResponse.next);
       last.setDisabled(true);
+    }
+  },
+
+  refreshStore() {
+    return this.up('grid').store.load();
+  },
+
+  setRefreshMode(text) {
+    this.clearRefreshInterval();
+    this.refreshStore();
+    if (text != 'Manual') {
+      this.down('[name=refresh]').setText(text);
+      var seconds = 0;
+      if (text.indexOf('second') !== -1) {
+        seconds = 1;
+      } else if (text.indexOf('minute') !== -1) {
+        seconds = 60;
+      } else {
+        throw 'invalid text ' + text;
+      }
+      var amount = +text.split(' ')[1];
+      this.refreshInterval = setInterval(this.refreshStore.bind(this), amount * seconds * 1000);
+    }
+  },
+
+  clearRefreshInterval() {
+    this.down('[name=refresh]').setText('');
+    if (this.refreshInterval) {
+      clearInterval(this.refreshInterval);
+      this.refreshInterval = null;
     }
   },
 
@@ -203,10 +240,46 @@ Ext.define('Admin.Space.toolbar.Collection', {
         this.up('grid').store.loadPage(this.up('grid').down('[name=total-pages]').text);
       }
     }, {
+      xtype: 'splitbutton',
+      name: 'refresh',
       iconCls: 'fa fa-sync',
       handler() {
-        this.up('grid').store.load();
-      }
+        this.up('toolbar-collection').setRefreshMode('Manual');
+      },
+      menu: {
+        defaults: {
+          xtype: 'menucheckitem',
+          group: 'refresh-mode',
+          hideOnClick: true,
+          handler() {
+            this.up('toolbar-collection').setRefreshMode(this.text);
+          },
+        },
+        items: [{
+          text: 'Manual',
+          checked: true,
+        }, {
+          text: 'Every 1 second'
+        }, {
+          text: 'Every 2 seconds'
+        }, {
+          text: 'Every 5 seconds'
+        }, {
+          text: 'Every 15 seconds'
+        }, {
+          text: 'Every 30 seconds'
+        }, {
+          text: 'Every 1 minute'
+        }, {
+          text: 'Every 2 minutes'
+        }, {
+          text: 'Every 5 minutes'
+        }, {
+          text: 'Every 15 minutes'
+        }, {
+          text: 'Every 30 minutes'
+        }],
+      },
     }];
   },
 
