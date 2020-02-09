@@ -73,10 +73,12 @@ Ext.define('Admin.Space.toolbar.Collection', {
   },
 
   clearRefreshInterval() {
-    this.down('[name=refresh]').setText('');
     if (this.refreshInterval) {
       clearInterval(this.refreshInterval);
       this.refreshInterval = null;
+    }
+    if (!this.destroying) {
+      this.down('[name=refresh]').setText('');
     }
   },
 
