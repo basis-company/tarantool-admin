@@ -40,7 +40,7 @@ Ext.define('Admin.Viewport', {
   dispatch(job, params) {
     params = params || {};
     var el = (Ext.WindowManager.getActive() || this).el;
-    el.mask('Please, wait');
+    var timeout = setTimeout(function() { el.mask('Please, wait'); }, 100);
     return new Promise(function(resolve, reject) {
       Ext.Ajax.request({
           method: 'post',
@@ -52,6 +52,7 @@ Ext.define('Admin.Viewport', {
             }),
           },
           success: response => {
+            clearTimeout(timeout);
             try {
               var result = Ext.JSON.decode(response.responseText);
             } catch(e) {
@@ -60,7 +61,9 @@ Ext.define('Admin.Viewport', {
                 message: e
               }
             }
-            el.unmask();
+            if (el.isMasked()) {
+              setTimeout(function() {el.unmask();}, 250);
+            }
             if(!result.success) {
               Ext.MessageBox.alert('Error', result.message);
               reject(result.message);
