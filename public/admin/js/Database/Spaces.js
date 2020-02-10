@@ -73,10 +73,12 @@ Ext.define('Admin.Database.Spaces', {
   },
 
   truncateSpace(space) {
-    Ext.MessageBox.confirm(
-      'Danger!',
-      'Are you sure to truncate space ' + space + '?<br/>This operation can not be undone',
-      answer => {
+    Ext.MessageBox.confirm({
+      title: 'Danger!',
+      icon: Ext.MessageBox.WARNING,
+      message: 'Are you sure to truncate space ' + space + '?<br/>This operation can not be undone',
+      buttons: Ext.MessageBox.YESNO,
+      callback: (answer) => {
         if(answer == 'yes') {
           dispatch('space.truncate', this.spaceParams(space))
             .then(() => {
@@ -93,7 +95,7 @@ Ext.define('Admin.Database.Spaces', {
             })
         }
       }
-    );
+    });
   },
 
   dropSpace(space) {
