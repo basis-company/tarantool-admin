@@ -106,16 +106,34 @@ Ext.define('Admin.Space.toolbar.Collection', {
       handler() {
         var grid = this.up('grid');
         var selected = grid.getSelectionModel().getSelected();
-        var record = selected.startCell ? selected.startCell.record : selected.selectedRecords.items[0];
-        var id = {};
-        grid.indexes[0].parts.forEach(p => {
-          id[grid.fields[p[0]]] = record.get(grid.fields[p[0]]);
+        var records = [];
+        if (selected.startCell) {
+          for (var i = selected.startCell.rowIdx; i <= selected.endCell.rowIdx; i++) {
+            records.push(grid.store.getAt(i));
+          }
+        } else {
+          records = selected.selectedRecords.items;
+        }
+
+        var msg = "Are you sure want to delete selected row?"
+        if (records.length > 1) {
+          msg = "Are you sure want to delete " + records.length + " selected rows?"
+        }
+        Ext.MessageBox.confirm('Warning', msg, (answer) => {
+          if (answer == 'no') {
+            return;
+          }
+          var params = records.map(record => {
+            var id = {};
+            grid.indexes[0].parts.forEach(p => {
+              id[grid.fields[p[0]]] = record.get(grid.fields[p[0]]);
+            });
+            return Ext.apply({ id: id }, grid.params);
+          });
+
+          return dispatch.progress('entity.remove', params)
+            .then(() => this.up('toolbar-collection').refreshStore());
         });
-
-        var params = Ext.apply({id: id}, grid.params);
-
-        dispatch('entity.remove', params)
-          .then(() => grid.store.load());
       }
     }, {
       text:     'Search',
