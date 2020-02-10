@@ -75,5 +75,7 @@ Ext.define('Admin.Space.toolbar.Search', {
     });
     this.items = items;
     this.callParent(arguments);
+
+    setTimeout(() => this.down('textfield').focus(), 100);
   },
 });
