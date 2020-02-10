@@ -247,6 +247,7 @@ Ext.define('Admin.Space.toolbar.Collection', {
       iconCls: 'fa fa-sync',
       handler() {
         this.up('toolbar-collection').setRefreshMode('Manual');
+        this.down('[text=Manual]').setChecked(true);
       },
       menu: {
         defaults: {
