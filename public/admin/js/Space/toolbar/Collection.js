@@ -51,6 +51,7 @@ Ext.define('Admin.Space.toolbar.Collection', {
   },
 
   refreshStore() {
+    this.down('[name=refresh]').blur();
     return this.up('grid').store.load();
   },
 
