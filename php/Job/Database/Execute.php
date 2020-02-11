@@ -27,7 +27,7 @@ class Execute extends Job
 
         return [
             'result' => $result,
-            'timing' => microtime(true) - $start,
+            'timing' => 1000 * (microtime(true) - $start),
         ];
     }
 }
