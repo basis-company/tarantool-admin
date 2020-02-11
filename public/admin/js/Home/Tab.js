@@ -99,7 +99,7 @@ Ext.define('Admin.Home.Tab', {
               html: [
                 '<a target=blank href=' + url + '>',
                   'new version available!<br/>',
-                  'you can update to ' + result.latest,
+                  'update to ' + result.latest + ' release',
                 '</a>',
               ],
             });
