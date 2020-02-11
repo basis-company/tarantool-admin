@@ -88,6 +88,20 @@ Ext.define('Admin.Home.Tab', {
         if (result.version && result.version.tag) {
           let version = Ext.ComponentQuery.query('[name=version]')[0]
           version.setText('version ' + result.version.tag);
+          if (result.latest && result.latest != result.version.tag) {
+            var url = 'https://github.com/basis-company/tarantool-admin/releases/tag/' + result.latest;
+            var tip = Ext.create('Ext.tip.ToolTip', {
+              target: version,
+              html: [
+                '<a target=blank href=' + url + '>',
+                  'new version available!<br/>',
+                  'you can update to ' + result.latest,
+                '</a>',
+              ],
+            });
+            setTimeout(function() { tip.show() }, 1000);
+            setTimeout(function() { tip.el.fadeOut({ duration: 1000 }) }, 5000);
+          }
         }
         if(result.readOnly) {
           this.down('home-new').hide();
