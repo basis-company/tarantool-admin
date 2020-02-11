@@ -5,7 +5,9 @@ namespace Job\Admin;
 class Configuration
 {
     public $repository = 'basis-company/tarantool-admin';
-    public $ttl = 30;
+
+    // once per hour
+    public $ttl = 3600;
 
     public function run()
     {
