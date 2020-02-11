@@ -89,7 +89,7 @@ Ext.define('Admin.Home.Tab', {
           let version = Ext.ComponentQuery.query('[name=version]')[0]
           version.setText('version ' + result.version.tag);
           if (result.latest && result.latest != result.version.tag) {
-            var url = 'https://github.com/basis-company/tarantool-admin/releases/tag/' + result.latest;
+            var url = 'https://github.com/basis-company/tarantool-admin/releases';
             var tip = Ext.create('Ext.tip.ToolTip', {
               target: version,
               html: [
