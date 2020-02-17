@@ -42,7 +42,7 @@ Ext.define('Admin.Viewport', {
     params = params || {};
     if (!silent) {
       var el = (Ext.WindowManager.getActive() || this).el;
-      var timeout = setTimeout(function() { el.mask('Please, wait'); }, 100);
+      var timeout = setTimeout(function() { el.mask('Please, wait'); }, 250);
     }
     return new Promise(function(resolve, reject) {
       Ext.Ajax.request({
