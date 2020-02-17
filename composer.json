@@ -2,7 +2,7 @@
     "name": "basis-company/tarantool-admin",
     "license": "MIT",
     "require": {
-        "basis-company/framework" : "^3.12.0",
+        "basis-company/framework" : "^3.12.4",
         "php": "^7.2",
         "rybakit/msgpack": "^0.6.1",
         "tarantool/mapper": "^4.5.18"

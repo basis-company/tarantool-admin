@@ -2,7 +2,6 @@ Ext.define('Admin.Space.Indexes', {
 
   extend: 'Ext.grid.Panel',
 
-  title: 'Indexes',
   flex: 2,
 
   statics: {
@@ -32,6 +31,9 @@ Ext.define('Admin.Space.Indexes', {
   },
 
   tbar: [{
+    xtype: 'label',
+    text: 'Indexes',
+  }, {
     text: 'Add',
     iconCls: 'fa fa-plus-circle',
     handler() {

@@ -2,15 +2,20 @@ Ext.define('Admin.Home.New', {
 
   extend: 'Ext.form.Panel',
 
-  title: 'New connection',
-  bodyPadding: 10,
+  height: 200,
   border: false,
+  style: {
+    paddingRight: '15px',
+  },
 
   defaults: {
     xtype: 'textfield',
     labelWidth: 80,
     width: 250,
     enableKeyEvents: true,
+    style: {
+      paddingLeft: '9px',      
+    },
     listeners: {
       specialkey(field, e) {
         if(e.getKey() == e.ENTER) {
@@ -43,8 +48,11 @@ Ext.define('Admin.Home.New', {
     boxLabel: 'remember connection',
     checked: true,
     name: 'remember'
-  }],
-  tbar: [{
+  }, {
+    xtype: 'button',
+    style: {
+      marginLeft: '10px',
+    },
     text: 'Connect',
     name: 'connect-button',
     iconCls: 'fa fa-link',
@@ -52,5 +60,12 @@ Ext.define('Admin.Home.New', {
     handler() {
       this.up('home-tab').createConnection();
     }
-  }]
+  }],
+  tbar: {
+    height: 36,
+    items: [{
+      xtype: 'label',
+      text: 'New connection',
+    }]
+  },
 });

@@ -201,7 +201,7 @@ Ext.define('Admin.Space.Collection', {
       if (['unsigned', 'UNSIGNED', 'num', 'NUM'].indexOf(field.type) != -1) {
         Ext.apply(item, {
           xtype: 'numberfield',
-          showSpinner: false,
+          hideTrigger: true,
         });
       }
       if (['boolean', 'BOOLEAN'].indexOf(field.type) != -1) {

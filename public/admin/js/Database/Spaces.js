@@ -154,6 +154,9 @@ Ext.define('Admin.Database.Spaces', {
   },
 
   tbar: [{
+    xtype: 'label',
+    text: 'Spaces',
+  },{
     xtype: 'filter-field',
   }, {
     text: 'Create',

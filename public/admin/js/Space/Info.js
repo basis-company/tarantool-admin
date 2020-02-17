@@ -9,6 +9,13 @@ Ext.define('Admin.Space.Info', {
   ],
 
   layout: 'hbox',
+  defaults: {
+    border: false,
+    style: {
+      marginLeft: '5px',
+      marginRight: '10px',
+    },
+  },
 
   iconCls: 'fa fa-info',
 

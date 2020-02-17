@@ -4,10 +4,17 @@ Ext.define('Admin.Database.Info', {
   title: 'Info',
   layout: {
     type: 'hbox',
-    align: 'stretch',
   },
   border: false,
+  defaults: {
+    border: false,
+    style: {
+      marginLeft: '5px',
+      marginRight: '10px',
+    },
+  },
   iconCls: 'fa fa-info',
+  cls: 'admin-info',
 
   listeners: {
     activate() {
@@ -29,8 +36,14 @@ Ext.define('Admin.Database.Info', {
 
 
   items: [{
-    width: 200,
-    title: 'Info',
+    width: 250,
+    tbar: {
+      height: 36,
+      items: [{
+        xtype: 'label',
+        text: 'Instance information',
+      }],
+    },
     name: 'info',
     xtype: 'propertygrid',
     nameColumnWidth: 80,
@@ -42,11 +55,42 @@ Ext.define('Admin.Database.Info', {
       quota_used: Ext.util.Format.fileSize,
     }
   }, {
+    tbar: {
+      height: 36,
+      items: [{
+        xtype: 'label',
+        text: 'Query counters',
+      }],
+    },
+    width: 300,
+    name: 'stat',
+    readonly: true,
+    xtype: 'grid',
+    store: {
+      fields: ['action', 'rps', 'total'],
+      sorters: [{property: 'action', direction: 'ASC'}]
+    },
+    columns: [{
+      header: 'Action',
+      dataIndex: 'action'
+    }, {
+      header: 'Rps',
+      dataIndex: 'rps',
+    }, {
+      header: 'Total',
+      dataIndex: 'total',
+    }]
+  }, {
     width: 250,
-    title: 'Slab',
+    tbar: {
+      height: 36,
+      items: [{
+        xtype: 'label',
+        text: 'Memory usage',
+      }],
+    },
     name: 'slab',
     xtype: 'propertygrid',
-    border: false,
     nameColumnWidth: 150,
     listeners: {
       beforeedit: function (e) { return false; }
@@ -60,24 +104,5 @@ Ext.define('Admin.Database.Info', {
       quota_size: Ext.util.Format.fileSize,
       quota_used: Ext.util.Format.fileSize,
     }
-  }, {
-    title: 'Stat',
-    flex: 1,
-    name: 'stat',
-    readonly: true,
-    xtype: 'grid',
-    store: {
-      fields: ['action', 'rps', 'total']
-    },
-    columns: [{
-      header: 'Action',
-      dataIndex: 'action'
-    }, {
-      header: 'Rps',
-      dataIndex: 'rps',
-    }, {
-      header: 'Total',
-      dataIndex: 'total',
-    }]
   }]
 });

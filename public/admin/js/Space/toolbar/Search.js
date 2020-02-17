@@ -10,7 +10,11 @@ Ext.define('Admin.Space.toolbar.Search', {
 
     var items = [{
       xtype: 'label',
-      text: 'Query'
+      text: 'Index params',
+      style: {
+        marginLeft: '5px',
+        marginRight: '15px',
+      }
     },' '];
 
     index.parts.forEach(p => {
@@ -27,7 +31,7 @@ Ext.define('Admin.Space.toolbar.Search', {
       if(['str', 'string'].indexOf(p[1].toLowerCase()) == -1) {
         Ext.apply(field, {
           xtype: 'numberfield',
-          showSpinner: false,
+          hideTrigger: true,
           minValue: 0,
         });
       }

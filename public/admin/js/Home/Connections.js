@@ -2,7 +2,6 @@ Ext.define('Admin.Home.Connections', {
 
   extend: 'Ext.grid.Panel',
 
-  title: 'Persisted Tarantool connections',
   flex: 1,
 
   listeners: {
@@ -25,6 +24,9 @@ Ext.define('Admin.Home.Connections', {
   },
 
   tbar: [{
+    xtype: 'label',
+    text: 'Connection list'
+  }, {
     xtype: 'filter-field',
   }, {
     text: 'Connect',

@@ -2,7 +2,6 @@ Ext.define('Admin.Space.Format', {
 
   extend: 'Ext.grid.Panel',
 
-  title: 'Format',
   flex: 1,
 
   store: {
@@ -16,6 +15,9 @@ Ext.define('Admin.Space.Format', {
   },
 
   tbar: [{
+    xtype: 'label',
+    text: 'Format',
+  }, {
     text: 'Add',
     iconCls: 'fa fa-plus-circle',
     handler() {

@@ -18,11 +18,22 @@ Ext.define('Admin.Database.Query', {
   },
 
   items: [{
-    bodyPadding: 10,
+    tbar: {
+      height: 36,
+      items: [{
+        xtype: 'label',
+        text: 'Type your query below'
+      }]
+    },
+    style: {
+      marginLeft: '8px',
+      marginRight: '8px',
+    },
     layout: 'fit',
     items: [{
       xtype: 'textarea',
       value: 'return box.space._space:select()',
+      cls: 'query-textarea',
       grow: true,
       flex: 1,
       maxHeight: 300,
@@ -42,11 +53,9 @@ Ext.define('Admin.Database.Query', {
     showResult(script, result) {
       var returns = (script.split('return ')[1] || '').split(',').map(v => v.trim());
       this.removeAll();
+      var stats = 'Your query takes ' + Ext.util.Format.number(result.timing, "0.0") + ' ms';
+      this.up('[title=Query]').down('[name=execution]').setText(stats);
       this.add(Ext.create('Ext.tab.Panel', {
-        bbar: ['->', {
-          text: 'Query execution time: ' + Ext.util.Format.number(result.timing, "0.0") + ' ms',
-          xtype: 'label',
-        }],
         layout: 'fit',
         items: result.result.map((element, i) => {
           var item = {
@@ -118,9 +127,6 @@ Ext.define('Admin.Database.Query', {
       }));
     },
     tbar: [{
-      text: 'Result',
-      xtype: 'label',
-    }, {
       text: 'Execute',
       iconCls: 'fa fa-play',
       handler() {
@@ -130,6 +136,9 @@ Ext.define('Admin.Database.Query', {
             this.up('database-query').down('[name=result]').showResult(script, result);
           });
       },
+    }, '->', {
+      xtype: 'label',
+      name: 'execution'
     }],
   }]
 });
