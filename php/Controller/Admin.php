@@ -10,7 +10,7 @@ class Admin
 {
     public function index(Filesystem $fs)
     {
-        include $fs->getPath('index.html');
+        include $fs->getPath('index.php');
     }
 
     public function api(Runner $runner)
