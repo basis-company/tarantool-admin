@@ -85,17 +85,14 @@ Ext.define('Admin.Home.Tab', {
           var legacy = result.latest && result.latest != result.version.tag;
           version.setText('version ' + result.version.tag);
           if (legacy) {
-            version.el.dom.style['color'] = '#990';
-            var url = 'https://github.com/basis-company/tarantool-admin/releases';
+            version.addCls('version-upgrade');
+            version.setIconCls('fas fa-bell');
             var tip = Ext.create('Ext.tip.ToolTip', {
               target: version,
               autoShow: true,
               autoHide: true,
               html: [
-                '<a target=blank href=' + url + '>',
-                  'new version available!<br/>',
-                  'update to ' + result.latest + ' release',
-                '</a>',
+                'new version available!',
               ],
             });
           }

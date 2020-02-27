@@ -27,13 +27,12 @@ Ext.define('Admin.Viewport', {
       items: [{
         xtype: 'tbfill'
       }, { 
-        xtype: 'label',
+        xtype: 'button',
         name: 'version',
-        style: {
-          paddingTop: '4px',
-          paddingRight: '8px',
-          color: '#aaa',
-        },
+        baseCls: 'version-button',
+        handler() {
+          window.open('https://github.com/basis-company/tarantool-admin/releases');
+        }
       }]
     }
   }],

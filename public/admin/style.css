@@ -105,3 +105,22 @@
     border-radius: 0px;
     background-color: #999; 
 }
+.version-button {
+    border-radius: 0px;
+    border: 1px solid #f5f5f5;
+    background-color: #f5f5f5;
+}
+.version-button:hover {
+    cursor: pointer;
+    border: 1px solid #ccc;
+}
+.version-button  {
+    color: #999;
+    padding: 0px 2px 0px 2px;
+}
+.version-button .x-btn-icon-el {
+    margin-right: 2px;
+}
+.version-upgrade span {
+    color: #696;
+}
