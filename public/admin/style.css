@@ -121,6 +121,9 @@
 .version-button .x-btn-icon-el {
     margin-right: 2px;
 }
+.version-button span {
+    color: #999;
+}
 .version-upgrade span {
     color: #696;
 }
