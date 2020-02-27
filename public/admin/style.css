@@ -112,7 +112,11 @@
 }
 .version-button:hover {
     cursor: pointer;
-    border: 1px solid #ccc;
+    border: 1px solid #c9deed;
+    background-color: #c9deed;
+}
+.version-button:hover span{
+    color: #000;
 }
 .version-button  {
     color: #999;
