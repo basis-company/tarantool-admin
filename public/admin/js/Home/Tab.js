@@ -97,11 +97,10 @@ Ext.define('Admin.Home.Tab', {
             });
           }
         }
-        if(result.readOnly) {
-          this.down('home-new').hide();
-              grid.down('[name=remove-button]').hide();
-              grid.down('[name=remove-all]').hide();
-        }
+        this.down('home-new').setHidden(result.readOnly);
+        this.down('home-connections').show();
+        grid.down('[name=remove-button]').setHidden(result.readOnly);
+        grid.down('[name=remove-all]').setHidden(result.readOnly);
         Ext.require('Admin.Database.Tab', function() {
           Admin.Database.Tab.prototype.items[1].hidden = !result.query;
         });

@@ -4,6 +4,7 @@ Ext.define('Admin.Home.New', {
 
   height: 200,
   border: false,
+  hidden: true,
   style: {
     paddingRight: '15px',
   },

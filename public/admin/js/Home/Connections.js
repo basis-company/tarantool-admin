@@ -3,6 +3,7 @@ Ext.define('Admin.Home.Connections', {
   extend: 'Ext.grid.Panel',
 
   flex: 1,
+  hidden: true,
 
   listeners: {
     itemdblclick(view, record) {
@@ -42,6 +43,7 @@ Ext.define('Admin.Home.Connections', {
     name: 'remove-button',
     iconCls: 'fa fa-trash',
     disabled: true,
+    hidden: true,
     handler() {
       Ext.MessageBox.confirm('Confirmation', 'Are you sure want to remove selected connection?<br/>This operation has no rollback!', (btn) => {
         if (btn == 'yes') {
@@ -55,6 +57,7 @@ Ext.define('Admin.Home.Connections', {
     text: 'Remove all',
     name: 'remove-all',
     iconCls: 'fa fa-ban',
+    hidden: true,
     handler() {
       Ext.MessageBox.confirm('Confirmation', 'Are you sure want to remove all connections?<br/>This operation has no rollback!', (btn) => {
         if (btn == 'yes') {
