@@ -72,13 +72,24 @@ Ext.define('Admin.Database.Info', {
     },
     columns: [{
       header: 'Action',
-      dataIndex: 'action'
+      dataIndex: 'action',
+      renderer(v) {
+        return ( v || "" ).toLowerCase();
+      }
     }, {
       header: 'Rps',
       dataIndex: 'rps',
+      align: 'center',
+      renderer(v) {
+        return v || '-';
+      },
     }, {
       header: 'Total',
+      align: 'right',
       dataIndex: 'total',
+      renderer(v) {
+        return v || '-';
+      },
     }]
   }, {
     width: 250,
