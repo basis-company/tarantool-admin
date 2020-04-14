@@ -194,6 +194,9 @@ Ext.define('Admin.Space.toolbar.Collection', {
             store.loadPage(1);
           }
           localStorage.setItem('admin-page-size', v);
+          if (v == 25 || !v) {
+            localStorage.removeItem('admin-page-size');
+          }
         }
       }
     }, ' ', {
