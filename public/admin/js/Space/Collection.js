@@ -77,7 +77,7 @@ Ext.define('Admin.Space.Collection', {
 
     this.callParent(arguments);
 
-    if(this.autoLoad) {
+    if (!localStorage.getItem('admin-page-size') && this.autoLoad) {
       this.on('reconfigure', () => this.store.load());
     }
 
@@ -167,6 +167,10 @@ Ext.define('Admin.Space.Collection', {
             }
 
             this.reconfigure(store, columns);
+
+            if (localStorage.getItem('admin-page-size')) {
+              this.down('[name=pageSize]').setValue(localStorage.getItem('admin-page-size'));
+            }
           });
       }
     });

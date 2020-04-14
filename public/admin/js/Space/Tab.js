@@ -22,12 +22,7 @@ Ext.define('Admin.Space.Tab', {
   initComponent() {
     this.title = this.params.space.split('_').map(Ext.util.Format.capitalize).join('');
     this.callParent(arguments);
-    dispatch('space.info', this.params)
-      .then(result => {
-        if(result.indexes.length) {
-          this.setActiveTab(+localStorage.getItem('space-default-item') || 0);
-        }
-      });
+    this.setActiveTab(+localStorage.getItem('space-default-item') || 0);
   },
 
   items:[{

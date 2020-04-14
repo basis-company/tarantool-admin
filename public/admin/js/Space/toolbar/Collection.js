@@ -6,9 +6,6 @@ Ext.define('Admin.Space.toolbar.Collection', {
   initComponent() {
     this.items = this.getDefaultItems();
     this.callParent(arguments);
-    if(localStorage.getItem('admin-page-size')) {
-      this.down('[name=pageSize]').setValue(localStorage.getItem('admin-page-size'));
-    }
   },
 
   initEvents() {
@@ -187,7 +184,6 @@ Ext.define('Admin.Space.toolbar.Collection', {
       hideTrigger: true,
       keyNavEnabled: false,
       listeners: {
-        buffer: 500,
         change(field, v) {
           if (!v) {
             return this.setValue(1);
