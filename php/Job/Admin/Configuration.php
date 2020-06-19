@@ -11,12 +11,20 @@ class Configuration
 
     public function run()
     {
+        $version = @include('version.php') ?: [];
+        $latest = '';
+        if (array_key_exists('tag', $version)) {
+            $latest = $version['tag'];
+        }
+        if (getenv('TARANTOOL_CHECK_VERSION') !== 'false') {
+            $latest = $this->getLatest();
+        }
         return [
             'readOnly' => getenv('TARANTOOL_CONNECTIONS_READONLY') ? true : false,
             'connections' => explode(',', getenv('TARANTOOL_CONNECTIONS')),
             'query' => getenv('TARANTOOL_DATABASE_QUERY') ? true : false,
-            'version' => @include('version.php') ?: [],
-            'latest' => $this->getLatest(),
+            'version' => $version,
+            'latest' => $latest,
         ];
     }
 

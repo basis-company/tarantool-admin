@@ -8,12 +8,13 @@ Open [http://localhost:8000](http://localhost:8000) in your browser.
 
 ## Configure using env
 Application can be configured via environment:
+* TARANTOOL_CHECK_VERSION - default is `true`. set to `false` if you want to disable version check
 * TARANTOOL_CONNECT_TIMEOUT - connect timeout
-* TARANTOOL_SOCKET_TIMEOUT - connection read/write timeout
-* TARANTOOL_TCP_NODELAY - disable Nagle TCP algorithm
 * TARANTOOL_CONNECTIONS - comma-separated connection strings
 * TARANTOOL_CONNECTIONS_READONLY - disable connections editor
 * TARANTOOL_DATABASE_QUERY - enable Query database tab
+* TARANTOOL_SOCKET_TIMEOUT - connection read/write timeout
+* TARANTOOL_TCP_NODELAY - disable Nagle TCP algorithm
 
 ## You can build and run docker image yourself.
 * Clone repository: `git clone https://github.com/basis-company/tarantool-admin.git`
