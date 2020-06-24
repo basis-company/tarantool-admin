@@ -14,7 +14,7 @@ services:
       - ./public/admin/style.css:/var/www/html/admin/style.css
 
   tarantool:
-    image: "tarantool/tarantool:1"
+    image: "tarantool/tarantool:2"
     restart: always
     ports:
       - "3301:3301"

@@ -4,22 +4,15 @@ namespace Job\Export;
 
 use Exception;
 use Job\Space\Select;
-use Basis\Filesystem;
 
 class Csv extends Select
 {
     public $limit = 1000;
 
-    private $fs;
     public $delimiter = ";";
 
     // 60 seconds
     public $keepFiles = 60;
-
-    public function __construct(Filesystem $fs)
-    {
-        $this->fs = $fs;
-    }
 
     public function run()
     {
@@ -34,10 +27,8 @@ class Csv extends Select
         $this->offset = 0;
 
         while (!$page || count($data) < $total) {
-
             $result = parent::run();
-
-            foreach($result['data'] as $item) {
+            foreach ($result['data'] as $item) {
                 $data[] = implode($this->delimiter, $item);
             }
 
@@ -52,26 +43,26 @@ class Csv extends Select
             $fields[] = $field['name'];
         }
 
-        $contents = implode($this->delimiter, $fields).PHP_EOL.implode(PHP_EOL, $data);
+        $contents = implode($this->delimiter, $fields) . PHP_EOL . implode(PHP_EOL, $data);
 
         $folder = 'admin/downloads';
-        $fs = $this->fs;
 
-        $dir = $fs->getPath($folder);
-        if (!is_dir($dir)) {
-            mkdir($dir);
-
+        if (!is_dir($folder)) {
+            mkdir($folder);
         } else {
-            foreach ($fs->listFiles($folder) as $file) {
-                $path = $fs->getPath($folder.'/'.$file);
+            foreach (scandir($folder) as $file) {
+                if ($file == '.' || $file == '..') {
+                    continue;
+                }
+                $path = $folder . '/' . $file;
                 if (filemtime($path) < time() - $this->keepFiles) {
                     unlink($path);
                 }
             }
         }
 
-        $path = $folder.'/'.$name.'.csv';
-        file_put_contents($fs->getPath($path), $contents);
+        $path = $folder . '/' . $name . '.csv';
+        file_put_contents($path, $contents);
 
         return compact('path');
     }
