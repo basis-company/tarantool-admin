@@ -2,10 +2,10 @@
 FROM php:apache as build
 WORKDIR /var/www/html
 RUN apt-get update && apt-get install -y git wget zip
-RUN wget https://use.fontawesome.com/releases/v5.0.6/fontawesome-free-5.0.6.zip \
-    && wget http://cdn.sencha.com/ext/gpl/ext-6.2.0-gpl.zip \
-    && unzip ./fontawesome-free-5.0.6.zip \
-    && unzip ./ext-6.2.0-gpl.zip
+RUN wget -q https://use.fontawesome.com/releases/v5.0.6/fontawesome-free-5.0.6.zip \
+    && wget -q http://cdn.sencha.com/ext/gpl/ext-6.2.0-gpl.zip \
+    && unzip -q ./fontawesome-free-5.0.6.zip \
+    && unzip -q ./ext-6.2.0-gpl.zip
 
 ADD .git /var/www/html/.git
 RUN export CI_COMMIT_TAG=$(git describe --tags) \
