@@ -11,7 +11,7 @@ class Create extends Job
         $schema = $this->getMapper()->getSchema();
 
         if ($schema->hasSpace($this->space)) {
-            throw new Exception('Space '.$this->space.' exists');
+            throw new Exception('Space ' . $this->space . ' exists');
         }
 
         $schema->createSpace($this->space);

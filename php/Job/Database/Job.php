@@ -16,12 +16,12 @@ abstract class Job
     public $username;
     public $password;
 
-    private $_client;
-    private $_mapper;
+    private $client;
+    private $mapper;
 
     public function getClient()
     {
-        if (!$this->_client) {
+        if (!$this->client) {
             if (!$this->hostname || !$this->port) {
                 if (!$this->socket) {
                     throw new Exception("Invalid params");
@@ -29,20 +29,20 @@ abstract class Job
             }
 
             $dsn = $this->socket ?: 'tcp://'.$this->hostname.':'.$this->port;
-            $this->_client = Client::fromDsn($dsn)->withMiddleware(
+            $this->client = Client::fromDsn($dsn)->withMiddleware(
                 new AuthenticationMiddleware($this->username ?: 'guest', $this->password),
             );
         }
 
-        return $this->_client;
+        return $this->client;
     }
 
     public function getMapper()
     {
-        if (!$this->_mapper) {
-            $this->_mapper = new Mapper($this->getClient());
+        if (!$this->mapper) {
+            $this->mapper = new Mapper($this->getClient());
         }
 
-        return $this->_mapper;
+        return $this->mapper;
     }
 }

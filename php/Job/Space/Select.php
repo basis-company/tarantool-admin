@@ -18,7 +18,7 @@ class Select extends Job
     {
         $key = [];
         foreach ($this->key as $value) {
-            if (is_null($value)) {
+            if ($value === null) {
                 break;
             }
             $key[] = $value;
@@ -46,7 +46,7 @@ class Select extends Job
                     if (is_object($value) && get_class($value) == Decimal::class) {
                         $value = $value->toString();
                     }
-                    if (is_numeric($value) && $value > 2^32 -1) {
+                    if (is_numeric($value) && $value > 2 ^ 32 - 1) {
                         $data[$x][$y] = (string) $value;
                     }
                 }
@@ -63,13 +63,12 @@ class Select extends Job
                 [$total] = $this->getMapper()->getClient()
                     ->call("box.space.$this->space.index.$indexName:count", $key);
             } catch (Exception $e) {
-                $criteria = $criteria->andLimit($this->limit+1);
+                $criteria = $criteria->andLimit($this->limit + 1);
                 $extra = $this->getMapper()->getClient()->getSpace($this->space)
                     ->select($criteria);
                 // next page flag
                 $next = count($extra) > count($data);
             }
-
         } catch (Exception $e) {
             if (!$data) {
                 throw $e;
@@ -80,7 +79,7 @@ class Select extends Job
             foreach ($data as $i => $tuple) {
                 foreach ($tuple as $k => $v) {
                     if (is_string($v) && !json_encode($v)) {
-                        $data[$i][$k] = '!!binary '.base64_encode($v);
+                        $data[$i][$k] = '!!binary ' . base64_encode($v);
                     }
                 }
             }

@@ -14,13 +14,12 @@ class Create extends Job
         $space = $this->getSpace();
 
         if (!count($space->getFormat())) {
-
             $data = [];
             foreach ($this->values as $k => $v) {
                 if (!is_numeric($k)) {
                     throw new Exception("Named property $k without format definition");
                 }
-                $data[$k-1] = $v;
+                $data[$k - 1] = $v;
             }
 
             if (array_values($data) == $data) {
@@ -37,7 +36,6 @@ class Create extends Job
                 ->insert($data);
 
             return ['entity' => $data];
-
         } else {
             $entity = $space->getRepository()->create(get_object_vars($this->values));
             $this->getMapper()->save($entity);

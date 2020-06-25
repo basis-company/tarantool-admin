@@ -24,12 +24,11 @@ class CreateIndex extends Job
                 'parts' => $this->parts,
             ];
             $space->getMapper()->getClient()->call("box.space[$spaceId]:create_index", $this->name, [$options]);
-
         } elseif (is_array($this->fields)) {
             $format = $space->getFormat();
 
             $fields = [];
-            foreach($this->fields as $index) {
+            foreach ($this->fields as $index) {
                 $fields[] = $format[$index]['name'];
             }
 
@@ -40,7 +39,7 @@ class CreateIndex extends Job
                 'type' => $this->type,
             ]);
         } else {
-            throw new Exception("Invalid index configuration: ".json_encode([
+            throw new Exception("Invalid index configuration: " . json_encode([
                 'name' => $this->name,
                 'type' => $this->type,
             ]));

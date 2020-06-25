@@ -11,6 +11,6 @@ class Truncate extends Job
             throw new Exception('Disabled for system spaces');
         }
 
-        $this->getClient()->call('box.space.'.$space->getName().':truncate');
+        $this->getClient()->call('box.space.' . $space->getName() . ':truncate');
     }
 }

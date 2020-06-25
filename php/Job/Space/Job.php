@@ -7,15 +7,15 @@ use Job\Database\Job as DatabaseJob;
 
 abstract class Job extends DatabaseJob
 {
-    private $_space;
+    private $space;
     public function getSpace()
     {
-        if (!$this->_space) {
+        if (!$this->space) {
             if (!$this->space) {
                 throw new Exception("Invalid params");
             }
-            $this->_space = $this->getMapper()->getSchema()->getSpace($this->space);
+            $this->space = $this->getMapper()->getSchema()->getSpace($this->space);
         }
-        return $this->_space;
+        return $this->space;
     }
 }

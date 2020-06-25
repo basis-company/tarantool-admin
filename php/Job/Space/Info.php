@@ -21,7 +21,7 @@ class Info extends Job
             $count = $count ?: 20; // default max columns
             foreach (range(1, $count) as $value) {
                 $format[] = [
-                    'name' => "".$value,
+                    'name' => "" . $value,
                     'type' => 'str',
                 ];
             }

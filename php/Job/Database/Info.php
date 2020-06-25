@@ -20,7 +20,8 @@ class Info extends Job
         foreach ($stats as $k => $function) {
             try {
                 $info[$k] = $client->call($function)[0];
-            } catch (Exception $e) {}
+            } catch (Exception $e) {
+            }
         }
 
         return $info;

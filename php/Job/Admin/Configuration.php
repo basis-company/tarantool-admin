@@ -49,7 +49,7 @@ class Configuration
         $tag = @json_decode(file_get_contents($url, false, $context))->tag_name;
         $timestamp = time();
 
-        file_put_contents('latest.php', '<?php return '.var_export(compact('tag', 'timestamp'), true) .';');
+        file_put_contents('latest.php', '<?php return ' . var_export(compact('tag', 'timestamp'), true) . ';');
         return $tag;
     }
 }

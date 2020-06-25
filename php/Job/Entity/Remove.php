@@ -18,7 +18,7 @@ class Remove extends Job
                 if (!is_numeric($k)) {
                     throw new Exception("Named property $k without format definition");
                 }
-                $data[$k-1] = $v;
+                $data[$k - 1] = $v;
             }
 
             $pk = [];
@@ -29,13 +29,11 @@ class Remove extends Job
             $space->getMapper()->getClient()
                 ->getSpace($space->getName())
                 ->delete($pk);
-
         } else {
             $entity = $space->getRepository()
                 ->findOne(get_object_vars($this->id));
 
             $this->getMapper()->remove($entity);
         }
-
     }
 }
