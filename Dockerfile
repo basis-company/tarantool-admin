@@ -38,7 +38,8 @@ RUN php composer.phar install --no-dev
 
 COPY --from=build /var/www/html/version.php .
 
-ADD . /var/www/html/php
+ADD public /var/www/html
+ADD . /var/www/html
 
 RUN mkdir admin/downloads -p \
     && chown www-data admin/downloads \
