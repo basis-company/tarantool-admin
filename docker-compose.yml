@@ -6,7 +6,7 @@ services:
     restart: always
     image: "quay.io/basis-company/tarantool-admin"
     ports:
-      - "8000:80"
+      - "8888:80"
     volumes:
       - ./php:/var/www/html/php
       - ./public/admin/js:/var/www/html/admin/js
@@ -16,8 +16,6 @@ services:
   tarantool:
     image: "tarantool/tarantool:2"
     restart: always
-    ports:
-      - "3301:3301"
     healthcheck:
       test: tarantool_is_up
       interval: 60s

@@ -27,3 +27,18 @@ Application can be configured via environment:
 Short demo of ui is available on youtube:
 
 <a href="https://www.youtube.com/watch?v=ApPbFvcozPE" target="_blank"><img src="http://img.youtube.com/vi/ApPbFvcozPE/0.jpg" alt="Short demo" width="240" height="180" border="10" /></a>
+
+## Development
+
+* Install git and docker
+* Clone repository: `git clone https://github.com/basis-company/tarantool-admin.git`
+* Change current directory: `cd tarantool-admin`
+* Run developer environment using `docker-compose up -d`
+* Access environment using http://0.0.0.0:8888
+* Use "tarantool" hostname configuration with form default values:
+  * port 3301
+  * username guest
+  * password (should be empty)
+* Use your favorite ide to edit php/js, all code will be updated on the fly
+* Follow https://phptherightway.com/ recommendations
+* Don't repeat yourself
