@@ -16,12 +16,10 @@ Application can be configured via environment:
 * TARANTOOL_SOCKET_TIMEOUT - connection read/write timeout
 * TARANTOOL_TCP_NODELAY - disable Nagle TCP algorithm
 
-## You can build and run docker image yourself.
+## You can build image yourself.
 * Clone repository: `git clone https://github.com/basis-company/tarantool-admin.git`
 * Change current directory: `cd tarantool-admin`
-* Build and run `docker-compose up`
-* Open [http://localhost:8000](http://localhost:8000) in your browser.
-* If you need database, add tarantool instance to docker-compose file.
+* Run `docker build .`
 
 ## Youtube demo
 Short demo of ui is available on youtube:
