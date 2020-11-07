@@ -73,12 +73,15 @@ Ext.define('Admin.Space.toolbar.Search', {
 
             grid.store.proxy.params.key = params;
             grid.store.load();
+            //console.log(items);
           }
         };
       })
     });
     this.items = items;
     this.callParent(arguments);
+   // console.log(items);
+
 
     setTimeout(() => this.down('textfield').focus(), 100);
   },
