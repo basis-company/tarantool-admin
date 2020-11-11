@@ -20,7 +20,6 @@ if (file_exists($filename)) {
         <link rel="stylesheet" href="/admin/style.css<?php echo '?', $version; ?>" />
         <link rel="icon" type="image/png" sizes="48x48" href="/admin/39156475-8b873e18-4756-11e8-89d0-6ffca592f664.png">
 
-
     </head>
     <body>
         <script src="/admin/ext-6.2.0/ext-all.js"></script>

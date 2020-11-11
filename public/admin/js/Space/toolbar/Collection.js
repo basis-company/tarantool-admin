@@ -81,7 +81,6 @@ Ext.define('Admin.Space.toolbar.Collection', {
   },
 
   getDefaultItems() {
-    var self = this;
     return [{
       text:    'Create',
       iconCls: 'fa fa-plus-circle',
@@ -112,7 +111,6 @@ Ext.define('Admin.Space.toolbar.Collection', {
         } else {
           records = selected.selectedRecords.items;
         }
-        //console.log(selected)
 
         var msg = "Are you sure want to delete selected row?"
         if (records.length > 1) {
@@ -137,42 +135,24 @@ Ext.define('Admin.Space.toolbar.Collection', {
     }, {
       text:     'Search',
       iconCls:  'fa fa-search',
-      handler() {
-        console.log('111');
-        self.refreshStore.bind(self);
-      },
       name:     'search',
       disabled: true,
       menu:     []
     }, {
       text: 'Truncate',
       iconCls: 'fa fa-trash',
-      handler() { // обработчик кнопки трункейт
-
-        //было
-        //var space = this.up('grid').store.proxy.params.space;
-        //стало
+      handler() {
 
         var space = this.up('grid').store.proxy.params.space;
-        var index = this.up('grid').store.proxy.params.index;
-        var key = this.up('grid').store.proxy.params.key;
-        var searchCount = this.up('grid').store.proxy.lastResponse['total'];
-
-        //console.log(space1);
-        console.log(searchCount);
-
 
         // > database tabs
         //  > collection
         //  > space tabs
         //   > {collection}
 
-
         this.up('tabpanel').up('tabpanel')
-          .down('[name=spaces]') //ищем компонент spaces
-          //.truncateSpace(space)// вызываем компонент
-          .truncateSpace(space,index,key,searchCount);// вызываем компонент
-
+          .down('[name=spaces]')
+          .truncateSpace(space);
       }
     }, {
       iconCls:  'fa fa-download',

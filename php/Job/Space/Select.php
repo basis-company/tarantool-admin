@@ -86,6 +86,5 @@ class Select extends Job
         }
 
         return compact('data', 'total', 'next');
-        echo $data;
     }
 }
