@@ -1,0 +1,6 @@
+vendor
+composer.lock
+composer.phar
+public/admin/downloads
+public/admin/ext-6.2.0/
+public/admin/fontawesome-free-5.0.6/
