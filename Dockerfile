@@ -1,5 +1,5 @@
 # Build
-FROM php:apache as build
+FROM php:7-apache as build
 WORKDIR /var/www/html
 RUN apt-get update && apt-get install -y git wget zip
 RUN wget -q https://use.fontawesome.com/releases/v5.0.6/fontawesome-free-5.0.6.zip \
@@ -15,15 +15,14 @@ RUN export CI_COMMIT_TAG=$(git describe --tags) \
     && echo "<?php return ['tag'=>'$CI_COMMIT_TAG','sha'=>'$CI_COMMIT_SHA','short_sha'=>'$CI_COMMIT_SHORT_SHA','ref_name'=>'$CI_COMMIT_REF_NAME'];" > version.php
 
 # Runtime
-FROM php:apache
+FROM php:7-apache
 
 WORKDIR /var/www/html
 
-RUN apt-get update && apt-get install -y zip zlib1g-dev libzip-dev libmpdec-dev \
-    && docker-php-ext-install zip \
-    && docker-php-ext-install opcache \
-    && pecl install decimal \
-    && docker-php-ext-enable decimal \
+RUN apt-get update && apt-get install -y zip zlib1g-dev libzip-dev libmpdec-dev uuid-dev \
+    && docker-php-ext-install zip opcache \
+    && pecl install decimal uuid \
+    && docker-php-ext-enable decimal uuid \
     && curl -sS https://getcomposer.org/installer | php \
     && a2enmod rewrite
 

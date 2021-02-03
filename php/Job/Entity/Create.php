@@ -2,8 +2,9 @@
 
 namespace Job\Entity;
 
-use Job\Space\Job;
 use Exception;
+use Job\Space\Job;
+use Symfony\Component\Uid\Uuid;
 
 class Create extends Job
 {
@@ -37,7 +38,17 @@ class Create extends Job
 
             return ['entity' => $data];
         } else {
-            $entity = $space->getRepository()->create(get_object_vars($this->values));
+            $values = get_object_vars($this->values);
+            foreach ($values as $k => $v) {
+                $type = $space->getProperty($k)['type'];
+                if ($type == 'uuid') {
+                    $v = new Uuid($v);
+                } elseif (is_object($v)) {
+                    $v = $converter->toArray($v);
+                }
+                $values[$k] = $v;
+            }
+            $entity = $space->getRepository()->create($values);
             $this->getMapper()->save($entity);
 
             return ['entity' => $entity];

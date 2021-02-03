@@ -5,6 +5,7 @@ namespace Job\Entity;
 use Basis\Converter;
 use Exception;
 use Job\Space\Job;
+use Symfony\Component\Uid\Uuid;
 use Tarantool\Client\Schema\Operations;
 
 class Update extends Job
@@ -54,10 +55,13 @@ class Update extends Job
 
             $entity = $space->getRepository()->findOne($pk);
             foreach ($this->values as $k => $v) {
-                $entity->$k = $v;
-                if (is_object($v)) {
-                    $entity->$k = $converter->toArray($v);
+                $type = $space->getProperty($k)['type'];
+                if ($type == 'uuid') {
+                    $v = new Uuid($v);
+                } elseif (is_object($v)) {
+                    $v = $converter->toArray($v);
                 }
+                $entity->$k = $v;
             }
             $this->getMapper()->save($entity);
         }

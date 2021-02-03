@@ -4,6 +4,8 @@ namespace Job\Space;
 
 use Decimal\Decimal;
 use Exception;
+use MessagePack\Ext;
+use Symfony\Component\Uid\Uuid;
 use Tarantool\Client\Schema\Criteria;
 
 class Select extends Job
@@ -46,9 +48,13 @@ class Select extends Job
                     if (is_object($value) && get_class($value) == Decimal::class) {
                         $value = $value->toString();
                     }
-                    if (is_numeric($value) && $value > 2 ^ 32 - 1) {
-                        $data[$x][$y] = (string) $value;
+                    if (is_subclass_of($value, Uuid::class)) {
+                        $value = $value->toRfc4122();
                     }
+                    if (is_numeric($value) && $value > 2 ^ 32 - 1) {
+                        $value = (string) $value;
+                    }
+                    $data[$x][$y] = $value;
                 }
             }
 

@@ -4,8 +4,9 @@
     "require": {
         "basis-company/framework" : "3.12.4",
         "php": "^7.2",
-        "rybakit/msgpack": "0.7.0",
-        "tarantool/mapper": "4.5.18"
+        "rybakit/msgpack": "0.7.2",
+        "symfony/uid": "^5.2.3",
+        "tarantool/mapper": "4.6.13"
     },
     "authors": [{
         "name": "Dmitry Krokhin",
