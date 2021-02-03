@@ -48,6 +48,18 @@ Ext.define('Admin.Space.toolbar.Collection', {
   },
 
   refreshStore() {
+    if (!this.up('grid').isVisible()) {
+      // grid is not active
+      return;
+    }
+    if (!this.up('grid').up('tabpanel').isVisible()) {
+      // space tab is not active
+      return;
+    }
+    if (!this.up('grid').up('tabpanel').up('tabpanel').isVisible()) {
+      // database tab is not active
+      return;
+    }
     this.down('[name=refresh]').blur();
     return this.up('grid').store.load();
   },
