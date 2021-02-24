@@ -47,7 +47,7 @@ class Select extends Job
                 foreach ($tuple as $y => $value) {
                     if ($value instanceof Decimal) {
                         $value = $value->toString();
-                    } else if ($value instanceof Uuid)) {
+                    } else if ($value instanceof Uuid) {
                         $value = $value->toRfc4122();
                     }
                     $data[$x][$y] = $value;
