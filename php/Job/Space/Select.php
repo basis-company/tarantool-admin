@@ -4,19 +4,19 @@ namespace Job\Space;
 
 use Decimal\Decimal;
 use Exception;
-use MessagePack\Ext;
 use Symfony\Component\Uid\Uuid;
 use Tarantool\Client\Schema\Criteria;
+use Tarantool\Client\Schema\IteratorTypes;
 
 class Select extends Job
 {
-    public $limit = 0;
-    public $offset = 0;
-    public $index = 0;
-    public $key = [];
-    public $iterator = 2;
+    public int $limit = 0;
+    public int $offset = 0;
+    public int $index = 0;
+    public array $key = [];
+    public int $iterator = IteratorTypes::ALL;
 
-    public function run()
+    public function run(): array
     {
         $key = [];
         foreach ($this->key as $value) {
@@ -64,7 +64,7 @@ class Select extends Job
                 }
                 [$total] = $this->getMapper()->getClient()
                     ->call("box.space.$this->space.index.$indexName:count", $key);
-            } catch (Exception $e) {
+            } catch (Exception) {
                 $criteria = $criteria->andLimit($this->limit + 1);
                 $extra = $this->getMapper()->getClient()->getSpace($this->space)
                     ->select($criteria);

@@ -1,14 +1,12 @@
 <?php
 
-include 'vendor/autoload.php';
-
 use Basis\Application;
 use Basis\Http;
 
-date_default_timezone_set('Europe/Moscow');
+include dirname(__DIR__) . '/vendor/autoload.php';
 
 try {
-    $app = new Application(__DIR__);
+    $app = new Application(dirname(__DIR__));
     echo $app->get(Http::class)->process($_SERVER['REQUEST_URI']);
 } catch (Exception $e) {
     echo $e->getMessage();

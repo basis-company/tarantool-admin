@@ -6,7 +6,7 @@ use Exception;
 
 class Info extends Job
 {
-    public function run()
+    public function run(): array
     {
         $client = $this->getMapper()->getClient();
 
@@ -20,7 +20,7 @@ class Info extends Job
         foreach ($stats as $k => $function) {
             try {
                 $info[$k] = $client->call($function)[0];
-            } catch (Exception $e) {
+            } catch (Exception) {
             }
         }
 

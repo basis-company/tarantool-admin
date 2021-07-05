@@ -2,9 +2,11 @@
 
 namespace Job\Space;
 
+use Exception;
+
 class Drop extends Job
 {
-    public function run()
+    public function run(): void
     {
         $space = $this->getSpace();
         if ($space->getId() < 512) {

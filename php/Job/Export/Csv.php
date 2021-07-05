@@ -2,19 +2,16 @@
 
 namespace Job\Export;
 
-use Exception;
 use Job\Space\Select;
+use RuntimeException;
 
 class Csv extends Select
 {
-    public $limit = 1000;
+    public int $limit = 1000;
+    public string $delimiter = ";";
+    public int $keepFiles = 60; // 60 seconds
 
-    public $delimiter = ";";
-
-    // 60 seconds
-    public $keepFiles = 60;
-
-    public function run()
+    public function run(): array
     {
         $name = md5(json_encode([
             $this->space,
@@ -23,6 +20,7 @@ class Csv extends Select
             microtime(1),
         ]));
 
+        $data = [];
         $page = 0;
         $this->offset = 0;
 
@@ -48,10 +46,12 @@ class Csv extends Select
         $folder = 'admin/downloads';
 
         if (!is_dir($folder)) {
-            mkdir($folder);
+            if (!mkdir($folder) && !is_dir($folder)) {
+                throw new RuntimeException(sprintf('Directory "%s" was not created', $folder));
+            }
         } else {
             foreach (scandir($folder) as $file) {
-                if ($file == '.' || $file == '..') {
+                if ($file === '.' || $file === '..') {
                     continue;
                 }
                 $path = $folder . '/' . $file;

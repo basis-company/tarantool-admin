@@ -8,7 +8,7 @@ class Bootstrap
 {
     use Toolkit;
 
-    public function run()
+    public function run(): object
     {
         return $this->dispatch('module.configure');
     }
