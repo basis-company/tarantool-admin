@@ -6,20 +6,19 @@ use Exception;
 
 class AddProperty extends Job
 {
-    public $name;
-    public $type;
-    public $is_nullable;
+    public string $name;
+    public string $type;
+    public bool $is_nullable;
 
-    public function run()
+    public function run(): void
     {
         $space = $this->getSpace();
-
         if ($space->hasProperty($this->name)) {
-            throw new Exception("Property $this->name exists");
+            throw new Exception("Property $this->name already exists");
         }
 
         $space->addProperty($this->name, $this->type, [
-            'is_nullable' => $this->is_nullable
+            'is_nullable' => $this->is_nullable,
         ]);
     }
 }

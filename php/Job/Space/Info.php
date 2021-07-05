@@ -6,10 +6,9 @@ use Exception;
 
 class Info extends Job
 {
-    public function run()
+    public function run(): array
     {
         $space = $this->getSpace();
-
         $format = $space->getFormat();
         $indexes = $space->getIndexes();
         $fake = !count($format);
@@ -29,11 +28,10 @@ class Info extends Job
 
         foreach ($indexes as $i => $index) {
             $spaceName = $space->getName();
-            $id = $index['iid'];
             $name = $index['name'];
             try {
                 $indexes[$i]['size'] = $this->getClient()->call("box.space.$spaceName.index.$name:bsize")[0];
-            } catch (Exception $e) {
+            } catch (Exception) {
                 // no bsize
                 break;
             }

@@ -1,20 +1,26 @@
 {
     "name": "basis-company/tarantool-admin",
+    "description": "A web interface for Tarantool.",
     "license": "MIT",
-    "require": {
-        "basis-company/framework" : "3.12.4",
-        "php": "^7.2",
-        "rybakit/msgpack": "0.7.2",
-        "symfony/uid": "^5.2.3",
-        "tarantool/mapper": "4.6.13"
-    },
     "authors": [{
         "name": "Dmitry Krokhin",
         "email": "nekufa@gmail.com"
     }],
+    "require": {
+        "php": "^8",
+        "ext-decimal": "*",
+        "rybakit/msgpack": "^0.8",
+        "symfony/uid": "^5.3",
+        "tarantool/mapper": "^4.6",
+        "basis-company/framework": "^4.8",
+        "nyholm/psr7": "^1.4",
+        "symfony/http-client": "^5.3",
+        "symfony/cache": "^5.3",
+        "basis-company/opentelemetry": "^0.0.6"
+    },
     "autoload": {
         "psr-4": {
-            "": "php"
+            "": "php/"
         }
     }
 }

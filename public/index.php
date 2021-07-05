@@ -1,13 +1,12 @@
 <?php
 
 $version = null;
-$filename = __DIR__ . '/version.php';
+$filename = dirname(__DIR__) . '/var/version.php';
 
 if (file_exists($filename)) {
     $version = include $filename;
     $version = $version['tag'] ?: $version['short_sha'];
 }
-
 ?>
 <!DOCTYPE html>
 <html>

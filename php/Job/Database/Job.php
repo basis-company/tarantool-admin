@@ -9,22 +9,21 @@ use Tarantool\Mapper\Mapper;
 
 abstract class Job
 {
-    public $socket;
+    public ?string $socket = null;
+    public ?string $hostname = null;
+    public string|int|null $port = null;
+    public ?string $username = null;
+    public ?string $password = null;
 
-    public $hostname;
-    public $port;
-    public $username;
-    public $password;
+    private Client $client;
+    private Mapper $mapper;
 
-    private $client;
-    private $mapper;
-
-    public function getClient()
+    public function getClient(): Client
     {
-        if (!$this->client) {
+        if (!isset($this->client)) {
             if (!$this->hostname || !$this->port) {
                 if (!$this->socket) {
-                    throw new Exception("Invalid params");
+                    throw new Exception('Invalid connection parameters');
                 }
             }
 
@@ -37,9 +36,9 @@ abstract class Job
         return $this->client;
     }
 
-    public function getMapper()
+    public function getMapper(): Mapper
     {
-        if (!$this->mapper) {
+        if (!isset($this->mapper)) {
             $this->mapper = new Mapper($this->getClient());
         }
 

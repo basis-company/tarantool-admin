@@ -3,12 +3,14 @@
 namespace Job\Entity;
 
 use Job\Space\Job;
+use Exception;
+use stdClass;
 
 class Remove extends Job
 {
-    public $id;
+    public stdClass $id;
 
-    public function run()
+    public function run(): void
     {
         $space = $this->getSpace();
 

@@ -1,1 +1,11 @@
-vendor
+**/*.log
+**/*.md
+**/*.php~
+**/._*
+**/.dockerignore
+**/.DS_Store
+**/.gitignore
+**/Dockerfile
+**/Thumbs.db
+var/
+vendor/

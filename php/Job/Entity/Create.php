@@ -2,15 +2,17 @@
 
 namespace Job\Entity;
 
-use Exception;
+use Basis\Converter;
 use Job\Space\Job;
+use Exception;
+use stdClass;
 use Symfony\Component\Uid\Uuid;
 
 class Create extends Job
 {
-    public $values;
+    public stdClass $values;
 
-    public function run()
+    public function run(Converter $converter): array
     {
         $space = $this->getSpace();
 
@@ -23,25 +25,26 @@ class Create extends Job
                 $data[$k - 1] = $v;
             }
 
-            if (array_values($data) == $data) {
+            if (array_values($data) === $data) {
                 $data = array_values($data);
             } else {
                 throw new Exception('add null values');
             }
 
             // additional index-based type casting for data
-            throw new Exception("Create instance without format not implemened");
-
+            throw new Exception("Create instance without format is not implemented");
+            /*
             $space->getMapper()->getClient()
                 ->getSpace($space->getName())
                 ->insert($data);
 
             return ['entity' => $data];
+            */
         } else {
             $values = get_object_vars($this->values);
             foreach ($values as $k => $v) {
                 $type = $space->getProperty($k)['type'];
-                if ($type == 'uuid') {
+                if ($type === 'uuid') {
                     $v = new Uuid($v);
                 } elseif (is_object($v)) {
                     $v = $converter->toArray($v);
