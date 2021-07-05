@@ -2,17 +2,18 @@
 
 namespace Job\Entity;
 
+use Job\Space\Job;
 use Basis\Converter;
 use Exception;
-use Job\Space\Job;
+use stdClass;
 use Symfony\Component\Uid\Uuid;
 use Tarantool\Client\Schema\Operations;
 
 class Update extends Job
 {
-    public $values;
+    public stdClass $values;
 
-    public function run(Converter $converter)
+    public function run(Converter $converter): void
     {
         $pk = [];
         $space = $this->getSpace();
@@ -30,7 +31,7 @@ class Update extends Job
             foreach ($space->getIndexes()[0]['parts'] as $part) {
                 $value = $data[$part[0]];
                 unset($data[$part[0]]);
-                if (array_key_exists(1, $part) && $part[1] == 'unsigned') {
+                if (array_key_exists(1, $part) && $part[1] === 'unsigned') {
                     $value = +$value;
                 }
                 $pk[] = $value;
@@ -49,14 +50,16 @@ class Update extends Job
                 ->getSpace($space->getName())
                 ->update($pk, $operations);
         } else {
+            $format = $space->getFormat();
             foreach ($space->getPrimaryIndex()['parts'] as $part) {
-                $pk[] = $this->values->{$space->getFormat()[$part[0]]['name']};
+                $fieldName = $format[$part[0]]['name'];
+                $pk[$fieldName] = $this->values->$fieldName;
             }
 
-            $entity = $space->getRepository()->findOne($pk);
+            $entity = $space->getRepository()->findOrFail($pk);
             foreach ($this->values as $k => $v) {
                 $type = $space->getProperty($k)['type'];
-                if ($type == 'uuid') {
+                if ($type === 'uuid') {
                     $v = new Uuid($v);
                 } elseif (is_object($v)) {
                     $v = $converter->toArray($v);

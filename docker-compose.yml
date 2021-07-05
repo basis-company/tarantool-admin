@@ -1,17 +1,23 @@
-version: '2.1'
+version: '3.5'
 
 services:
-
   admin:
     restart: always
-    image: "quay.io/basis-company/tarantool-admin"
+    build:
+      context: .
     ports:
       - "8888:80"
     volumes:
       - ./php:/var/www/html/php
-      - ./public/admin/js:/var/www/html/admin/js
-      - ./public/admin/index.php:/var/www/html/admin/index.php
-      - ./public/admin/style.css:/var/www/html/admin/style.css
+      - ./public/admin/js:/var/www/html/public/admin/js
+      - ./public/admin/index.php:/var/www/html/public/admin/index.php
+      - ./public/admin/style.css:/var/www/html/public/admin/style.css
+    environment:
+      - TARANTOOL_TCP_NODELAY=1
+      - TARANTOOL_DATABASE_QUERY=1
+      - TARANTOOL_CONNECTIONS=tarantool:3301
+    depends_on:
+      - tarantool
 
   tarantool:
     image: "tarantool/tarantool:2"

@@ -2,13 +2,11 @@
 
 namespace Job\Space;
 
-use Exception;
-
 class RemoveIndex extends Job
 {
-    public $name;
+    public string $name;
 
-    public function run()
+    public function run(): void
     {
         $space = $this->getSpace();
         $space->removeIndex($this->name);

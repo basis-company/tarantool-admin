@@ -6,13 +6,13 @@ use Exception;
 
 class CreateIndex extends Job
 {
-    public $name;
-    public $fields;
-    public $parts;
-    public $unique;
-    public $type;
+    public string $name;
+    public array|string $fields;
+    public array|string $parts;
+    public bool $unique;
+    public string $type;
 
-    public function run()
+    public function run(): void
     {
         $space = $this->getSpace();
 

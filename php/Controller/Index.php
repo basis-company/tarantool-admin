@@ -2,11 +2,9 @@
 
 namespace Controller;
 
-use Exception;
-
 class Index
 {
-    public function index()
+    public function index(): void
     {
         include 'index.php';
     }

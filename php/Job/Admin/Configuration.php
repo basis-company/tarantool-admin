@@ -4,25 +4,28 @@ namespace Job\Admin;
 
 class Configuration
 {
-    public $repository = 'basis-company/tarantool-admin';
+    public string $repository = 'basis-company/tarantool-admin';
 
     // once per hour
-    public $ttl = 3600;
+    public int $ttl = 3600;
 
-    public function run()
+    public function run(): array
     {
-        $version = @include('version.php') ?: [];
+        $version = (@include dirname(__DIR__, 3) . '/var/version.php') ?: [];
         $latest = '';
+
         if (array_key_exists('tag', $version)) {
             $latest = $version['tag'];
         }
+
         if (getenv('TARANTOOL_CHECK_VERSION') !== 'false') {
             $latest = $this->getLatest();
         }
+
         return [
-            'readOnly' => getenv('TARANTOOL_CONNECTIONS_READONLY') ? true : false,
+            'readOnly' => (bool) getenv('TARANTOOL_CONNECTIONS_READONLY'),
             'connections' => explode(',', getenv('TARANTOOL_CONNECTIONS')),
-            'query' => getenv('TARANTOOL_DATABASE_QUERY') ? true : false,
+            'query' => (bool) getenv('TARANTOOL_DATABASE_QUERY'),
             'version' => $version,
             'latest' => $latest,
         ];
@@ -30,8 +33,10 @@ class Configuration
 
     protected function getLatest()
     {
-        if (file_exists('latest.php')) {
-            $latest = include('latest.php');
+        $filename = dirname(__DIR__, 3) . '/var/latest.php';
+
+        if (file_exists($filename)) {
+            $latest = include $filename;
             if ($latest['tag'] && $latest['timestamp'] + $this->ttl >= time()) {
                 return $latest['tag'];
             }
@@ -41,15 +46,19 @@ class Configuration
             'http' => [
                 'method' => 'GET',
                 'header' => [
-                    'User-Agent: PHP'
+                    'User-Agent: PHP',
                 ]
             ]
         ]);
+
         $url = "https://api.github.com/repos/$this->repository/releases/latest";
         $tag = @json_decode(file_get_contents($url, false, $context))->tag_name;
         $timestamp = time();
 
-        file_put_contents('latest.php', '<?php return ' . var_export(compact('tag', 'timestamp'), true) . ';');
+        file_put_contents($filename,
+            '<' . '?php return ' . var_export(compact('tag', 'timestamp'), true) . ';'
+        );
+
         return $tag;
     }
 }

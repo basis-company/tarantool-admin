@@ -2,20 +2,23 @@
 
 namespace Job\Space;
 
-use Exception;
 use Job\Database\Job as DatabaseJob;
+use Exception;
+use Tarantool\Mapper\Space;
 
 abstract class Job extends DatabaseJob
 {
-    private $spaceInstance;
-    public function getSpace()
+    public string $space;
+    private Space $spaceInstance;
+
+    public function getSpace(): Space
     {
-        if (!$this->spaceInstance) {
-            if (!$this->space) {
-                throw new Exception("Invalid params");
-            }
-            $this->spaceInstance = $this->getMapper()->getSchema()->getSpace($this->space);
+        if (isset($this->spaceInstance)) {
+            return $this->spaceInstance;
         }
-        return $this->spaceInstance;
+
+        return $this->spaceInstance = $this->space
+            ? $this->getMapper()->getSchema()->getSpace($this->space)
+            : throw new Exception('Space name is not defined');
     }
 }

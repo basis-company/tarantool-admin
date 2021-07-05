@@ -3,19 +3,18 @@
 namespace Controller;
 
 use Basis\Toolkit;
-use Basis\Runner;
 use Exception;
 
 class Admin
 {
     use Toolkit;
 
-    public function index()
+    public function index(): void
     {
         include 'index.php';
     }
 
-    public function api()
+    public function api(): array
     {
         header('Content-Type: application/json');
         ini_set('display_errors', 'on');
@@ -36,11 +35,7 @@ class Admin
 
             return [
                 'success' => true,
-                'data' => $this->get(Runner::class)
-                    ->dispatch(
-                        strtolower($data->job),
-                        get_object_vars($data->params)
-                    ),
+                'data' => $this->dispatch(strtolower($data->job), get_object_vars($data->params)),
             ];
         } catch (Exception $e) {
             return [
