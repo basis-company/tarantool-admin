@@ -187,7 +187,7 @@ Ext.define('Admin.Space.Indexes', {
           emptyText: '[[1, \'unsigned\'], [5, \'string\']]',
         }, {
           fieldLabel: 'Type',
-          value: 'TREE',
+          value: 'tree',
           name: 'type',
           xtype: 'combobox',
           editable: false,
