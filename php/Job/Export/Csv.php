@@ -27,6 +27,11 @@ class Csv extends Select
         while (!$page || count($data) < $total) {
             $result = parent::run();
             foreach ($result['data'] as $item) {
+                foreach ($item as $k => $v) {
+                    if (is_array($v)) {
+                        $item[$k] = json_encode($v);
+                    }
+                }
                 $data[] = implode($this->delimiter, $item);
             }
 
