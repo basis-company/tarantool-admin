@@ -47,7 +47,7 @@ Ext.define('Admin.Space.Format', {
             store: {
               xtype: 'arraystore',
               fields: ['type'],
-              data: ['unsigned', 'str', 'boolean', '*'].map(v => [v])
+              data: ['unsigned', 'str', 'boolean', 'uuid', 'decimal', '*'].map(v => [v])
             }
           }, {
             xtype: 'checkboxfield',
