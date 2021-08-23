@@ -40,7 +40,7 @@ RUN apt-get update && apt-get install -y zip zlib1g-dev libzip-dev libmpdec-dev 
     && a2enmod rewrite
 
 RUN echo "ServerName tarantool-admin" > /etc/apache2/conf-enabled/server-name.conf
-RUN sed -i 's~DocumentRoot.*$~DocumentRoot /var/www/html/public~' /etc/apache2/sites-enabled/000-default.conf
+RUN sed -i 's~DocumentRoot.*$~DocumentRoot /var/www/html/public~' /etc/apache2/sites-available/000-default.conf
 
 RUN mkdir -p public/admin/downloads \
     && chown www-data public/admin/downloads \
