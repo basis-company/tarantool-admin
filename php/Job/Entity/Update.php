@@ -61,8 +61,23 @@ class Update extends Job
                 $type = $space->getProperty($k)['type'];
                 if ($type === 'uuid') {
                     $v = new Uuid($v);
-                } elseif (is_object($v)) {
-                    $v = $converter->toArray($v);
+                } elseif ($type == 'map') {
+                    if ($v !== null) {
+                        if (is_string($v)) {
+                            $v = json_decode($v);
+                        }
+                        if (!is_array($v) && !is_object($v)) {
+                            $extra = '';
+                            if (is_string($this->values->$k)) {
+                                $extra .= ': ' . $this->values->$k;
+                            }
+                            throw new Exception("Invalid type for '$k' ($type)$extra");
+                        }
+                        $v = $converter->toArray($v);
+                        if (!count($v)) {
+                            $v = null;
+                        }
+                    }
                 }
                 $entity->$k = $v;
             }

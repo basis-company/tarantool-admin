@@ -46,6 +46,19 @@ class Create extends Job
                 $type = $space->getProperty($k)['type'];
                 if ($type === 'uuid') {
                     $v = new Uuid($v);
+                } elseif ($type == 'map') {
+                    if ($v !== null) {
+                        if (is_string($v)) {
+                            $v = json_decode($v);
+                        }
+                        if (!is_array($v) && !is_object($v)) {
+                            throw new Exception("Invalid type for '$k' ($type): $values[$k]");
+                        }
+                        $v = $converter->toArray($v);
+                        if (!count($v)) {
+                            $v = null;
+                        }
+                    }
                 } elseif (is_object($v)) {
                     $v = $converter->toArray($v);
                 }
