@@ -16,14 +16,14 @@ Ext.define('Admin.Database.Tab', {
   listeners: {
     tabchange(tabs, tab) {
       var tabIndex = tabs.items.indexOf(tab);
+
       if (tab.xtypesChain.indexOf('space-tab') === -1) {
         localStorage.setItem('database-default-item', tabIndex);
       }
-    }
+    },
   },
 
   initComponent() {
-
     var params = this.params;
 
     this.title = '';
@@ -34,8 +34,10 @@ Ext.define('Admin.Database.Tab', {
 
     if (params.socket) {
       this.title += params.socket;
-    } else {
+    }
+    else {
       this.title += params.hostname;
+
       if (params.port != 3301) {
         this.title += ' : ' + params.port;
       }
@@ -47,18 +49,18 @@ Ext.define('Admin.Database.Tab', {
       this.activeTab = 0;
     }
 
-    if (this.activeTab == 1 && Admin.Database.Tab.prototype.items[1].hidden) {
+    if (this.activeTab == 1 && window.Admin.Database.Tab.prototype.items[1].hidden) {
       this.activeTab = 0;
     }
 
     this.callParent(arguments);
   },
 
-  items: [{
-    xtype: 'database-info'
+  items: [ {
+    xtype: 'database-info',
   }, {
-    xtype: 'database-query'
+    xtype: 'database-query',
   }, {
-    xtype: 'database-spaces'
-  }]
+    xtype: 'database-spaces',
+  } ],
 });

@@ -15,18 +15,18 @@ Ext.define('Admin.Home.New', {
     width: 250,
     enableKeyEvents: true,
     style: {
-      paddingLeft: '9px',      
+      paddingLeft: '9px',
     },
     listeners: {
       specialkey(field, e) {
-        if(e.getKey() == e.ENTER) {
+        if (e.getKey() == e.ENTER) {
           this.up('home-tab').createConnection();
         }
-      }
+      },
     },
   },
 
-  items: [{
+  items: [ {
     fieldLabel: 'Hostname',
     allowBlank: false,
     name: 'hostname',
@@ -35,20 +35,20 @@ Ext.define('Admin.Home.New', {
     name: 'port',
     xtype: 'numberfield',
     minValue: 0,
-    emptyText: 3301
+    emptyText: 3301,
   }, {
     fieldLabel: 'Username',
     name: 'username',
-    emptyText: 'guest'
+    emptyText: 'guest',
   }, {
     fieldLabel: 'Password',
     name: 'password',
-    inputType: "password",
+    inputType: 'password',
   }, {
     xtype: 'checkbox',
     boxLabel: 'remember connection',
     checked: true,
-    name: 'remember'
+    name: 'remember',
   }, {
     xtype: 'button',
     style: {
@@ -60,13 +60,13 @@ Ext.define('Admin.Home.New', {
     formBind: true,
     handler() {
       this.up('home-tab').createConnection();
-    }
-  }],
+    },
+  } ],
   tbar: {
     height: 36,
-    items: [{
+    items: [ {
       xtype: 'label',
       text: 'New connection',
-    }]
+    } ],
   },
 });

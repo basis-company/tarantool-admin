@@ -5,11 +5,11 @@ Ext.define('Admin.Space.Indexes', {
   flex: 2,
 
   statics: {
-    iterators: ['EQ', 'REQ', 'ALL', 'LT', 'LE', 'GE', 'GT', 'BITS_ALL_SET', 'BITS_ANY_SET', 'BITS_ALL_NOT_SET', 'OVERLAPS', 'NEIGHBOR'],
+    iterators: [ 'EQ', 'REQ', 'ALL', 'LT', 'LE', 'GE', 'GT', 'BITS_ALL_SET', 'BITS_ANY_SET', 'BITS_ALL_NOT_SET', 'OVERLAPS', 'NEIGHBOR' ],
   },
 
   store: {
-    fields: ['iid', 'name', 'type', 'parts', 'opts']
+    fields: [ 'iid', 'name', 'type', 'parts', 'opts' ],
   },
 
   selModel: {
@@ -27,26 +27,27 @@ Ext.define('Admin.Space.Indexes', {
     },
     itemdblclick() {
       this.down('[name=search-button]').handler();
-    }
+    },
   },
 
-  tbar: [{
+  tbar: [ {
     xtype: 'label',
     text: 'Indexes',
   }, {
     text: 'Add',
     iconCls: 'fa fa-plus-circle',
     handler() {
-      if (!this.up('space-info').down('space-format').store.getRange().length) {
-        return Ext.MessageBox.confirm("Error", "No format is defined!<br/>Do you want to continue?", (btn) => {
+      if (this.up('space-info').down('space-format').store.getRange().length) {
+        this.up('space-indexes').createNewIndex();
+      }
+      else {
+        return Ext.MessageBox.confirm('Error', 'No format is defined!<br/>Do you want to continue?', (btn) => {
           if (btn == 'yes') {
             this.up('space-indexes').createNewIndex();
           }
         });
-      } else {
-        this.up('space-indexes').createNewIndex();
       }
-    }
+    },
   }, {
     text: 'Search',
     iconCls: 'fa fa-search',
@@ -54,16 +55,17 @@ Ext.define('Admin.Space.Indexes', {
     name: 'search-button',
     handler() {
       var params = Ext.apply({
-        index: this.up('space-indexes').selModel.getCellContext().view.selection.get('iid')
+        index: this.up('space-indexes').selModel.getCellContext().view.selection.get('iid'),
       }, this.up('space-tab').params);
 
       var view = Ext.create('Admin.Space.Collection', {
         params: params,
-        autoLoad: false
+        autoLoad: false,
       });
+
       this.up('space-tab').add(view);
       this.up('space-tab').setActiveItem(view);
-    }
+    },
   }, {
     text: 'Remove',
     disabled: true,
@@ -71,7 +73,7 @@ Ext.define('Admin.Space.Indexes', {
     iconCls: 'fa fa-minus-circle',
     handler() {
       var params = Ext.apply({
-        name: this.up('space-indexes').selModel.getCellContext().view.selection.get('name')
+        name: this.up('space-indexes').selModel.getCellContext().view.selection.get('name'),
       }, this.up('space-tab').params);
 
       var store = this.up('space-indexes').store;
@@ -81,26 +83,27 @@ Ext.define('Admin.Space.Indexes', {
         dispatch('space.removeIndex', params)
           .then(() => {
             this.up('space-info').reloadInfo();
-          })
+          });
       };
 
-      if(store.getAt(recordIndex).get('iid') > 0) {
+      if (store.getAt(recordIndex).get('iid') > 0) {
         removeIndex();
-      } else {
+      }
+      else {
         Ext.MessageBox.confirm(
           'Danger!',
           'Are you sure to drop primary key ' + params.name + ' in space ' + params.space + '?<br/>All tuples will be deleted, this operation can not be undone',
           answer => {
-            if(answer == 'yes') {
+            if (answer == 'yes') {
               removeIndex();
             }
           }
         );
       }
-    }
-  }],
+    },
+  } ],
 
-  columns: [{
+  columns: [ {
     dataIndex: 'name',
     header: 'Name',
     width: 160,
@@ -108,7 +111,7 @@ Ext.define('Admin.Space.Indexes', {
     dataIndex: 'type',
     header: 'Type',
     align: 'center',
-    width: 70
+    width: 70,
   }, {
     dataIndex: 'size',
     header: 'Size',
@@ -120,19 +123,21 @@ Ext.define('Admin.Space.Indexes', {
     header: 'Unique',
     align: 'center',
     width: 80,
-    renderer: v => v.unique
+    renderer: v => v.unique,
   }, {
     dataIndex: 'parts',
     header: 'Parts',
     flex: 1,
     renderer(v) {
       var format = this.up('space-info').down('space-format').store;
-      if(!format.getCount()) {
+
+      if (!format.getCount()) {
         return v.map(info => info[0]).join(', ');
       }
+
       return v.map(info => format.getAt(info[0]).get('name')).join(', ');
-    }
-  }],
+    },
+  } ],
 
   createNewIndex() {
     var indexes = this;
@@ -140,14 +145,14 @@ Ext.define('Admin.Space.Indexes', {
     var win = Ext.create('Ext.window.Window', {
       modal: true,
       title: 'New index',
-      items: [{
+      items: [ {
         xtype: 'form',
         bodyPadding: 10,
         defaults: {
           width: 300,
           fieldLabel: 80,
         },
-        items: [{
+        items: [ {
           fieldLabel: 'Fields',
           xtype: 'tagfield',
           displayField: 'name',
@@ -155,30 +160,32 @@ Ext.define('Admin.Space.Indexes', {
           valueField: 'index',
           hidden: !fields.length,
           store: {
-            fields: ['index', 'name'],
+            fields: [ 'index', 'name' ],
             data: fields.map((r, index) => {
               return {
                 index: index,
-                name: r.get('name')
+                name: r.get('name'),
               };
-            })
+            }),
           },
           listeners: {
             select() {
               var nameField = win.down('[name=name]');
               var fieldsField = win.down('[name=fields]');
               var format = indexes.up('space-info').down('space-format').store;
-              if(!nameField.edited) {
+
+              if (!nameField.edited) {
                 var name = fieldsField.value.map(i => format.getAt(i).get('name')).join('_');
+
                 nameField.setValue(name);
               }
-            }
-          }
+            },
+          },
         }, {
           fieldLabel: 'Name',
           xtype: 'textfield',
           allowBlank: false,
-          name: 'name'
+          name: 'name',
         }, {
           fieldLabel: 'Parts',
           xtype: 'textfield',
@@ -196,17 +203,17 @@ Ext.define('Admin.Space.Indexes', {
           valueField: 'type',
           store: {
             xtype: 'arraystore',
-            fields: ['type'],
-            data: ['tree', 'hash', 'bitset', 'rtree'].map(v => [v])
-          }
+            fields: [ 'type' ],
+            data: [ 'tree', 'hash', 'bitset', 'rtree' ].map(v => [ v ]),
+          },
         }, {
           xtype: 'checkboxfield',
           boxLabel: 'Unique index',
           checked: true,
           fieldLabel: '',
           name: 'unique',
-        }],
-        bbar: ['->', {
+        } ],
+        bbar: [ '->', {
           formBind: true,
           text: 'Create',
           handler: () => {
@@ -221,14 +228,15 @@ Ext.define('Admin.Space.Indexes', {
 
             if (!params.fields && params.parts) {
               try {
-                params.parts = Ext.JSON.decode(params.parts)
-              } catch (e) {
-                return Ext.MessageBox.alert('Error!', "Invalid parts!<br/>" + e.message);
+                params.parts = Ext.JSON.decode(params.parts);
+              }
+              catch (e) {
+                return Ext.MessageBox.alert('Error!', 'Invalid parts!<br/>' + e.message);
               }
             }
 
             if (!params.parts && !params.fields) {
-              return Ext.MessageBox.alert("Error!", "No fields defined in index");
+              return Ext.MessageBox.alert('Error!', 'No fields defined in index');
             }
 
             dispatch('space.createIndex', params)
@@ -236,11 +244,12 @@ Ext.define('Admin.Space.Indexes', {
                 win.close();
                 this.up('space-info').reloadInfo();
               });
-          }
-        }]
-      }]
-    })
+          },
+        } ],
+      } ],
+    });
+
     win.show();
     win.down('textfield').focus();
-  }
+  },
 });

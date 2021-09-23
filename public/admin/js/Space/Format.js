@@ -5,16 +5,16 @@ Ext.define('Admin.Space.Format', {
   flex: 1,
 
   store: {
-    fields: ['index', 'name', 'type', 'is_nullable'],
+    fields: [ 'index', 'name', 'type', 'is_nullable' ],
   },
 
   listeners: {
     selectionchange(sm, sel) {
       this.down('[name=remove-button]').setDisabled(!sel.view.selection);
-    }
+    },
   },
 
-  tbar: [{
+  tbar: [ {
     xtype: 'label',
     text: 'Format',
   }, {
@@ -24,15 +24,15 @@ Ext.define('Admin.Space.Format', {
       var win = Ext.create('Ext.window.Window', {
         modal: true,
         title: 'New property',
-        items: [{
+        items: [ {
           xtype: 'form',
           bodyPadding: 10,
-          items: [{
+          items: [ {
             selectOnFocus: true,
             fieldLabel: 'Name',
             allowBlank: false,
             xtype: 'textfield',
-            name: 'name'
+            name: 'name',
           }, {
             fieldLabel: 'Type',
             allowBlank: false,
@@ -46,16 +46,16 @@ Ext.define('Admin.Space.Format', {
             valueField: 'type',
             store: {
               xtype: 'arraystore',
-              fields: ['type'],
-              data: ['unsigned', 'str', 'boolean', 'uuid', 'decimal', '*'].map(v => [v])
-            }
+              fields: [ 'type' ],
+              data: [ 'unsigned', 'str', 'boolean', 'uuid', 'decimal', '*' ].map(v => [ v ]),
+            },
           }, {
             xtype: 'checkboxfield',
             fieldLabel: 'Is nullable',
             checked: false,
             name: 'is_nullable',
-          }],
-          bbar: ['->', {
+          } ],
+          bbar: [ '->', {
             formBind: true,
             text: 'Create',
             handler: () => {
@@ -71,13 +71,14 @@ Ext.define('Admin.Space.Format', {
                   win.close();
                   this.up('space-info').reloadInfo();
                 });
-            }
-          }]
-        }]
+            },
+          } ],
+        } ],
       });
+
       win.show();
       win.down('textfield').focus();
-    }
+    },
   }, {
     disabled: true,
     name: 'remove-button',
@@ -92,8 +93,8 @@ Ext.define('Admin.Space.Format', {
         .then(() => {
           this.up('space-info').reloadInfo();
         });
-    }
-  }],
+    },
+  } ],
 
   selModel: {
     type: 'spreadsheet',
@@ -103,13 +104,13 @@ Ext.define('Admin.Space.Format', {
     ptype: 'clipboard',
   },
 
-  columns: [{
+  columns: [ {
     header: '#',
     width: 35,
     align: 'center',
     dataIndex: 'index',
     renderer: v => v + 1,
-  },{
+  }, {
     header: 'Name',
     dataIndex: 'name',
     flex: 1,
@@ -122,13 +123,13 @@ Ext.define('Admin.Space.Format', {
     dataIndex: 'is_nullable',
     width: 80,
     align: 'center',
-    renderer(v, e, r) {
+    renderer(v) {
       return v ? '<span class="fa fa-check" style="font-size:14px;"></span>' : '-';
-    }
+    },
   }, {
     header: 'Reference',
     dataIndex: 'reference',
     hidden: true,
-    flex: 1
-  }]
+    flex: 1,
+  } ],
 });

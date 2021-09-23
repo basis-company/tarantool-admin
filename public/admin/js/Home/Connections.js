@@ -12,21 +12,21 @@ Ext.define('Admin.Home.Connections', {
     selectionchange(sm, sel) {
       this.down('[name=connect-button]').setDisabled(!sel.length);
       this.down('[name=remove-button]').setDisabled(!sel.length);
-    }
+    },
   },
 
   store: {
-    fields: ['hostname', 'port', 'username', 'password'],
+    fields: [ 'hostname', 'port', 'username', 'password' ],
     sorters: [
-      {property: 'hostname', direction: 'ASC'},
-      {property: 'port', direction: 'ASC'},
-      {property: 'username', direction: 'ASC'},
-    ]
+      { property: 'hostname', direction: 'ASC' },
+      { property: 'port', direction: 'ASC' },
+      { property: 'username', direction: 'ASC' },
+    ],
   },
 
-  tbar: [{
+  tbar: [ {
     xtype: 'label',
-    text: 'Connection list'
+    text: 'Connection list',
   }, {
     xtype: 'filter-field',
   }, {
@@ -35,9 +35,13 @@ Ext.define('Admin.Home.Connections', {
     iconCls: 'fa fa-link',
     disabled: true,
     handler() {
-      var connection = this.up('grid').getSelectionModel().getSelection()[0].data;
+      var connection = this.up('grid')
+        .getSelectionModel()
+        .getSelection()[0]
+        .data;
+
       this.up('home-tab').showDatabase(connection);
-    }
+    },
   }, {
     text: 'Remove',
     name: 'remove-button',
@@ -47,12 +51,15 @@ Ext.define('Admin.Home.Connections', {
     handler() {
       Ext.MessageBox.confirm('Confirmation', 'Are you sure want to remove selected connection?<br/>This operation has no rollback!', (btn) => {
         if (btn == 'yes') {
-          var connection = this.up('grid').getSelectionModel().getSelection()[0].data;
+          var connection = this.up('grid')
+            .getSelectionModel()
+            .getSelection()[0]
+            .data;
+
           this.up('home-tab').removeConnection(connection);
         }
       });
-    }
-
+    },
   }, {
     text: 'Remove all',
     name: 'remove-all',
@@ -61,41 +68,46 @@ Ext.define('Admin.Home.Connections', {
     handler() {
       Ext.MessageBox.confirm('Confirmation', 'Are you sure want to remove all connections?<br/>This operation has no rollback!', (btn) => {
         if (btn == 'yes') {
-          var connection = this.up('grid').getSelectionModel().getSelection()[0].data;
+          var connection = this.up('grid')
+            .getSelectionModel()
+            .getSelection()[0]
+            .data;
+
           this.up('home-tab').removeConnection(connection);
         }
       });
       this.up('home-tab').clearConnections();
-    }
-  }],
-  columns: [{
+    },
+  } ],
+  columns: [ {
     dataIndex: 'hostname',
     header: 'Hostname',
     align: 'center',
     width: 150,
     renderer(v, e, r) {
       return v || r.get('socket');
-    }
+    },
   }, {
     header: 'Port',
     dataIndex: 'port',
     align: 'center',
     renderer(v, el) {
-      if(v == 3301) {
-        el.style = "color: #999";
+      if (v == 3301) {
+        el.style = 'color: #999';
       }
+
       return v;
-    }
+    },
   }, {
     header: 'Username',
     dataIndex: 'username',
     align: 'center',
     renderer(v, el) {
-      if(v == 'guest') {
-        el.style = "color: #999";
+      if (v == 'guest') {
+        el.style = 'color: #999';
       }
-      return v;
-    }
-  }]
 
+      return v;
+    },
+  } ],
 });

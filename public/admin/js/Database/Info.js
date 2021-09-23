@@ -27,55 +27,56 @@ Ext.define('Admin.Database.Info', {
               action: k,
               rps: result.stat[k].rps,
               total: result.stat[k].total,
-            }
+            };
           }));
         })
-        .catch(e => this.close())
+        .catch(() => this.close());
     },
   },
 
-
-  items: [{
+  items: [ {
     width: 250,
     tbar: {
       height: 36,
-      items: [{
+      items: [ {
         xtype: 'label',
         text: 'Instance information',
-      }],
+      } ],
     },
     name: 'info',
     xtype: 'propertygrid',
     nameColumnWidth: 80,
     listeners: {
-      beforeedit: function (e) { return false; }
+      beforeedit: function() {
+        return false;
+      },
     },
     source: {},
     customRenderers: {
       quota_used: Ext.util.Format.fileSize,
-    }
+    },
   }, {
     tbar: {
       height: 36,
-      items: [{
+      items: [ {
         xtype: 'label',
         text: 'Query counters',
-      }],
+      } ],
     },
     width: 300,
     name: 'stat',
     readonly: true,
     xtype: 'grid',
     store: {
-      fields: ['action', 'rps', 'total'],
-      sorters: [{property: 'action', direction: 'ASC'}]
+      fields: [ 'action', 'rps', 'total' ],
+      sorters: [ { property: 'action', direction: 'ASC' } ],
     },
-    columns: [{
+    columns: [ {
       header: 'Action',
       dataIndex: 'action',
       renderer(v) {
-        return ( v || "" ).toLowerCase();
-      }
+        return (v || '').toLowerCase();
+      },
     }, {
       header: 'Rps',
       dataIndex: 'rps',
@@ -90,21 +91,23 @@ Ext.define('Admin.Database.Info', {
       renderer(v) {
         return v || '-';
       },
-    }]
+    } ],
   }, {
     width: 250,
     tbar: {
       height: 36,
-      items: [{
+      items: [ {
         xtype: 'label',
         text: 'Memory usage',
-      }],
+      } ],
     },
     name: 'slab',
     xtype: 'propertygrid',
     nameColumnWidth: 150,
     listeners: {
-      beforeedit: function (e) { return false; }
+      beforeedit: function() {
+        return false;
+      },
     },
     source: {},
     customRenderers: {
@@ -114,6 +117,6 @@ Ext.define('Admin.Database.Info', {
       items_used: Ext.util.Format.fileSize,
       quota_size: Ext.util.Format.fileSize,
       quota_used: Ext.util.Format.fileSize,
-    }
-  }]
+    },
+  } ],
 });

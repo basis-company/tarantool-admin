@@ -12,35 +12,36 @@ Ext.define('Admin.Space.Collection', {
   ],
 
   selModel: {
-     type: 'spreadsheet',
-     columnSelect: true,
-     listeners: {
+    type: 'spreadsheet',
+    columnSelect: true,
+    listeners: {
       selectionchange(grid, sel) {
-        if(this.view.grid.down('[text=Update]')) {
+        if (this.view.grid.down('[text=Update]')) {
           this.view.grid.down('[text=Update]').setDisabled(!sel.length);
           this.view.grid.down('[text=Delete]').setDisabled(!sel.length);
         }
-      }
-     }
+      },
+    },
   },
 
   plugins: {
-      ptype: 'clipboard',
+    ptype: 'clipboard',
   },
 
-  tbar: [{
+  tbar: [ {
     iconCls: 'fa fa-chevron-left',
   }, {
     xtype: 'label',
     name: 'paging-info',
   }, {
     iconCls: 'fa fa-chevron-right',
-  }],
+  } ],
 
   listeners: {
     columnresize(table, column, width) {
-      if(width != 50) {
+      if (width != 50) {
         var config = table.grid.getWidthConfig();
+
         config[column.fullColumnIndex] = width;
         localStorage.setItem(table.grid.params.space+'_width', Ext.JSON.encode(config));
       }
@@ -49,28 +50,30 @@ Ext.define('Admin.Space.Collection', {
 
   getWidthConfig() {
     var config = localStorage.getItem(this.params.space+'_width');
-    if(config) {
+
+    if (config) {
       config = Ext.JSON.decode(config);
     }
-    if(!config) {
+
+    if (!config) {
       config = [];
     }
+
     return config;
   },
 
   autoLoad: true,
 
   initComponent() {
-
-    if(!this.params) {
+    if (!this.params) {
       this.params = this.up('space-tab').params;
     }
 
     this.tbar = Ext.create('Admin.Space.toolbar.Collection', {
-      params: this.params
+      params: this.params,
     });
 
-    if(this.params.index !== undefined) {
+    if (this.params.index !== undefined) {
       this.closable = true;
       this.iconCls = 'fa fa-search';
     }
@@ -81,7 +84,7 @@ Ext.define('Admin.Space.Collection', {
       this.on('reconfigure', () => this.store.load());
     }
 
-    this.on('itemdblclick', (record) => {
+    this.on('itemdblclick', () => {
       this.down('[text=Update]').handler();
     });
 
@@ -90,8 +93,8 @@ Ext.define('Admin.Space.Collection', {
       activate: () => {
         dispatch('space.info', this.params)
           .then(result => {
-
             var fields = [];
+
             result.format.forEach(p => fields.push(p.name));
 
             this.fields = fields;
@@ -103,38 +106,43 @@ Ext.define('Admin.Space.Collection', {
             var store = Ext.create('Ext.data.ArrayStore', {
               model: Ext.define(null, {
                 extend: 'Ext.data.Model',
-                fields: ['_'].concat(fields),
-                idProperty: '_'
+                fields: [ '_' ].concat(fields),
+                idProperty: '_',
               }),
               proxy: 'pagingdispatch',
               listeners: {
                 load: () => {
                   this.down('[name=export]').setDisabled(!this.store.getCount());
                   var maxSize = 0;
-                  if(result.fake) {
+
+                  if (result.fake) {
                     this.store.getRange().forEach(r => {
-                      if(Ext.Object.getSize(r.data) > maxSize) {
+                      if (Ext.Object.getSize(r.data) > maxSize) {
                         maxSize = Ext.Object.getSize(r.data);
                       }
                     });
                   }
+
                   columns.forEach((c, n) => {
-                    if(result.fake) {
-                      if(n >= maxSize-1) {
+                    if (result.fake) {
+                      if (n >= maxSize-1) {
                         this.getColumns()[n+1].hide();
-                      } else {
+                      }
+                      else {
                         this.getColumns()[n+1].show();
                       }
                     }
                   });
-                  if(Ext.Object.getSize(config) === 0) {
+
+                  if (Ext.Object.getSize(config) === 0) {
                     columns.forEach((c, n) => {
                       this.view.autoSizeColumn(n);
                     });
                   }
+
                   this.down('toolbar-collection').updateState();
-                }
-              }
+                },
+              },
             });
 
             store.proxy.job = 'space.select';
@@ -150,19 +158,21 @@ Ext.define('Admin.Space.Collection', {
                   if (Ext.isObject(v) || (Ext.isArray(v) && v[0])) {
                     v = Ext.JSON.encode(v);
                   }
+
                   if (Ext.isString(v) && v.indexOf('<') !== -1) {
                     v = Ext.String.htmlEncode(v);
                   }
+
                   return v;
-                }
+                },
               };
             });
 
             this.down('toolbar-collection').applyMeta();
 
-            if(this.params.index !== undefined) {
+            if (this.params.index !== undefined) {
               this.addDocked(Ext.create('Admin.Space.toolbar.Search', {
-                collection: this
+                collection: this,
               }), 0);
             }
 
@@ -172,19 +182,18 @@ Ext.define('Admin.Space.Collection', {
               this.down('[name=pageSize]').setValue(localStorage.getItem('admin-page-size'));
             }
           });
-      }
+      },
     });
   },
 
   createEntityWindow(entity) {
-
     var id;
-
     var primary = this.indexes[0].parts.map(p => this.fields[p[0]]);
 
-    if(entity) {
+    if (entity) {
       var key = primary.map(f => entity.get(f));
-      id = key.length == 1 ? key[0] : "[" + key.join(', ') + "]";
+
+      id = key.length == 1 ? key[0] : '[' + key.join(', ') + ']';
     }
 
     var required = Ext.Array.unique(Ext.Array.flatten(this.indexes.map(index => index.parts.map(p => p[0]))));
@@ -199,41 +208,51 @@ Ext.define('Admin.Space.Collection', {
         allowBlank: !Ext.Array.contains(required, id),
         flex: 1,
       };
-      if(field.type == '*') {
+
+      if (field.type == '*') {
         complexTypes.push(field.name);
       }
-      if (['unsigned', 'UNSIGNED', 'num', 'NUM'].indexOf(field.type) != -1) {
+
+      if ([ 'unsigned', 'UNSIGNED', 'num', 'NUM' ].indexOf(field.type) != -1) {
         Ext.apply(item, {
           xtype: 'numberfield',
           hideTrigger: true,
         });
       }
-      if (['boolean', 'BOOLEAN'].indexOf(field.type) != -1) {
+
+      if ([ 'boolean', 'BOOLEAN' ].indexOf(field.type) != -1) {
         Ext.apply(item, {
           xtype: 'checkbox',
         });
       }
-      if(entity) {
+
+      if (entity) {
         item.value = entity.get(field.name);
-        if(Ext.isObject(item.value) || Ext.isArray(item.value)) {
+
+        if (Ext.isObject(item.value) || Ext.isArray(item.value)) {
           if (complexTypes.indexOf(field.name) == -1) {
             complexTypes.push(field.name);
           }
+
           item.value = Ext.JSON.encode(item.value);
         }
-        if(primary.indexOf(field.name) !== -1) {
+
+        if (primary.indexOf(field.name) !== -1) {
           item.readOnly = true;
         }
+
         if (item.xtype == 'numberfield' && item.value >= Math.pow(2, 32)) {
           item.xtype = 'textfield';
         }
       }
+
       return item;
     });
 
     var columnsCount = 1;
     var itemsPerColumn = items.length;
-    while(itemsPerColumn >= 16) {
+
+    while (itemsPerColumn >= 16) {
       itemsPerColumn /= 2;
       columnsCount++;
     }
@@ -241,42 +260,44 @@ Ext.define('Admin.Space.Collection', {
     itemsPerColumn = Math.ceil(itemsPerColumn);
 
     var columns = [];
-    if(columnsCount > 1) {
+
+    if (columnsCount > 1) {
       var i;
-      for(i = 0; i < columnsCount; i++) {
+
+      for (i = 0; i < columnsCount; i++) {
         columns.push({
           border: false,
           flex: 1,
           columnWidth: .5,
           layout: {
             type: 'vbox',
-            align: 'stretch'
+            align: 'stretch',
           },
-          items: Ext.Array.slice(items, i*itemsPerColumn, (i+1) * itemsPerColumn)
+          items: Ext.Array.slice(items, i*itemsPerColumn, (i+1) * itemsPerColumn),
         });
       }
     }
 
     var win = Ext.create('Ext.window.Window', {
-      title: !entity ? 'New ' + this.params.space : 'Update ' + this.params.space + ' ' + id,
+      title: entity ? 'Update ' + this.params.space + ' ' + id : 'New ' + this.params.space,
       modal: true,
       layout: 'fit',
-      items: [{
+      items: [ {
         xtype: 'form',
         layout: columns.length > 1 ? 'column' : {
           type: 'vbox',
-          align: 'stretch'
+          align: 'stretch',
         },
         bodyPadding: 10,
         items: columns.length > 1 ? columns : items,
-        bbar: ['->', {
-          text: !entity ? 'Create' : 'Update',
+        bbar: [ '->', {
+          text: entity ? 'Update' : 'Create',
           formBind: true,
           handler: () => {
-
             var job = entity ? 'entity.update' : 'entity.create';
             var currentValues = win.down('form').getValues();
             var values = {};
+
             items.forEach(item => {
               if (item.xtype == 'checkbox') {
                 if (!currentValues[item.fieldLabel]) {
@@ -284,21 +305,23 @@ Ext.define('Admin.Space.Collection', {
                 }
               }
             });
+
             complexTypes.forEach(name => {
               try {
                 currentValues[name] = Ext.JSON.decode(currentValues[name]);
-              } catch (e) {
+              }
+              catch (e) {
                 currentValues[name] = null;
               }
             });
 
             Ext.Object.each(initialValues, (k, v) => {
-              if(v != currentValues[k]) {
+              if (v != currentValues[k]) {
                 values[k] = v;
               }
             });
             Ext.Object.each(currentValues, (k, v) => {
-              if(v != initialValues[k]) {
+              if (v != initialValues[k]) {
                 values[k] = v;
               }
             });
@@ -309,26 +332,27 @@ Ext.define('Admin.Space.Collection', {
               }
             });
 
-            if(!Ext.Object.getSize(values)) {
+            if (!Ext.Object.getSize(values)) {
               return win.close();
             }
 
-            if(entity) {
+            if (entity) {
               primary.forEach(f =>  values[f] = entity.get(f));
             }
 
             var params = Ext.apply({
-              values: values
+              values: values,
             }, this.params);
 
             dispatch(job, params).then(() => {
               win.close();
               this.store.load();
             });
-          }
-        }]
-      }]
+          },
+        } ],
+      } ],
     });
+
     win.show();
 
     var initialValues = win.down('form').getValues();
