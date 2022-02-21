@@ -9,6 +9,12 @@ Ext.define('Admin.Space.Format', {
   },
 
   listeners: {
+    render() {
+      if (window.configuration.readOnly) {
+        this.down('[text=Add]').hide();
+        this.down('[text=Remove]').hide();
+      }
+    },
     selectionchange(sm, sel) {
       this.down('[name=remove-button]').setDisabled(!sel.view.selection);
     },

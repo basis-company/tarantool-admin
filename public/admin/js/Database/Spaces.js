@@ -125,6 +125,12 @@ Ext.define('Admin.Database.Spaces', {
 
   listeners: {
     render: function() {
+      if (window.configuration.readOnly) {
+        this.down('[text=Create]').hide();
+        this.down('[text=Truncate]').hide();
+        this.down('[text=Drop]').hide();
+      }
+
       this.store.addFilter((record) => {
         if (this.down('[name=system-spaces]').value) {
           return true;

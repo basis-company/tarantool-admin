@@ -38,6 +38,14 @@ Ext.define('Admin.Space.Collection', {
   } ],
 
   listeners: {
+    render() {
+      if (window.configuration.readOnly) {
+        this.down('[text=Create]').hide();
+        this.down('[text=Update]').hide();
+        this.down('[text=Delete]').hide();
+        this.down('[text=Truncate]').hide();
+      }
+    },
     columnresize(table, column, width) {
       if (width != 50) {
         var config = table.grid.getWidthConfig();
@@ -278,8 +286,14 @@ Ext.define('Admin.Space.Collection', {
       }
     }
 
+    var windowTitle = entity ? 'Update ' + this.params.space + ' ' + id : 'New ' + this.params.space;
+
+    if (window.configuration.readOnly) {
+      windowTitle = 'Info for ' + this.params.space + ' ' + id;
+    }
+
     var win = Ext.create('Ext.window.Window', {
-      title: entity ? 'Update ' + this.params.space + ' ' + id : 'New ' + this.params.space,
+      title: windowTitle,
       modal: true,
       layout: 'fit',
       items: [ {
@@ -293,6 +307,7 @@ Ext.define('Admin.Space.Collection', {
         bbar: [ '->', {
           text: entity ? 'Update' : 'Create',
           formBind: true,
+          hidden: window.configuration.readOnly,
           handler: () => {
             var job = entity ? 'entity.update' : 'entity.create';
             var currentValues = win.down('form').getValues();

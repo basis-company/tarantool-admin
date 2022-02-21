@@ -1,5 +1,5 @@
 # Build
-FROM php:8-apache AS build
+FROM php:8.0-apache AS build
 
 WORKDIR /build
 
@@ -29,7 +29,7 @@ RUN composer install --prefer-dist --no-dev --no-autoloader --no-scripts --no-pr
 
 
 # Runtime
-FROM php:8-apache
+FROM php:8.0-apache
 
 WORKDIR /var/www/html
 

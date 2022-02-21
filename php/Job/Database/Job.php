@@ -3,6 +3,10 @@
 namespace Job\Database;
 
 use Exception;
+use Job\Database\Info as DatabaseInfo;
+use Job\Database\Spaces as SpaceList;
+use Job\Space\Info as SpaceInfo;
+use Job\Space\Select as Select;
 use Tarantool\Client\Client;
 use Tarantool\Client\Middleware\AuthenticationMiddleware;
 use Tarantool\Mapper\Mapper;
@@ -20,6 +24,22 @@ abstract class Job
 
     public function getClient(): Client
     {
+        if (getenv('TARANTOOL_READONLY') === 'true' || getenv('TARANTOOL_READONLY') === '1') {
+            $changes = !in_array(get_class($this), [Info::class, Select::class, SpaceInfo::class, Spaces::class]);
+            if (get_class($this) == Execute::class) {
+                $changes = false;
+                $stoplist = 'drop truncate create format insert update';
+                foreach (explode(' ', $stoplist) as $candidate) {
+                    if (strpos(strtolower($this->code), $candidate) !== false) {
+                        $changes = true;
+                    }
+                }
+            }
+            if ($changes) {
+                throw new Exception("Tarantool admin is in readonly mode");
+            }
+        }
+
         if (!isset($this->client)) {
             if (!$this->hostname || !$this->port) {
                 if (!$this->socket) {
@@ -27,7 +47,7 @@ abstract class Job
                 }
             }
 
-            $dsn = $this->socket ?: 'tcp://'.$this->hostname.':'.$this->port;
+            $dsn = $this->socket ?: 'tcp://' . $this->hostname . ':' . $this->port;
             $this->client = Client::fromDsn($dsn)->withMiddleware(
                 new AuthenticationMiddleware($this->username ?: 'guest', $this->password),
             );

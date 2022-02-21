@@ -22,10 +22,13 @@ class Configuration
             $latest = $this->getLatest();
         }
 
+
+
         return [
-            'readOnly' => (bool) getenv('TARANTOOL_CONNECTIONS_READONLY'),
+            'connectionsReadOnly' => (bool) getenv('TARANTOOL_CONNECTIONS_READONLY'),
             'connections' => explode(',', getenv('TARANTOOL_CONNECTIONS')),
             'query' => (bool) getenv('TARANTOOL_DATABASE_QUERY'),
+            'readOnly' => getenv('TARANTOOL_DATABASE_QUERY') == 'true' || getenv('TARANTOOL_DATABASE_QUERY') == '1',
             'version' => $version,
             'latest' => $latest,
         ];

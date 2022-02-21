@@ -12,7 +12,7 @@
         "rybakit/msgpack": "^0.8",
         "symfony/uid": "^5.3",
         "tarantool/mapper": "^4.6",
-        "basis-company/framework": "^4.8",
+        "basis-company/framework": "4.8.26",
         "nyholm/psr7": "^1.4",
         "symfony/http-client": "^5.3",
         "symfony/cache": "^5.3",
