@@ -13,6 +13,7 @@ Application can be configured via environment:
 * TARANTOOL_CONNECTIONS - comma-separated connection strings
 * TARANTOOL_CONNECTIONS_READONLY - disable connections editor
 * TARANTOOL_DATABASE_QUERY - enable Query database tab
+* TARANTOOL_ENABLE_VINYL_PAGE_COUNT - if your vinyl spaces are not to large, you can enable index:count requests
 * TARANTOOL_READONLY - disable any database changes
 * TARANTOOL_SOCKET_TIMEOUT - connection read/write timeout
 * TARANTOOL_TCP_NODELAY - disable Nagle TCP algorithm

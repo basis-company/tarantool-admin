@@ -47,7 +47,7 @@ class Select extends Job
                 foreach ($tuple as $y => $value) {
                     if ($value instanceof Decimal) {
                         $value = $value->toString();
-                    } else if ($value instanceof Uuid) {
+                    } elseif ($value instanceof Uuid) {
                         $value = $value->toRfc4122();
                     }
                     $data[$x][$y] = $value;
@@ -61,6 +61,11 @@ class Select extends Job
             try {
                 if (!in_array($this->iterator, [0, 2])) {
                     throw new Exception("No total rows for non-equals iterator type");
+                }
+                if ($schema->getSpace($this->space)->getEngine() == 'vinyl') {
+                    if (getenv('TARANTOOL_ENABLE_VINYL_PAGE_COUNT') !== false) {
+                        throw new Exception("No total rows for vinyl spaces");
+                    }
                 }
                 [$total] = $this->getMapper()->getClient()
                     ->call("box.space.$this->space.index.$indexName:count", $key);
