@@ -4,11 +4,17 @@ include dirname(__DIR__) . '/vendor/autoload.php';
 
 try {
     $app = new Basis\Application(dirname(__DIR__));
+    $container = $app->getContainer();
 
-    $logger = new Monolog\Logger('tarantool-admin');
+    $container->share(
+        Psr\Log\LoggerInterface::class,
+        new Monolog\Logger('tarantool-admin')
+    );
 
-    $app->getContainer()
-        ->share(Psr\Log\LoggerInterface::class, $logger);
+    $container->share(
+        Symfony\Component\Cache\Adapter\AdapterInterface::class,
+        Symfony\Component\Cache\Adapter\ArrayAdapter::class
+    );
 
     echo $app->get(Basis\Http::class)
         ->process($_SERVER['REQUEST_URI']);
