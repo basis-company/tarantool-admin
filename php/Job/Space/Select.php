@@ -56,7 +56,6 @@ class Select extends Job
 
             $schema = $this->getMapper()->getSchema();
             $index = $schema->getSpace($this->space)->getIndex($this->index);
-            $indexName = $index['name'];
 
             try {
                 if (!in_array($this->iterator, [0, 2])) {
@@ -68,7 +67,7 @@ class Select extends Job
                     }
                 }
                 [$total] = $this->getMapper()->getClient()
-                    ->call("box.space.$this->space.index.$indexName:count", $key);
+                    ->call("box.space.$this->space.index.$index->name:count", $key);
             } catch (Exception) {
                 $criteria = $criteria->andLimit($this->limit + 1);
                 $extra = $this->getMapper()->getClient()->getSpace($this->space)

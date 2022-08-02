@@ -160,7 +160,7 @@ Ext.define('Admin.Space.toolbar.Collection', {
             var id = {};
 
             grid.indexes[0].parts.forEach(p => {
-              id[grid.fields[p[0]]] = record.get(grid.fields[p[0]]);
+              id[grid.fields[p[0] || p.field]] = record.get(grid.fields[p[0] || p.field]);
             });
             return Ext.apply({ id: id }, grid.params);
           });
@@ -353,7 +353,7 @@ Ext.define('Admin.Space.toolbar.Collection', {
       return {
         text: index.name,
         handler: () => {
-          var params = Ext.apply({ index: index.iid }, this.up('space-tab').params);
+          var params = Ext.apply({ index: index.id }, this.up('space-tab').params);
           var view = Ext.create('Admin.Space.Collection', {
             params: params,
             autoLoad: false,

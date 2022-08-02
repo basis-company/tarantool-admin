@@ -4,7 +4,7 @@ Ext.define('Admin.Space.toolbar.Search', {
 
   initComponent() {
     var grid = this.collection;
-    var index = grid.indexes.filter(i => i.iid == grid.params.index)[0];
+    var index = grid.indexes.filter(i => i.id == grid.params.index)[0];
 
     var camelCasedName = index.name.split('_')
       .map(Ext.util.Format.capitalize)
@@ -24,7 +24,7 @@ Ext.define('Admin.Space.toolbar.Search', {
     index.parts.forEach(p => {
       items.push({
         xtype: 'label',
-        text: grid.fields[p[0]],
+        text: grid.fields[p.field || p[0]],
       });
 
       var field = {
@@ -32,7 +32,7 @@ Ext.define('Admin.Space.toolbar.Search', {
         searchField: true,
       };
 
-      if ([ 'str', 'string' ].indexOf(p[1].toLowerCase()) == -1) {
+      if ([ 'str', 'string' ].indexOf((p[1] || p.type).toLowerCase()) == -1) {
         Ext.apply(field, {
           xtype: 'numberfield',
           hideTrigger: true,
@@ -41,7 +41,7 @@ Ext.define('Admin.Space.toolbar.Search', {
       }
 
       items.push(Ext.apply(field, {
-        name: grid.fields[p[0]],
+        name: grid.fields[p.field || p[0]],
         width: 70,
         labelAlign: 'right',
         enableKeyEvents: true,

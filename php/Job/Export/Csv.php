@@ -41,10 +41,7 @@ class Csv extends Select
             $this->offset = $page * $this->limit;
         }
 
-        $fields = [];
-        foreach ($this->getSpace()->getFormat() as $field) {
-            $fields[] = $field['name'];
-        }
+        $fields = $this->getSpace()->getFields();
 
         $contents = implode($this->delimiter, $fields) . PHP_EOL . implode(PHP_EOL, $data);
 

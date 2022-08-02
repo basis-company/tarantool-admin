@@ -196,7 +196,7 @@ Ext.define('Admin.Space.Collection', {
 
   createEntityWindow(entity) {
     var id;
-    var primary = this.indexes[0].parts.map(p => this.fields[p[0]]);
+    var primary = this.indexes[0].parts.map(p => this.fields[p[0] || p.field]);
 
     if (entity) {
       var key = primary.map(f => entity.get(f));
@@ -204,7 +204,8 @@ Ext.define('Admin.Space.Collection', {
       id = key.length == 1 ? key[0] : '[' + key.join(', ') + ']';
     }
 
-    var required = Ext.Array.unique(Ext.Array.flatten(this.indexes.map(index => index.parts.map(p => p[0]))));
+    var required = Ext.Array.unique(Ext.Array.flatten(this.indexes.map(index => index.parts.map(p => p[0] || p.field))));
+    console.log({required})
     var complexTypes = [];
 
     var items = this.format.map((field, id) => {

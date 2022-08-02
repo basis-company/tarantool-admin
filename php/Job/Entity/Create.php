@@ -16,7 +16,7 @@ class Create extends Job
     {
         $space = $this->getSpace();
 
-        if (!count($space->getFormat())) {
+        if (!count($space->getProperties())) {
             $data = [];
             foreach ($this->values as $k => $v) {
                 if (!is_numeric($k)) {
@@ -43,7 +43,7 @@ class Create extends Job
         } else {
             $values = get_object_vars($this->values);
             foreach ($values as $k => $v) {
-                $type = $space->getProperty($k)['type'];
+                $type = $space->getProperty($k)->type;
                 if ($type === 'uuid') {
                     $v = new Uuid($v);
                 } elseif ($type == 'map') {

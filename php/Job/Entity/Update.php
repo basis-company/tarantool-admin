@@ -18,7 +18,7 @@ class Update extends Job
         $pk = [];
         $space = $this->getSpace();
 
-        if (!count($space->getFormat())) {
+        if (!count($space->getProperties())) {
             $data = [];
             foreach ($this->values as $k => $v) {
                 if (!is_numeric($k)) {
@@ -29,9 +29,9 @@ class Update extends Job
 
             $pk = [];
             foreach ($space->getIndexes()[0]['parts'] as $part) {
-                $value = $data[$part[0]];
-                unset($data[$part[0]]);
-                if (array_key_exists(1, $part) && $part[1] === 'unsigned') {
+                $value = $data[array_key_exists(0, $part) ? $part[0] : $part['field']];
+                unset($data[array_key_exists(0, $part) ? $part[0] : $part['field']]);
+                if ((array_key_exists(1, $part) ? $part[1] : $part['type']) === 'unsigned') {
                     $value = +$value;
                 }
                 $pk[] = $value;
@@ -50,15 +50,15 @@ class Update extends Job
                 ->getSpace($space->getName())
                 ->update($pk, $operations);
         } else {
-            $format = $space->getFormat();
-            foreach ($space->getPrimaryIndex()['parts'] as $part) {
-                $fieldName = $format[$part[0]]['name'];
+            $format = array_values($space->getProperties());
+            foreach ($space->getIndex(0)->parts as $part) {
+                $fieldName = $format[array_key_exists(0, $part) ? $part[0] : $part['field']]->name;
                 $pk[$fieldName] = $this->values->$fieldName;
             }
 
             $entity = $space->getRepository()->findOrFail($pk);
             foreach ($this->values as $k => $v) {
-                $type = $space->getProperty($k)['type'];
+                $type = $space->getProperty($k)->type;
                 if ($type === 'uuid') {
                     $v = new Uuid($v);
                 } elseif ($type == 'map') {

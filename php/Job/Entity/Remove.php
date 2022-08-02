@@ -14,7 +14,7 @@ class Remove extends Job
     {
         $space = $this->getSpace();
 
-        if (!$space->getFormat()) {
+        if (!$space->getProperties()) {
             $data = [];
             foreach ($this->id as $k => $v) {
                 if (!is_numeric($k)) {
@@ -24,16 +24,21 @@ class Remove extends Job
             }
 
             $pk = [];
-            foreach ($space->getIndexes()[0]['parts'] as $part) {
-                $pk[] = $data[$part[0]];
+            foreach ($space->getIndexes()[0]->parts as $part) {
+                $pk[] = $data[array_key_exists(0, $part) ? $part[0] : $part['field']];
             }
 
             $space->getMapper()->getClient()
                 ->getSpace($space->getName())
                 ->delete($pk);
         } else {
+            $params = get_object_vars($this->id);
+
+            if (!count($params)) {
+                throw new Exception("Invalid params");
+            }
             $entity = $space->getRepository()
-                ->findOne(get_object_vars($this->id));
+                ->findOne($params);
 
             $this->getMapper()->remove($entity);
         }

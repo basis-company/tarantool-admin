@@ -9,14 +9,13 @@ class Info extends Job
     public function run(): array
     {
         $space = $this->getSpace();
-        $format = $space->getFormat();
+        $format = array_values($space->getProperties());
         $indexes = $space->getIndexes();
         $fake = !count($format);
 
         if ($fake) {
-            $spaceName = $space->getName();
             $format = [];
-            $count = $this->getClient()->evaluate("return box.space['$spaceName'].field_count")[0];
+            $count = $this->getClient()->evaluate("return box.space['$space->name'].field_count")[0];
             $count = $count ?: 20; // default max columns
             foreach (range(1, $count) as $value) {
                 $format[] = [
@@ -27,10 +26,9 @@ class Info extends Job
         }
 
         foreach ($indexes as $i => $index) {
-            $spaceName = $space->getName();
-            $name = $index['name'];
             try {
-                $indexes[$i]['size'] = $this->getClient()->call("box.space.$spaceName.index.$name:bsize")[0];
+                $indexes[$i]->iid = $index->id;
+                $indexes[$i]->size = $this->getClient()->call("box.space.$space->name.index.$index->name:bsize")[0];
             } catch (Exception) {
                 // no bsize
                 break;

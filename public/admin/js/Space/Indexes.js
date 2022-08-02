@@ -9,7 +9,8 @@ Ext.define('Admin.Space.Indexes', {
   },
 
   store: {
-    fields: [ 'iid', 'name', 'type', 'parts', 'opts' ],
+    fields: [ 'id', 'name', 'type', 'parts', 'opts' ],
+    idProperty: 'id',
   },
 
   selModel: {
@@ -92,7 +93,7 @@ Ext.define('Admin.Space.Indexes', {
           });
       };
 
-      if (store.getAt(recordIndex).get('iid') > 0) {
+      if (store.getAt(recordIndex).get('id') > 0) {
         removeIndex();
       }
       else {
@@ -141,7 +142,7 @@ Ext.define('Admin.Space.Indexes', {
         return v.map(info => info[0]).join(', ');
       }
 
-      return v.map(info => format.getAt(info[0]).get('name')).join(', ');
+      return v.map(info => format.getAt(info[0] || info.field).get('name')).join(', ');
     },
   } ],
 
