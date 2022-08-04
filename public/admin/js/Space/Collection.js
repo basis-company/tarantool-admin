@@ -205,7 +205,6 @@ Ext.define('Admin.Space.Collection', {
     }
 
     var required = Ext.Array.unique(Ext.Array.flatten(this.indexes.map(index => index.parts.map(p => p[0] || p.field))));
-    console.log({required})
     var complexTypes = [];
 
     var items = this.format.map((field, id) => {
