@@ -25,16 +25,9 @@ class CreateIndex extends Job
             ];
             $space->getMapper()->getClient()->call("box.space[$spaceId]:create_index", $this->name, [$options]);
         } elseif (is_array($this->fields)) {
-            $properties = $space->getProperties();
-
-            $fields = $space->getFields();
-            foreach ($this->fields as $index) {
-                $fields[] = $properties[$index]->name;
-            }
-
             $space->createIndex([
                 'name' => $this->name,
-                'fields' => $fields,
+                'fields' => $this->fields,
                 'unique' => $this->unique,
                 'type' => $this->type,
             ]);

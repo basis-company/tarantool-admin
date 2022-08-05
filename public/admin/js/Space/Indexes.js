@@ -225,6 +225,10 @@ Ext.define('Admin.Space.Indexes', {
           text: 'Create',
           handler: () => {
             var values = win.down('form').getValues();
+            var format = indexes.up('space-info').down('space-format').store;
+
+            values.fields = values.fields.map(i => format.getAt(i).get('name'));
+
             var params = Ext.apply({
               name: values.name,
               fields: values.fields,

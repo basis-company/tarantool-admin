@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8f3ca6db5aae61491a5ed596043efc06",
+    "content-hash": "f81bedc8a4202b187d1da1baf87f8bd0",
     "packages": [
         {
             "name": "basis-company/framework",
@@ -1475,16 +1475,16 @@
         },
         {
             "name": "tarantool/mapper",
-            "version": "5.0.8",
+            "version": "5.0.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tarantool-php/mapper.git",
-                "reference": "ca952228cbd415ac94a28d33eb50d6ff951e4f3c"
+                "reference": "1f49d6f8ef124c499ba20c7a50ac659d480c4fd0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tarantool-php/mapper/zipball/ca952228cbd415ac94a28d33eb50d6ff951e4f3c",
-                "reference": "ca952228cbd415ac94a28d33eb50d6ff951e4f3c",
+                "url": "https://api.github.com/repos/tarantool-php/mapper/zipball/1f49d6f8ef124c499ba20c7a50ac659d480c4fd0",
+                "reference": "1f49d6f8ef124c499ba20c7a50ac659d480c4fd0",
                 "shasum": ""
             },
             "require": {
@@ -1531,9 +1531,9 @@
             ],
             "support": {
                 "issues": "https://github.com/tarantool-php/mapper/issues",
-                "source": "https://github.com/tarantool-php/mapper/tree/5.0.8"
+                "source": "https://github.com/tarantool-php/mapper/tree/5.0.9"
             },
-            "time": "2022-07-21T13:06:45+00:00"
+            "time": "2022-08-05T11:07:21+00:00"
         }
     ],
     "packages-dev": [],
