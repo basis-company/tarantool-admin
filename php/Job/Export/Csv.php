@@ -32,7 +32,7 @@ class Csv extends Select
                         $item[$k] = json_encode($v);
                     }
                 }
-                $data[] = implode($this->delimiter, $item);
+                $data[] = nl2br(implode($this->delimiter, $item));
             }
 
             $total = $result['total'];
