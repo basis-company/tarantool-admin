@@ -24,7 +24,7 @@ Ext.define('Admin.Space.toolbar.Search', {
     index.parts.forEach(p => {
       items.push({
         xtype: 'label',
-        text: grid.fields[p.field || p[0]],
+        text: grid.fields[p.field || p[0]] + (p.path && '.' + p.path || ''),
       });
 
       var field = {
