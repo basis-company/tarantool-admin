@@ -22,9 +22,17 @@ Ext.define('Admin.Space.toolbar.Search', {
     }, ' ' ];
 
     index.parts.forEach(p => {
+      var partName = grid.fields[(p.field === undefined && p[0]) || p.field];
+      if (p.path) {
+        if (!p.path.startsWith(".")) {
+          partName += ".";
+        }
+        partName += p.path;
+      }
+
       items.push({
         xtype: 'label',
-        text: grid.fields[p.field || p[0]] + (p.path && '.' + p.path || ''),
+        text: partName,
       });
 
       var field = {
@@ -41,7 +49,7 @@ Ext.define('Admin.Space.toolbar.Search', {
       }
 
       items.push(Ext.apply(field, {
-        name: grid.fields[p.field || p[0]],
+        name: partName,
         width: 70,
         labelAlign: 'right',
         enableKeyEvents: true,
