@@ -22,11 +22,13 @@ Ext.define('Admin.Space.toolbar.Search', {
     }, ' ' ];
 
     index.parts.forEach(p => {
-      var partName = grid.fields[(p.field === undefined && p[0]) || p.field];
+      var partName = grid.fields[p.field === undefined ? p[0] : p.field];
+
       if (p.path) {
-        if (!p.path.startsWith(".")) {
-          partName += ".";
+        if (!p.path.startsWith('.')) {
+          partName += '.';
         }
+
         partName += p.path;
       }
 
