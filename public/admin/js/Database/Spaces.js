@@ -77,30 +77,104 @@ Ext.define('Admin.Database.Spaces', {
     }
   },
 
-  truncateSpace(space) {
-    Ext.MessageBox.confirm({
-      title: 'Danger!',
-      icon: Ext.MessageBox.WARNING,
-      message: 'Are you sure to truncate space ' + space + '?<br/>This operation can not be undone',
-      buttons: Ext.MessageBox.YESNO,
-      callback: (answer) => {
-        if (answer == 'yes') {
-          dispatch('space.truncate', this.spaceParams(space))
-            .then(() => {
-              this.refreshSpaces();
-              this.up('database-tab').items.each(item => {
-                if (item.params && item.params.space == space) {
-                  item.items.each(item => {
-                    if (item.xtype == 'space-collection') {
-                      item.store.load();
-                    }
-                  });
-                }
-              });
-            });
+  keyEmptyCheck(key) {
+    var isEmpty = true;
+
+    if (key.length > 0) {
+      for (let i in key) {
+        if (key[i] != null) {
+          isEmpty = false;
+          break;
         }
-      },
-    });
+      }
+    }
+
+    return isEmpty;
+  },
+
+  keyValidCheck(key) {
+    var isValid = true;
+
+    if (this.keyEmptyCheck(key)) {
+      isValid = false;
+    }
+    else {
+      for (let i=0; i<key.length-1; i++) {
+        if (key[i] == undefined && key[i+1] != undefined) {
+          isValid = false;
+          break;
+        }
+      }
+    }
+
+    return isValid;
+  },
+
+  truncateSpace(space, searchdata = undefined) {
+    var indexNum;
+    var key;
+    var sendData;
+
+    if (searchdata == undefined) {
+      sendData = this.spaceParams(space);
+      indexNum = undefined;
+      key = undefined;
+    }
+    else {
+      try {
+        key = searchdata[0];
+        indexNum = searchdata[1];
+        var index = searchdata[2];
+        var iterator = searchdata[3];
+        var spaceParams = this.spaceParams(space);
+
+        sendData = Ext.apply(spaceParams, { key: key, indexNumber: indexNum, iterator: iterator });
+      }
+      catch (e) {
+        alert(e);
+      }
+    }
+
+    var showMessageBox = true;
+    var message = 'Are you sure to truncate space ' + space + '?<br/>This operation can not be undone';
+
+    if (searchdata != undefined && indexNum != undefined && key != undefined) {
+      if (this.keyValidCheck(key) == false) {
+        Ext.Msg.alert('Warning!', 'Not valid key. Please, fill in all fields starting from the first.');
+        showMessageBox = false;
+      }
+      else {
+        message = 'Are you sure to delete tuples by index ' +  index.name +
+                  ' and key ' + key + ' from space ' + space + '?<br/>This operation can not be undone';
+        showMessageBox =  true;
+      }
+    }
+
+    if (showMessageBox) {
+      Ext.MessageBox.confirm({
+        title: 'Danger!',
+        icon: Ext.MessageBox.WARNING,
+        message: message,
+        buttons: Ext.MessageBox.YESNO,
+        callback: (answer) => {
+          if (answer == 'yes') {
+            dispatch('space.truncate', sendData)
+              .then(() => {
+                this.refreshSpaces();
+                this.up('database-tab').items.each(item => {
+                  if (item.params && item.params.space == space) {
+                    item.items.each(item => {
+                      if (item.xtype == 'space-collection') {
+                        item.store.load();
+                      }
+                    });
+                  }
+                });
+              });
+          }
+        },
+      });
+    }
   },
 
   dropSpace(space) {

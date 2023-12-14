@@ -176,7 +176,7 @@ Ext.define('Admin.Space.toolbar.Collection', {
       disabled: true,
       menu:     [],
     }, {
-      text: 'Truncate',
+      text: 'Delete Tuples',
       iconCls: 'fa fa-trash',
       handler() {
         var space = this.up('grid').store.proxy.params.space;
@@ -186,9 +186,18 @@ Ext.define('Admin.Space.toolbar.Collection', {
         //  > space tabs
         //   > {collection}
 
+        var store = this.up('grid').store;
+        var key = store.proxy.params.key;
+        var indexnum = store.proxy.params.index;
+        var index = this.up('grid').indexes[store.proxy.params.index];
+        var iterator = store.proxy.params.iterator;
+        var searchdata = [ key, indexnum, index, iterator ];
+
         this.up('tabpanel').up('tabpanel')
           .down('[name=spaces]')
-          .truncateSpace(space);
+          .truncateSpace(space, searchdata);
+
+        this.up('toolbar-collection').refreshStore();
       },
     }, {
       iconCls:  'fa fa-download',
