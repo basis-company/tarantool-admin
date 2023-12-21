@@ -80,7 +80,7 @@ Ext.define('Admin.Database.Spaces', {
   keyEmptyCheck(key) {
     var isEmpty = true;
 
-    if (key.length > 0) {
+    if (key != undefined && key.length > 0) {
       for (let i in key) {
         if (key[i] != null) {
           isEmpty = false;
@@ -111,24 +111,11 @@ Ext.define('Admin.Database.Spaces', {
   },
 
   truncateSpace(space, searchdata = undefined) {
-    var indexNum;
-    var key;
-    var sendData;
+    var params = this.spaceParams(space);
 
-    if (searchdata == undefined) {
-      sendData = this.spaceParams(space);
-      indexNum = undefined;
-      key = undefined;
-    }
-    else {
+    if (searchdata != undefined) {
       try {
-        key = searchdata[0];
-        indexNum = searchdata[1];
-        var index = searchdata[2];
-        var iterator = searchdata[3];
-        var spaceParams = this.spaceParams(space);
-
-        sendData = Ext.apply(spaceParams, { key: key, indexNumber: indexNum, iterator: iterator });
+        Ext.apply(params, searchdata);
       }
       catch (e) {
         alert(e);
@@ -138,14 +125,14 @@ Ext.define('Admin.Database.Spaces', {
     var showMessageBox = true;
     var message = 'Are you sure to truncate space ' + space + '?<br/>This operation can not be undone';
 
-    if (searchdata != undefined && indexNum != undefined && key != undefined) {
-      if (this.keyValidCheck(key) == false) {
+    if (searchdata != undefined && searchdata.index != undefined) {
+      if (this.keyValidCheck(searchdata.key) == false) {
         Ext.Msg.alert('Warning!', 'Not valid key. Please, fill in all fields starting from the first.');
         showMessageBox = false;
       }
       else {
-        message = 'Are you sure to delete tuples by index ' +  index.name +
-                  ' and key ' + key + ' from space ' + space + '?<br/>This operation can not be undone';
+        message = 'Are you sure to delete tuples by index ' +  searchdata.indexObj.name +
+                  ' and key ' + searchdata.key + ' from space ' + space + '?<br/>This operation can not be undone';
         showMessageBox =  true;
       }
     }
@@ -158,7 +145,7 @@ Ext.define('Admin.Database.Spaces', {
         buttons: Ext.MessageBox.YESNO,
         callback: (answer) => {
           if (answer == 'yes') {
-            dispatch('space.truncate', sendData)
+            dispatch('space.truncate', params)
               .then(() => {
                 this.refreshSpaces();
                 this.up('database-tab').items.each(item => {

@@ -23,4 +23,16 @@ abstract class Job extends DatabaseJob
 
         return $this->spaceInstance = $this->getMapper()->getSchema()->getSpace($this->space);
     }
+
+    public function trimTail($arr): array
+    {
+        $trimArr = [];
+        foreach ($arr as $value) {
+            if ($value === null) {
+                break;
+            }
+            $trimArr[] = $value;
+        }
+        return $trimArr;
+    }
 }

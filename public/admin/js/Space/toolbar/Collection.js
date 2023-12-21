@@ -109,6 +109,12 @@ Ext.define('Admin.Space.toolbar.Collection', {
   },
 
   getDefaultItems() {
+    var truncateButtonName = 'Truncate';
+
+    if (this.params.truncateButtonText != undefined) {
+      truncateButtonName = 'Truncate rows';
+    }
+
     return [ {
       text:    'Create',
       iconCls: 'fa fa-plus-circle',
@@ -176,22 +182,19 @@ Ext.define('Admin.Space.toolbar.Collection', {
       disabled: true,
       menu:     [],
     }, {
-      text: 'Delete Tuples',
+      text: truncateButtonName,
       iconCls: 'fa fa-trash',
       handler() {
-        var space = this.up('grid').store.proxy.params.space;
+        var params = this.up('grid').store.proxy.params;
+        var space = params.space;
 
         // > database tabs
         //  > collection
         //  > space tabs
         //   > {collection}
 
-        var store = this.up('grid').store;
-        var key = store.proxy.params.key;
-        var indexnum = store.proxy.params.index;
-        var index = this.up('grid').indexes[store.proxy.params.index];
-        var iterator = store.proxy.params.iterator;
-        var searchdata = [ key, indexnum, index, iterator ];
+        var index = this.up('grid').indexes[params.index];
+        var searchdata = { key: params.key, index: params.index, indexObj: index, iterator: params.iterator };
 
         this.up('tabpanel').up('tabpanel')
           .down('[name=spaces]')
@@ -362,7 +365,7 @@ Ext.define('Admin.Space.toolbar.Collection', {
       return {
         text: index.name,
         handler: () => {
-          var params = Ext.apply({ index: index.id }, this.up('space-tab').params);
+          var params = Ext.apply({ index: index.id, truncateButtonText: 'Truncate rows' }, this.up('space-tab').params);
           var view = Ext.create('Admin.Space.Collection', {
             params: params,
             autoLoad: false,

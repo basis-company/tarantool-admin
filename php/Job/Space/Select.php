@@ -18,13 +18,7 @@ class Select extends Job
 
     public function run(): array
     {
-        $key = [];
-        foreach ($this->key as $value) {
-            if ($value === null) {
-                break;
-            }
-            $key[] = $value;
-        }
+        $key = $this->trimTail($this->key);
 
         $data = null;
         $total = null;
