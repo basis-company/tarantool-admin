@@ -113,55 +113,45 @@ Ext.define('Admin.Database.Spaces', {
   truncateSpace(space, searchdata = undefined) {
     var params = this.spaceParams(space);
 
-    if (searchdata != undefined) {
-      try {
-        Ext.apply(params, searchdata);
-      }
-      catch (e) {
-        alert(e);
-      }
-    }
+    var message =
+    'Are you sure to truncate space ' + space + '?<br/>' +
+    'This operation can not be undone';
 
-    var showMessageBox = true;
-    var message = 'Are you sure to truncate space ' + space + '?<br/>This operation can not be undone';
-
-    if (searchdata != undefined && searchdata.index != undefined) {
-      if (this.keyValidCheck(searchdata.key) == false) {
+    if (searchdata && searchdata.index != undefined) {
+      if (!this.keyValidCheck(searchdata.key)) {
         Ext.Msg.alert('Warning!', 'Not valid key. Please, fill in all fields starting from the first.');
-        showMessageBox = false;
+        return;
       }
-      else {
-        message = 'Are you sure to delete tuples by index ' +  searchdata.indexObj.name +
-                  ' and key ' + searchdata.key + ' from space ' + space + '?<br/>This operation can not be undone';
-        showMessageBox =  true;
-      }
+
+      Ext.apply(params, searchdata);
+      message = 'Are you sure to delete tuples by index ' +  searchdata.indexObj.name +
+                ' and key ' + searchdata.key + ' from space ' + space + '?<br/>' +
+                'This operation can not be undone';
     }
 
-    if (showMessageBox) {
-      Ext.MessageBox.confirm({
-        title: 'Danger!',
-        icon: Ext.MessageBox.WARNING,
-        message: message,
-        buttons: Ext.MessageBox.YESNO,
-        callback: (answer) => {
-          if (answer == 'yes') {
-            dispatch('space.truncate', params)
-              .then(() => {
-                this.refreshSpaces();
-                this.up('database-tab').items.each(item => {
-                  if (item.params && item.params.space == space) {
-                    item.items.each(item => {
-                      if (item.xtype == 'space-collection') {
-                        item.store.load();
-                      }
-                    });
-                  }
-                });
+    Ext.MessageBox.confirm({
+      title: 'Danger!',
+      icon: Ext.MessageBox.WARNING,
+      message: message,
+      buttons: Ext.MessageBox.YESNO,
+      callback: (answer) => {
+        if (answer == 'yes') {
+          dispatch('space.truncate', params)
+            .then(() => {
+              this.refreshSpaces();
+              this.up('database-tab').items.each(item => {
+                if (item.params && item.params.space == space) {
+                  item.items.each(item => {
+                    if (item.xtype == 'space-collection') {
+                      item.store.load();
+                    }
+                  });
+                }
               });
-          }
-        },
-      });
-    }
+            });
+        }
+      },
+    });
   },
 
   dropSpace(space) {
