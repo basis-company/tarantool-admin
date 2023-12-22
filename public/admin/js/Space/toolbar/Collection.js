@@ -194,7 +194,11 @@ Ext.define('Admin.Space.toolbar.Collection', {
         //   > {collection}
 
         var index = this.up('grid').indexes[params.index];
-        var searchdata = { key: params.key, index: params.index, indexObj: index, iterator: params.iterator };
+        var searchdata = {
+          key: params.key,
+          index: params.index,
+          indexObj: index,
+          iterator: params.iterator };
 
         this.up('tabpanel').up('tabpanel')
           .down('[name=spaces]')

@@ -78,18 +78,7 @@ Ext.define('Admin.Database.Spaces', {
   },
 
   keyEmptyCheck(key) {
-    var isEmpty = true;
-
-    if (key != undefined && key.length > 0) {
-      for (let i in key) {
-        if (key[i] != null) {
-          isEmpty = false;
-          break;
-        }
-      }
-    }
-
-    return isEmpty;
+    return !key || key.every(v => v == null);
   },
 
   keyValidCheck(key) {
