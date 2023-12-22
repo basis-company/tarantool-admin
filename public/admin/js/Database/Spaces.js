@@ -106,7 +106,7 @@ Ext.define('Admin.Database.Spaces', {
     'Are you sure to truncate space ' + space + '?<br/>' +
     'This operation can not be undone';
 
-    if (searchdata && searchdata.index != undefined) {
+    if (searchdata && searchdata.index >= 0) {
       if (!this.keyValidCheck(searchdata.key)) {
         Ext.Msg.alert('Warning!', 'Not valid key. Please, fill in all fields starting from the first.');
         return;
