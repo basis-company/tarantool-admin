@@ -77,15 +77,55 @@ Ext.define('Admin.Database.Spaces', {
     }
   },
 
-  truncateSpace(space) {
+  keyEmptyCheck(key) {
+    return !key || key.every(v => v == null);
+  },
+
+  keyValidCheck(key) {
+    var isValid = true;
+
+    if (this.keyEmptyCheck(key)) {
+      isValid = false;
+    }
+    else {
+      for (let i=0; i<key.length-1; i++) {
+        if (key[i] == undefined && key[i+1] != undefined) {
+          isValid = false;
+          break;
+        }
+      }
+    }
+
+    return isValid;
+  },
+
+  truncateSpace(space, searchdata = undefined) {
+    var params = this.spaceParams(space);
+
+    var message =
+    'Are you sure to truncate space ' + space + '?<br/>' +
+    'This operation can not be undone';
+
+    if (searchdata && searchdata.index >= 0) {
+      if (!this.keyValidCheck(searchdata.key)) {
+        Ext.Msg.alert('Warning!', 'Not valid key. Please, fill in all fields starting from the first.');
+        return;
+      }
+
+      Ext.apply(params, searchdata);
+      message = 'Are you sure to delete tuples by index ' +  searchdata.indexObj.name +
+                ' and key ' + searchdata.key + ' from space ' + space + '?<br/>' +
+                'This operation can not be undone';
+    }
+
     Ext.MessageBox.confirm({
       title: 'Danger!',
       icon: Ext.MessageBox.WARNING,
-      message: 'Are you sure to truncate space ' + space + '?<br/>This operation can not be undone',
+      message: message,
       buttons: Ext.MessageBox.YESNO,
       callback: (answer) => {
         if (answer == 'yes') {
-          dispatch('space.truncate', this.spaceParams(space))
+          dispatch('space.truncate', params)
             .then(() => {
               this.refreshSpaces();
               this.up('database-tab').items.each(item => {
