@@ -25,11 +25,11 @@ class Truncate extends Job
                 box.begin()
                 box.space[space].index[index]:pairs(key, {iterator=iterator})
                     :each(function(tuple)
-                        local key = {}
+                        local pk = {}
                         for _, part in pairs(box.space[space].index[0].parts) do
-                            table.insert(key, tuple[part.fieldno])
+                            table.insert(pk, tuple[part.fieldno])
                         end
-                        box.space[space]:delete(key)
+                        box.space[space]:delete(pk)
                     end)
                 box.commit()',
                 $space->getName(),

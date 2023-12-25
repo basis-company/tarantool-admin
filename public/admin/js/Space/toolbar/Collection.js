@@ -109,9 +109,6 @@ Ext.define('Admin.Space.toolbar.Collection', {
   },
 
   getDefaultItems() {
-    var truncateButtonName =
-    this.params.truncateButtonText || 'Truncate';
-
     return [ {
       text:    'Create',
       iconCls: 'fa fa-plus-circle',
@@ -179,7 +176,7 @@ Ext.define('Admin.Space.toolbar.Collection', {
       disabled: true,
       menu:     [],
     }, {
-      text: truncateButtonName,
+      text: this.params.truncateButtonText || 'Truncate',
       iconCls: 'fa fa-trash',
       handler() {
         var params = this.up('grid').store.proxy.params;
