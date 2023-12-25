@@ -23,8 +23,6 @@ class Truncate extends Job
         } else {
             $this->getClient()->evaluate(
                 'local space, index, key, iterator = ...
-                local tuples = box.space[space].index[index]
-                    :select(key,{iterator=iterator})
                 box.begin()
                 box.space[space].index[index]:pairs(key, {iterator=iterator})
                     :each(function(tuple)
