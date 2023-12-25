@@ -12,7 +12,6 @@ class Truncate extends Job
     public function run(): void
     {
         $space = $this->getSpace();
-        $key = $this->trimTail($this->key);
 
         if ($space->getId() < 512) {
             throw new Exception('Disabled for system spaces');
@@ -35,7 +34,7 @@ class Truncate extends Job
                 box.commit()',
                 $space->getName(),
                 $this->index,
-                $key,
+                $this->trimTail($this->key),
                 $this->iterator
             );
         }
