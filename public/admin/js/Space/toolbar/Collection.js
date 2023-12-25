@@ -109,11 +109,8 @@ Ext.define('Admin.Space.toolbar.Collection', {
   },
 
   getDefaultItems() {
-    var truncateButtonName = 'Truncate';
-
-    if (this.params.truncateButtonText != undefined) {
-      truncateButtonName = 'Truncate rows';
-    }
+    var truncateButtonName =
+    this.params.truncateButtonText || 'Truncate';
 
     return [ {
       text:    'Create',
