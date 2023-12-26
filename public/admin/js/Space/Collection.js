@@ -43,7 +43,7 @@ Ext.define('Admin.Space.Collection', {
         this.down('[text=Create]').hide();
         this.down('[text=Update]').hide();
         this.down('[text=Delete]').hide();
-        this.down('[text=Truncate]').hide();
+        this.down('[name=truncate]').hide();
       }
     },
     columnresize(table, column, width) {

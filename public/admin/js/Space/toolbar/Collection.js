@@ -177,6 +177,7 @@ Ext.define('Admin.Space.toolbar.Collection', {
       menu:     [],
     }, {
       text: this.params.truncateButtonText || 'Truncate',
+      name: 'truncate',
       iconCls: 'fa fa-trash',
       handler() {
         var params = this.up('grid').store.proxy.params;
