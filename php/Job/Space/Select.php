@@ -76,12 +76,12 @@ class Select extends Job
         }
 
         if (!json_encode($data)) {
-            foreach ($data as $i => $tuple) {
-                foreach ($tuple as $k => $v) {
+            foreach ($data as $i => &$tuple) {
+                array_walk_recursive($tuple, function (&$v) {
                     if (is_string($v) && !json_encode($v)) {
-                        $data[$i][$k] = '!!binary ' . base64_encode($v);
+                        $v = '!!binary ' . base64_encode($v);
                     }
-                }
+                });
             }
         }
 
