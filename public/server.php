@@ -3,21 +3,19 @@
 include dirname(__DIR__) . '/vendor/autoload.php';
 
 try {
-    $app = new Basis\Application(dirname(__DIR__));
-    $container = $app->getContainer();
+    $json = $_POST['rpc'];
+    $parsed = json_decode($json, true);
+    $parts = explode('.', 'job.'.$parsed['job']);
+    $uppercased = array_map('ucfirst', $parts);
+    $class = implode('\\', $uppercased);
+    $instance = new $class;
 
-    $container->share(
-        Psr\Log\LoggerInterface::class,
-        new Monolog\Logger('tarantool-admin')
-    );
+    foreach ($parsed['params'] as $k => $v) {
+      $instance->$k = $v;
+    }
 
-    $container->share(
-        Symfony\Component\Cache\Adapter\AdapterInterface::class,
-        Symfony\Component\Cache\Adapter\ArrayAdapter::class
-    );
-
-    echo $app->get(Basis\Http::class)
-        ->process($_SERVER['REQUEST_URI']);
+    $result = $instance->run();
+    echo json_encode(['success' => true, 'data' => $result]);
 } catch (Exception $e) {
     echo $e->getMessage();
 }
