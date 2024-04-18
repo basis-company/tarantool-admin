@@ -2,7 +2,6 @@
 
 namespace Job\Entity;
 
-use Basis\Converter;
 use Job\Space\Job;
 use Exception;
 use stdClass;
@@ -11,8 +10,9 @@ use Symfony\Component\Uid\Uuid;
 class Create extends Job
 {
     public stdClass $values;
+    public Converter $converter;
 
-    public function run(Converter $converter): array
+    public function run(): array
     {
         $space = $this->getSpace();
 
@@ -54,13 +54,13 @@ class Create extends Job
                         if (!is_array($v) && !is_object($v)) {
                             throw new Exception("Invalid type for '$k' ($type): $values[$k]");
                         }
-                        $v = $converter->toArray($v);
+                        $v = $this->converter->toArray($v);
                         if (!count($v)) {
                             $v = null;
                         }
                     }
                 } elseif (is_object($v)) {
-                    $v = $converter->toArray($v);
+                    $v = $$this->converter->toArray($v);
                 }
                 $values[$k] = $v;
             }
