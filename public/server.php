@@ -17,12 +17,17 @@ try {
     if (!$parsed->job || !$parsed->params) {
         throw new Exception("Invalid rpc format");
     }
-    $parts = explode('.', 'job.'.$parsed -> job);
+    $parts = explode('.', 'job.'.$parsed->job);
     $uppercased = array_map('ucfirst', $parts);
     $class = implode('\\', $uppercased);
+
+    if (!class_exists($class)) {
+        throw new Exception("Invalid rpc.job value");
+    }
+
     $instance = new $class;
 
-    foreach ($parsed -> params as $k => $v) {
+    foreach ($parsed->params as $k => $v) {
       $instance->$k = $v;
     }
 
