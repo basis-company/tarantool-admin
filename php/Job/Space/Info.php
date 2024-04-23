@@ -10,7 +10,7 @@ class Info extends Job
     {
         $space = $this->getSpace();
         $format = array_values($space->getProperties());
-        $indexes = $space->getIndexes();
+        $indexes = $this->getSpaceIndexes();
         $fake = !count($format);
 
         if ($fake) {
