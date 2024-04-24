@@ -27,7 +27,7 @@ class Info extends Job
 
         foreach ($indexes as $i => $index) {
             try {
-                $indexes[$i]->iid = $index->id;
+                $indexes[$i]->id = $index->iid;
                 $indexes[$i]->size = $this->getClient()->call("box.space.$space->name.index.$index->name:bsize")[0];
             } catch (Exception) {
                 // no bsize
