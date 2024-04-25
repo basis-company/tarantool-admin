@@ -8,7 +8,9 @@ use Tarantool\Mapper\Space;
 
 abstract class Job extends DatabaseJob
 {
+    public int $index;
     public string $space;
+    public string $truncateButtonText;
     private Space $spaceInstance;
 
     public function getSpace(): Space
@@ -22,6 +24,14 @@ abstract class Job extends DatabaseJob
         }
 
         return $this->spaceInstance = $this->getMapper()->getSchema()->getSpace($this->space);
+    }
+
+    public function getSpaceIndexes()
+    {
+        $indexes = $this->spaceInstance->mapper->find('_vindex', [
+            'id' => $this->spaceInstance->id,
+        ]);
+        return $indexes;
     }
 
     public function trimTail($arr): array

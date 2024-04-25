@@ -7,18 +7,9 @@
         "email": "nekufa@gmail.com"
     }],
     "require": {
-        "basis-company/framework": "7.0.6",
-        "basis-company/telemetry": "^0.1.11",
-        "ext-decimal": "*",
-        "monolog/monolog": "^2.3.5",
-        "nyholm/psr7": "^1.5.1",
-        "nyholm/psr7-server": "^1.0.2",
         "php": "^8",
-        "rybakit/msgpack": "^0.9.1",
-        "symfony/cache": "^6.1.3",
-        "symfony/http-client": "^6.1.3",
         "symfony/uid": "^6.1.3",
-        "tarantool/mapper": "^5.0.9"
+        "tarantool/mapper": "^5.0.14"
     },
     "autoload": {
         "psr-4": {

@@ -1,11 +1,17 @@
 # Build
-FROM php:8.1.19-apache AS build
+
+FROM php:apache AS build
 
 WORKDIR /build
 
-RUN apt-get update && apt-get install -y git wget zip libmpdec-dev \
-    && pecl install decimal \
-    && docker-php-ext-enable decimal
+RUN curl -sSLf \
+        -o /usr/local/bin/install-php-extensions \
+        https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions && \
+    chmod +x /usr/local/bin/install-php-extensions && \
+    install-php-extensions gd xdebug
+
+RUN apt-get update && apt-get install -y git wget zip
+RUN install-php-extensions decimal
 
 RUN wget -q https://use.fontawesome.com/releases/v5.0.6/fontawesome-free-5.0.6.zip \
     && wget -q http://cdn.sencha.com/ext/gpl/ext-6.2.0-gpl.zip \
@@ -29,15 +35,23 @@ RUN composer install --prefer-dist --no-dev --no-autoloader --no-scripts --no-pr
 
 
 # Runtime
-FROM php:8.1.19-apache
+FROM php:apache
 
 WORKDIR /var/www/html
 
-RUN apt-get update && apt-get install -y zip zlib1g-dev libzip-dev libmpdec-dev uuid-dev \
-    && docker-php-ext-install zip opcache \
-    && pecl install decimal uuid \
-    && docker-php-ext-enable decimal uuid \
-    && a2enmod rewrite
+RUN curl -sSLf \
+        -o /usr/local/bin/install-php-extensions \
+        https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions && \
+    chmod +x /usr/local/bin/install-php-extensions && \
+    install-php-extensions gd xdebug
+
+RUN install-php-extensions decimal
+
+RUN apt-get update && apt-get install -y zip zlib1g-dev libzip-dev uuid-dev \
+&& docker-php-ext-install zip opcache \
+&& pecl install uuid \
+&& docker-php-ext-enable uuid \
+&& a2enmod rewrite
 
 RUN echo "ServerName tarantool-admin" > /etc/apache2/conf-enabled/server-name.conf
 RUN sed -i 's~DocumentRoot.*$~DocumentRoot /var/www/html/public~' /etc/apache2/sites-available/000-default.conf

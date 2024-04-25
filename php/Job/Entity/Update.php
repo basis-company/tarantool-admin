@@ -2,8 +2,6 @@
 
 namespace Job\Entity;
 
-use Job\Space\Job;
-use Basis\Converter;
 use Exception;
 use stdClass;
 use Symfony\Component\Uid\Uuid;
@@ -13,7 +11,7 @@ class Update extends Job
 {
     public stdClass $values;
 
-    public function run(Converter $converter): void
+    public function run(): void
     {
         $pk = [];
         $space = $this->getSpace();
@@ -73,7 +71,7 @@ class Update extends Job
                             }
                             throw new Exception("Invalid type for '$k' ($type)$extra");
                         }
-                        $v = $converter->toArray($v);
+                        $v = $this->toArray($v);
                         if (!count($v)) {
                             $v = null;
                         }
