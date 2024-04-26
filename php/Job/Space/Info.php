@@ -10,7 +10,9 @@ class Info extends Job
     {
         $space = $this->getSpace();
         $format = array_values($space->getProperties());
-        $indexes = $this->getSpaceIndexes();
+        $indexes = $this->getMapper()->find('_vindex', [
+            'id' => $space->id,
+        ]);
         $fake = !count($format);
 
         if ($fake) {

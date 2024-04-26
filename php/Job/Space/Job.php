@@ -26,14 +26,6 @@ abstract class Job extends DatabaseJob
         return $this->spaceInstance = $this->getMapper()->getSchema()->getSpace($this->space);
     }
 
-    public function getSpaceIndexes()
-    {
-        $indexes = $this->spaceInstance->mapper->find('_vindex', [
-            'id' => $this->spaceInstance->id,
-        ]);
-        return $indexes;
-    }
-
     public function trimTail($arr): array
     {
         $trimArr = [];
