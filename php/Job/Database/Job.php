@@ -18,6 +18,9 @@ abstract class Job
     public string|int|null $port = null;
     public ?string $username = null;
     public ?string $password = null;
+    public string $code;
+    public array $key;
+    public int $iterator;
 
     private Client $client;
     private Mapper $mapper;

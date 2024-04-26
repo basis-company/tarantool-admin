@@ -113,6 +113,7 @@ Ext.define('Admin.Database.Spaces', {
       }
 
       Ext.apply(params, searchdata);
+      delete params.indexObj;
       message = 'Are you sure to delete tuples by index ' +  searchdata.indexObj.name +
                 ' and key ' + searchdata.key + ' from space ' + space + '?<br/>' +
                 'This operation can not be undone';

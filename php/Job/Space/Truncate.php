@@ -7,7 +7,6 @@ use Exception;
 class Truncate extends Job
 {
     public array $key = [];
-    public ?int $index = null;
 
     public function run(): void
     {
@@ -17,7 +16,7 @@ class Truncate extends Job
             throw new Exception('Disabled for system spaces');
         }
 
-        if (count($this->key) == 0 || $this->index == null) {
+        if (count($this->key) == 0) {
             $this->getClient()->call('box.space.' . $space->getName() . ':truncate');
         } else {
             $this->getClient()->evaluate(

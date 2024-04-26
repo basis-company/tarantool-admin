@@ -6,8 +6,6 @@ use Exception;
 
 class Execute extends Job
 {
-    public string $code;
-
     public function run(): array
     {
         if (!getenv('TARANTOOL_DATABASE_QUERY')) {

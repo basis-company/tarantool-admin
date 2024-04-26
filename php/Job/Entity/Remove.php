@@ -40,7 +40,7 @@ class Remove extends Job
             $entity = $space->getRepository()
                 ->findOne($params);
 
-            $this->getMapper()->remove($entity);
+            $this->getMapper()->remove($space->getName(), $entity);
         }
     }
 }
