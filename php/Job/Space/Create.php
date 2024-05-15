@@ -8,11 +8,10 @@ class Create extends Job
 {
     public function run(): void
     {
-        $schema = $this->getMapper()->getSchema();
-        if ($schema->hasSpace($this->space)) {
+        if ($this->getMapper()->hasSpace($this->space)) {
             throw new Exception("Space $this->space already exists");
         }
 
-        $schema->createSpace($this->space);
+        $this->getMapper()->createSpace($this->space);
     }
 }

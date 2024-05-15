@@ -13,7 +13,7 @@ class Execute extends Job
         }
 
         $start = microtime(true);
-        $result = $this->getMapper()->getClient()->evaluate($this->code);
+        $result = $this->getMapper()->client->evaluate($this->code);
 
         foreach ($result as $k => $v) {
             if (!is_array($v)) {

@@ -34,7 +34,7 @@ class Select extends Job
                 $criteria = $criteria->andKey($key);
             }
 
-            $data = $this->getMapper()->getClient()->getSpace($this->space)
+            $data = $this->getMapper()->client->getSpace($this->space)
                 ->select($criteria);
 
             foreach ($data as $x => $tuple) {
@@ -48,23 +48,21 @@ class Select extends Job
                 }
             }
 
-            $schema = $this->getMapper()->getSchema();
-            $index = $schema->getSpace($this->space)->getIndex($this->index);
-
             try {
+                $space = $this->getMapper()->find('_vspace', [$this->space]);
                 if (!in_array($this->iterator, [0, 2])) {
                     throw new Exception("No total rows for non-equals iterator type");
                 }
-                if ($schema->getSpace($this->space)->getEngine() == 'vinyl') {
+                if ($space['engine'] == 'vinyl') {
                     if (getenv('TARANTOOL_ENABLE_VINYL_PAGE_COUNT') !== false) {
                         throw new Exception("No total rows for vinyl spaces");
                     }
                 }
-                [$total] = $this->getMapper()->getClient()
-                    ->call("box.space.$this->space.index.$index->name:count", $key);
+                [$total] = $this->getMapper()->client
+                    ->call("box.space.$this->space.index.[$this->index]:count", $key);
             } catch (Exception) {
                 $criteria = $criteria->andLimit($this->limit + 1);
-                $extra = $this->getMapper()->getClient()->getSpace($this->space)
+                $extra = $this->getMapper()->client->getSpace($this->space)
                     ->select($criteria);
                 // next page flag
                 $next = count($extra) > count($data);

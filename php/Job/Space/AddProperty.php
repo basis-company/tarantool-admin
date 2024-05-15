@@ -13,7 +13,7 @@ class AddProperty extends Job
     public function run(): void
     {
         $space = $this->getSpace();
-        if ($space->hasProperty($this->name)) {
+        if (in_array($this->name, $space->getFields())) {
             throw new Exception("Property $this->name already exists");
         }
 

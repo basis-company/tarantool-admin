@@ -11,10 +11,31 @@ class RemoveProperty extends Job
     public function run(): void
     {
         $space = $this->getSpace();
-        if (!$space->hasProperty($this->name)) {
+        $spaceName = $space->getName();
+        $fields = $space->getFields();
+        $partsNumbers = [];
+        foreach ($space->mapper->find('_vindex', ['id' => $space->getId()]) as $index) {
+            foreach ($index['parts'] as $part) {
+                $partsNumbers[] = (array_key_exists('field', $part) ? $part['field'] : $part[0]);
+            };
+        }
+
+        if (!in_array($this->name, $fields)) {
             throw new Exception("Property $this->name does not exist");
         }
 
-        $space->removeProperty($this->name);
+        if (!count($fields)) {
+            $space->getFieldFormat($this->name);
+        }
+
+        if (array_reverse($fields)[0] !== $this->name) {
+            throw new Exception("Remove only last property");
+        } elseif (in_array(array_search($this->name, $fields), $partsNumbers)) {
+            throw new Exception("This property is the part of index. Remove related index first.");
+        } else {
+            $format = $this->getFormat();
+            array_pop($format);
+            $space->mapper->client->call("box.space.$spaceName:format", $format);
+        }
     }
 }
