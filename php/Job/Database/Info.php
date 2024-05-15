@@ -8,7 +8,7 @@ class Info extends Job
 {
     public function run(): array
     {
-        $client = $this->getMapper()->getClient();
+        $client = $this->getMapper()->client;
 
         $stats = [
             'info' => 'box.info',

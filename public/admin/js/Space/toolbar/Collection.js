@@ -160,7 +160,7 @@ Ext.define('Admin.Space.toolbar.Collection', {
             var id = {};
 
             grid.indexes[0].parts.forEach(p => {
-              id[grid.fields[p[0] || p.field]] = record.get(grid.fields[p[0] || p.field]);
+              id[grid.fields[(p[0] == undefined) ? p.field : p[0]]] = record.get(grid.fields[(p[0] == undefined) ? p.field : p[0]]);
             });
             return Ext.apply({ id: id }, grid.params);
           });

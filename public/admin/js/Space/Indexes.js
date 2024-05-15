@@ -142,7 +142,7 @@ Ext.define('Admin.Space.Indexes', {
         return v.map(info => info[0]).join(', ');
       }
 
-      return v.map(info => format.getAt(info[0] || info.field).get('name')).join(', ');
+      return v.map(info => format.getAt((info[0] == undefined) ? info.field : info[0]).get('name')).join(', ');
     },
   } ],
 

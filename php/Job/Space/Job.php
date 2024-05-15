@@ -23,7 +23,16 @@ abstract class Job extends DatabaseJob
             throw new Exception('space name is not defined');
         }
 
-        return $this->spaceInstance = $this->getMapper()->getSchema()->getSpace($this->space);
+        return $this->spaceInstance = $this->getMapper()->getSpace($this->space);
+    }
+
+    public function getFormat()
+    {
+        $format = [];
+        foreach ($this->spaceInstance->getFields() as $field) {
+            $format[] = $this->spaceInstance->getFieldFormat($field);
+        }
+        return $format;
     }
 
     public function trimTail($arr): array

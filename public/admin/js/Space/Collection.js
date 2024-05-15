@@ -196,7 +196,7 @@ Ext.define('Admin.Space.Collection', {
 
   createEntityWindow(entity) {
     var id;
-    var primary = this.indexes[0].parts.map(p => this.fields[p[0] || p.field]);
+    var primary = this.indexes[0].parts.map(p => this.fields[(p[0] == undefined) ? p.field : p[0]]);
 
     if (entity) {
       var key = primary.map(f => entity.get(f));

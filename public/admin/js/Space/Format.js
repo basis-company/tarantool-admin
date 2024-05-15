@@ -95,10 +95,18 @@ Ext.define('Admin.Space.Format', {
         name: this.up('grid').selModel.getCellContext().view.selection.get('name'),
       }, this.up('space-tab').params);
 
-      dispatch('space.removeProperty', params)
-        .then(() => {
-          this.up('space-info').reloadInfo();
-        });
+      Ext.MessageBox.confirm(
+        'Danger!',
+        'Are you sure to drop property ' + params.name + ' in space ' + params.space + '?<br/>This operation can not be undone',
+        answer => {
+          if (answer == 'yes') {
+            dispatch('space.removeProperty', params)
+              .then(() => {
+                this.up('space-info').reloadInfo();
+              });
+          }
+        }
+      );
     },
   } ],
 

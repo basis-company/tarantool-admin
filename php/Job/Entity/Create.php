@@ -14,58 +14,31 @@ class Create extends Job
     {
         $space = $this->getSpace();
 
-        if (!count($space->getProperties())) {
-            $data = [];
-            foreach ($this->values as $k => $v) {
-                if (!is_numeric($k)) {
-                    throw new Exception("Named property $k without format definition");
-                }
-                $data[$k - 1] = $v;
-            }
+        $values = get_object_vars($this->values);
 
-            if (array_values($data) === $data) {
-                $data = array_values($data);
-            } else {
-                throw new Exception('add null values');
-            }
-
-            // additional index-based type casting for data
-            throw new Exception("Create instance without format is not implemented");
-            /*
-            $space->getMapper()->getClient()
-                ->getSpace($space->getName())
-                ->insert($data);
-
-            return ['entity' => $data];
-            */
-        } else {
-            $values = get_object_vars($this->values);
-            foreach ($values as $k => $v) {
-                $type = $space->getProperty($k)->type;
-                if ($type === 'uuid') {
-                    $v = new Uuid($v);
-                } elseif ($type == 'map') {
-                    if ($v !== null) {
-                        if (is_string($v)) {
-                            $v = json_decode($v);
-                        }
-                        if (!is_array($v) && !is_object($v)) {
-                            throw new Exception("Invalid type for '$k' ($type): $values[$k]");
-                        }
-                        $v = $this->toArray($v);
-                        if (!count($v)) {
-                            $v = null;
-                        }
+        foreach ($values as $k => $v) {
+            $type = $space->getFieldFormat($k)['type'];
+            if ($type === 'uuid') {
+                $v = new Uuid($v);
+            } elseif ($type == 'map') {
+                if ($v !== null) {
+                    if (is_string($v)) {
+                        $v = json_decode($v);
                     }
-                } elseif (is_object($v)) {
+                    if (!is_array($v) && !is_object($v)) {
+                        throw new Exception("Invalid type for '$k' ($type): $values[$k]");
+                    }
                     $v = $this->toArray($v);
+                    if (!count($v)) {
+                        $v = null;
+                    }
                 }
-                $values[$k] = $v;
+            } elseif (is_object($v)) {
+                $v = $this->toArray($v);
             }
-            $entity = $space->getRepository()->create($values);
-            $this->getMapper()->save($entity);
-
-            return ['entity' => $entity];
+            $values[$k] = $v;
         }
+        $entity = $space->create($values);
+        return ['entity' => $entity];
     }
 }
