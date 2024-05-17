@@ -11,7 +11,6 @@ class RemoveProperty extends Job
     public function run(): void
     {
         $space = $this->getSpace();
-        $spaceName = $space->getName();
         $fields = $space->getFields();
         $partsNumbers = [];
         foreach ($space->mapper->find('_vindex', ['id' => $space->getId()]) as $index) {
@@ -35,7 +34,7 @@ class RemoveProperty extends Job
         } else {
             $format = $this->getFormat();
             array_pop($format);
-            $space->mapper->client->call("box.space.$spaceName:format", $format);
+            $space->mapper->client->call("box.space." . $space->getName() . ":format", $format);
         }
     }
 }

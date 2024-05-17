@@ -14,11 +14,10 @@ class Info extends Job
             'id' => $space->getId(),
         ]);
         $fake = !count($format);
-        $spaceName = $space->getName();
 
         if ($fake) {
             $format = [];
-            $count = $this->getClient()->evaluate("return box.space['$spaceName'].field_count")[0];
+            $count = $this->getClient()->evaluate("return box.space['" . $space->getName() . "'].field_count")[0];
             $count = $count ?: 20; // default max columns
             foreach (range(1, $count) as $value) {
                 $format[] = [
@@ -31,8 +30,9 @@ class Info extends Job
         foreach ($indexes as $i => $index) {
             try {
                 $indexes[$i]['id'] = $index['iid'];
-                $indexName = $index['name'];
-                $indexes[$i]['size'] = $this->getClient()->call("box.space.$spaceName.index.$indexName:bsize")[0];
+                $indexes[$i]['size'] = $this->getClient()->call(
+                    "box.space." . $space->getName() . ".index." . $index['name'] . ":bsize"
+                )[0];
             } catch (Exception) {
                 // no bsize
                 break;
