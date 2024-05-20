@@ -1,6 +1,6 @@
 <?php
 
-namespace Job\Entity;
+namespace Job\Row;
 
 use Exception;
 use stdClass;
@@ -38,7 +38,6 @@ class Create extends Job
             }
             $values[$k] = $v;
         }
-        $entity = $space->create($values);
-        return ['entity' => $entity];
+        return ['row' => $space->create($values)];
     }
 }
