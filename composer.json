@@ -9,7 +9,7 @@
     "require": {
         "php": "^8",
         "symfony/uid": "^6.1.3",
-        "tarantool/mapper": "^6.0.0"
+        "tarantool/mapper": "^6.1.1"
     },
     "suggest": {
         "ext-decimal": "For using decimals with Tarantool 2.3+"
