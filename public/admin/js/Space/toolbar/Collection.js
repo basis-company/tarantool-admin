@@ -113,7 +113,7 @@ Ext.define('Admin.Space.toolbar.Collection', {
       text:    'Create',
       iconCls: 'fa fa-plus-circle',
       handler() {
-        this.up('grid').createEntityWindow();
+        this.up('grid').createWindow();
       },
     }, {
       text:     'Update',
@@ -125,7 +125,7 @@ Ext.define('Admin.Space.toolbar.Collection', {
           .getSelected();
         var record = selected.startCell ? selected.startCell.record : selected.selectedRecords.items[0];
 
-        this.up('grid').createEntityWindow(record);
+        this.up('grid').createWindow(record);
       },
     }, {
       text:     'Delete',
@@ -165,7 +165,7 @@ Ext.define('Admin.Space.toolbar.Collection', {
             return Ext.apply({ id: id }, grid.params);
           });
 
-          return dispatch.progress('entity.remove', params)
+          return dispatch.progress('row.remove', params)
             .then(() => this.up('toolbar-collection').refreshStore());
         });
       },

@@ -194,12 +194,12 @@ Ext.define('Admin.Space.Collection', {
     });
   },
 
-  createEntityWindow(entity) {
+  createWindow(row) {
     var id;
     var primary = this.indexes[0].parts.map(p => this.fields[(p[0] == undefined) ? p.field : p[0]]);
 
-    if (entity) {
-      var key = primary.map(f => entity.get(f));
+    if (row) {
+      var key = primary.map(f => row.get(f));
 
       id = key.length == 1 ? key[0] : '[' + key.join(', ') + ']';
     }
@@ -234,8 +234,8 @@ Ext.define('Admin.Space.Collection', {
         });
       }
 
-      if (entity) {
-        item.value = entity.get(field.name);
+      if (row) {
+        item.value = row.get(field.name);
 
         if (Ext.isObject(item.value) || Ext.isArray(item.value)) {
           if (complexTypes.indexOf(field.name) == -1) {
@@ -286,7 +286,7 @@ Ext.define('Admin.Space.Collection', {
       }
     }
 
-    var windowTitle = entity ? 'Update ' + this.params.space + ' ' + id : 'New ' + this.params.space;
+    var windowTitle = row ? 'Update ' + this.params.space + ' ' + id : 'New ' + this.params.space;
 
     if (window.configuration.readOnly) {
       windowTitle = 'Info for ' + this.params.space + ' ' + id;
@@ -305,11 +305,11 @@ Ext.define('Admin.Space.Collection', {
         bodyPadding: 10,
         items: columns.length > 1 ? columns : items,
         bbar: [ '->', {
-          text: entity ? 'Update' : 'Create',
+          text: row ? 'Update' : 'Create',
           formBind: true,
           hidden: window.configuration.readOnly,
           handler: () => {
-            var job = entity ? 'entity.update' : 'entity.create';
+            var job = row ? 'row.update' : 'row.create';
             var currentValues = win.down('form').getValues();
             var values = {};
 
@@ -351,8 +351,8 @@ Ext.define('Admin.Space.Collection', {
               return win.close();
             }
 
-            if (entity) {
-              primary.forEach(f =>  values[f] = entity.get(f));
+            if (row) {
+              primary.forEach(f =>  values[f] = row.get(f));
             }
 
             var params = Ext.apply({

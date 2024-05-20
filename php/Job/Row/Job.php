@@ -1,6 +1,6 @@
 <?php
 
-namespace Job\Entity;
+namespace Job\Row;
 
 use Job\Space\Job as SpaceJob;
 
