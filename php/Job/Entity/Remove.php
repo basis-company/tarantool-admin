@@ -17,7 +17,6 @@ class Remove extends Job
         if (!count($params)) {
             throw new Exception("Invalid params");
         }
-        $row = $space->findOne($params);
-        $space->delete($row);
+        $space->delete($space->findOrFail($params));
     }
 }
