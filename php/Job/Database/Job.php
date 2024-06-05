@@ -62,7 +62,7 @@ abstract class Job
     public function getMapper(): Mapper
     {
         if (!isset($this->mapper)) {
-            $this->mapper = new Mapper($this->getClient());
+            $this->mapper = new Mapper($this->getClient(), arrays: true);
         }
 
         return $this->mapper;
