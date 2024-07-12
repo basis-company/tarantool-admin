@@ -4,8 +4,57 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fee2fadd44ff4442af3e671200f347ec",
+    "content-hash": "4418aa70951ebd6d75f1be0989c85e73",
     "packages": [
+        {
+            "name": "psr/cache",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/cache.git",
+                "reference": "213f9dbc5b9bfbc4f8db86d2838dc968752ce13b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/cache/zipball/213f9dbc5b9bfbc4f8db86d2838dc968752ce13b",
+                "reference": "213f9dbc5b9bfbc4f8db86d2838dc968752ce13b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.0.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\Cache\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "https://www.php-fig.org/"
+                }
+            ],
+            "description": "Common interface for caching libraries",
+            "keywords": [
+                "cache",
+                "psr",
+                "psr-6"
+            ],
+            "support": {
+                "source": "https://github.com/php-fig/cache/tree/2.0.0"
+            },
+            "time": "2021-02-03T23:23:37+00:00"
+        },
         {
             "name": "rybakit/msgpack",
             "version": "v0.9.1",
@@ -70,16 +119,16 @@
         },
         {
             "name": "symfony/polyfill-uuid",
-            "version": "v1.29.0",
+            "version": "v1.30.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-uuid.git",
-                "reference": "3abdd21b0ceaa3000ee950097bc3cf9efc137853"
+                "reference": "2ba1f33797470debcda07fe9dce20a0003df18e9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-uuid/zipball/3abdd21b0ceaa3000ee950097bc3cf9efc137853",
-                "reference": "3abdd21b0ceaa3000ee950097bc3cf9efc137853",
+                "url": "https://api.github.com/repos/symfony/polyfill-uuid/zipball/2ba1f33797470debcda07fe9dce20a0003df18e9",
+                "reference": "2ba1f33797470debcda07fe9dce20a0003df18e9",
                 "shasum": ""
             },
             "require": {
@@ -129,7 +178,7 @@
                 "uuid"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-uuid/tree/v1.29.0"
+                "source": "https://github.com/symfony/polyfill-uuid/tree/v1.30.0"
             },
             "funding": [
                 {
@@ -145,20 +194,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-01-29T20:11:03+00:00"
+            "time": "2024-05-31T15:07:36+00:00"
         },
         {
             "name": "symfony/uid",
-            "version": "v6.4.3",
+            "version": "v6.4.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/uid.git",
-                "reference": "1d31267211cc3a2fff32bcfc7c1818dac41b6fc0"
+                "reference": "35904eca37a84bb764c560cbfcac9f0ac2bcdbdf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/uid/zipball/1d31267211cc3a2fff32bcfc7c1818dac41b6fc0",
-                "reference": "1d31267211cc3a2fff32bcfc7c1818dac41b6fc0",
+                "url": "https://api.github.com/repos/symfony/uid/zipball/35904eca37a84bb764c560cbfcac9f0ac2bcdbdf",
+                "reference": "35904eca37a84bb764c560cbfcac9f0ac2bcdbdf",
                 "shasum": ""
             },
             "require": {
@@ -203,7 +252,7 @@
                 "uuid"
             ],
             "support": {
-                "source": "https://github.com/symfony/uid/tree/v6.4.3"
+                "source": "https://github.com/symfony/uid/tree/v6.4.8"
             },
             "funding": [
                 {
@@ -219,26 +268,26 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-01-23T14:51:35+00:00"
+            "time": "2024-05-31T14:49:08+00:00"
         },
         {
             "name": "tarantool/client",
-            "version": "v0.10.0",
+            "version": "v0.10.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tarantool-php/client.git",
-                "reference": "ddc22b43d4c34ba53c7860cb57ea839b06777e1e"
+                "reference": "9b0225119deebb263dd8dcaa11b89dfdd109cd73"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tarantool-php/client/zipball/ddc22b43d4c34ba53c7860cb57ea839b06777e1e",
-                "reference": "ddc22b43d4c34ba53c7860cb57ea839b06777e1e",
+                "url": "https://api.github.com/repos/tarantool-php/client/zipball/9b0225119deebb263dd8dcaa11b89dfdd109cd73",
+                "reference": "9b0225119deebb263dd8dcaa11b89dfdd109cd73",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.2.5|^8",
                 "rybakit/msgpack": "^0.9",
-                "symfony/uid": "^5.1|^6"
+                "symfony/uid": "^5.1|^6|^7"
             },
             "require-dev": {
                 "ext-json": "*",
@@ -246,7 +295,7 @@
                 "friendsofphp/php-cs-fixer": "^2.19",
                 "monolog/monolog": "^1.24|^2.0",
                 "psr/log": "^1.1",
-                "tarantool/phpunit-extras": "^0.1.10",
+                "tarantool/phpunit-extras": "^0.2.0",
                 "vimeo/psalm": "^3.9|^4"
             },
             "suggest": {
@@ -257,7 +306,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "0.9.x-dev"
+                    "dev-master": "0.10.x-dev"
                 }
             },
             "autoload": {
@@ -284,7 +333,7 @@
             ],
             "support": {
                 "issues": "https://github.com/tarantool-php/client/issues",
-                "source": "https://github.com/tarantool-php/client/tree/v0.10.0"
+                "source": "https://github.com/tarantool-php/client/tree/v0.10.1"
             },
             "funding": [
                 {
@@ -292,38 +341,31 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-07-05T17:52:27+00:00"
+            "time": "2024-06-20T22:53:05+00:00"
         },
         {
             "name": "tarantool/mapper",
-            "version": "5.0.14",
+            "version": "6.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tarantool-php/mapper.git",
-                "reference": "e83e412448ed1d2d211cda24d1a78ae9cc315e6d"
+                "reference": "b32e9531d508a7d9d679a1915341c24f202674dc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tarantool-php/mapper/zipball/e83e412448ed1d2d211cda24d1a78ae9cc315e6d",
-                "reference": "e83e412448ed1d2d211cda24d1a78ae9cc315e6d",
+                "url": "https://api.github.com/repos/tarantool-php/mapper/zipball/b32e9531d508a7d9d679a1915341c24f202674dc",
+                "reference": "b32e9531d508a7d9d679a1915341c24f202674dc",
                 "shasum": ""
             },
             "require": {
                 "php": ">=8.0",
-                "tarantool/client": ">=0.9.0"
+                "psr/cache": "^2.0",
+                "tarantool/client": ">=0.10.0"
             },
             "require-dev": {
-                "nesbot/carbon": "^2.51.1",
-                "phpdocumentor/reflection-docblock": "^5.2.2",
+                "monolog/monolog": "^2.9.3",
                 "phpunit/phpunit": "^9.5",
-                "psr/log": "^1.1.4",
-                "rybakit/msgpack": "^0.8.0",
-                "symfony/uid": "^v5.3.3"
-            },
-            "suggest": {
-                "ext-msgpack": "For using PeclPacker.",
-                "phpdocumentor/reflection-docblock": "Annotation Plugin",
-                "rybakit/msgpack": "For using PurePacker."
+                "symfony/cache": "^5.4.38"
             },
             "type": "library",
             "autoload": {
@@ -352,9 +394,9 @@
             ],
             "support": {
                 "issues": "https://github.com/tarantool-php/mapper/issues",
-                "source": "https://github.com/tarantool-php/mapper/tree/5.0.14"
+                "source": "https://github.com/tarantool-php/mapper/tree/6.2.2"
             },
-            "time": "2023-12-26T11:30:57+00:00"
+            "time": "2024-07-10T15:25:25+00:00"
         }
     ],
     "packages-dev": [],
@@ -364,9 +406,8 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "ext-decimal": "*",
         "php": "^8"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.3.0"
 }
