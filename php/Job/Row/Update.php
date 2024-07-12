@@ -27,6 +27,10 @@ class Update extends Job
             $type = $space->getFieldFormat($k)['type'];
             if ($type === 'uuid') {
                 $v = new Uuid($v);
+            } elseif ($type == '*') {
+                if (is_object($v)) {
+                    $v = $this->toArray($v);
+                }
             } elseif ($type == 'map') {
                 if ($v !== null) {
                     if (is_string($v)) {
