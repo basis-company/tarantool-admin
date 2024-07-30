@@ -63,13 +63,16 @@ class Select extends Job
                         throw new Exception("No total rows for vinyl spaces");
                     }
                 }
-                [$total] = $this->getMapper()->client
-                    ->evaluate(
-                        "local key = ...
-                        return box.space.$this->space.index[$this->index]
-                        :count(key)",
-                        $key
-                    );
+
+                $index_name = $this->getMapper()->find(
+                    '_vindex',
+                    ['id' => $space['id'], 'iid' => $this->index]
+                )[0]['name'];
+
+                [$total] = $this->getMapper()->client->call(
+                    "box.space.$this->space.index.$index_name:count",
+                    $key
+                );
             } catch (Exception) {
                 $criteria = $criteria->andLimit($this->limit + 1);
                 $extra = $this->getMapper()->client->getSpace($this->space)
