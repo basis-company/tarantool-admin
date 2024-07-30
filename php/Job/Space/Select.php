@@ -65,7 +65,7 @@ class Select extends Job
                 }
                 [$total] = $this->getMapper()->client
                     ->evaluate(
-                        " local key = ...
+                        "local key = ...
                         return box.space.$this->space.index[$this->index]
                         :count(key)",
                         $key
@@ -85,11 +85,13 @@ class Select extends Job
 
         if (!json_encode($data)) {
             foreach ($data as $i => &$tuple) {
-                array_walk_recursive($tuple, function (&$v) {
-                    if (is_string($v) && !json_encode($v)) {
-                        $v = '!!binary ' . base64_encode($v);
+                array_walk_recursive(
+                    $tuple, function (&$v) {
+                        if (is_string($v) && !json_encode($v)) {
+                            $v = '!!binary ' . base64_encode($v);
+                        }
                     }
-                });
+                );
             }
         }
 
