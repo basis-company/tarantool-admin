@@ -49,9 +49,14 @@ class Select extends Job
             }
 
             try {
-                $space = $this->getMapper()->find('_vspace', [$this->space]);
+                [$space] = $this->getMapper()->find(
+                    '_vspace',
+                    ['name' => $this->space]
+                );
                 if (!in_array($this->iterator, [0, 2])) {
-                    throw new Exception("No total rows for non-equals iterator type");
+                    throw new Exception(
+                        "No total rows for non-equals iterator type"
+                    );
                 }
                 if ($space['engine'] == 'vinyl') {
                     if (getenv('TARANTOOL_ENABLE_VINYL_PAGE_COUNT') !== false) {
@@ -59,7 +64,12 @@ class Select extends Job
                     }
                 }
                 [$total] = $this->getMapper()->client
-                    ->call("box.space.$this->space.index.[$this->index]:count", $key);
+                    ->evaluate(
+                        " local key = ...
+                        return box.space.$this->space.index[$this->index]
+                        :count(key)",
+                        $key
+                    );
             } catch (Exception) {
                 $criteria = $criteria->andLimit($this->limit + 1);
                 $extra = $this->getMapper()->client->getSpace($this->space)
