@@ -64,13 +64,17 @@ class Select extends Job
                     }
                 }
 
-                $index_name = $this->getMapper()->find(
-                    '_vindex',
-                    ['id' => $space['id'], 'iid' => $this->index]
-                )[0]['name'];
+                $index = $this->getMapper()->findOrFail(
+                    '_vindex', [
+                        'id' => $space['id'],
+                        'iid' => $this->index
+                    ]
+                );
+
+                $indexName = $index['name'];
 
                 [$total] = $this->getMapper()->client->call(
-                    "box.space.$this->space.index.$index_name:count",
+                    "box.space.$this->space.index.$indexName:count",
                     $key
                 );
             } catch (Exception) {
