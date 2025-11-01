@@ -12,11 +12,13 @@ Application can be configured via environment:
 * TARANTOOL_CONNECT_TIMEOUT - connect timeout
 * TARANTOOL_CONNECTIONS - comma-separated connection strings
 * TARANTOOL_CONNECTIONS_READONLY - disable connections editor
-* TARANTOOL_DATABASE_QUERY - enable Query database tab
+* TARANTOOL_DATABASE_QUERY - enable Lua Query database tab
+* TARANTOOL_SQL_QUERY - enable SQL Query database tab
 * TARANTOOL_ENABLE_VINYL_PAGE_COUNT - if your vinyl spaces are not to large, you can enable index:count requests
 * TARANTOOL_READONLY - disable any database changes
 * TARANTOOL_SOCKET_TIMEOUT - connection read/write timeout
 * TARANTOOL_TCP_NODELAY - disable Nagle TCP algorithm
+* TARANTOOL_SQL_LIMIT - specifies a limit on the number of records for SQL SELECT. By default, 500. To remove the limit, set 0.
 
 ## You can build image yourself.
 * Clone repository: `git clone https://github.com/basis-company/tarantool-admin.git`
