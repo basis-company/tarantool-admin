@@ -6,6 +6,10 @@ Ext.define('Admin.Database.Sql', {
     border: false,
     referenceHolder: true,
 
+    requires: [
+        'Admin.field.SqlEditor'
+    ],
+
     layout: {
         type: 'vbox',
         align: 'stretch',
@@ -14,7 +18,10 @@ Ext.define('Admin.Database.Sql', {
     listeners: {
         single: true,
         afterlayout() {
-            this.down('textarea').focus();
+            var ed = this.down('database-sql-editor') || this.down('textarea');
+            if (ed && ed.focus) {
+                ed.focus();
+            }
         },
     },
 
@@ -32,21 +39,11 @@ Ext.define('Admin.Database.Sql', {
         },
         layout: 'fit',
         items: [{
-            xtype: 'textarea',
+            xtype: 'database-sql-editor',
             value: 'SELECT 1 as one',
-            cls: 'query-textarea',
-            grow: true,
-            flex: 1,
+            minHeight: 80,
             maxHeight: 300,
-            listeners: {
-                specialkey(f, e) {
-                    if (e.keyCode === 13 && (e.ctrlKey || e.metaKey)) {
-                        f.up('database-sql')
-                            .down('[text=Execute]')
-                            .handler();
-                    }
-                },
-            },
+            flex: 1,
         }],
     }, {
         bodyPadding: 10,
@@ -220,9 +217,10 @@ Ext.define('Admin.Database.Sql', {
             handler() {
                 var panel = this.up('database-sql');
                 var btn = this; // Execute
-                var sql = panel.lookupReference('sqlTextarea')
-                    ? panel.lookupReference('sqlTextarea').getValue()
-                    : panel.down('textarea').getValue();
+                var editorCmp = panel.down('database-sql-editor');
+                var sql = (editorCmp && editorCmp.getValue)
+                    ? editorCmp.getValue()
+                    : (panel.down('textarea') ? panel.down('textarea').getValue() : '');
 
                 btn.setDisabled(true);
                 panel.setLoading('Executing…');
