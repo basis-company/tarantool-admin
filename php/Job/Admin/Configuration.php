@@ -26,6 +26,7 @@ class Configuration
             'connectionsReadOnly' => (bool) getenv('TARANTOOL_CONNECTIONS_READONLY'),
             'connections' => explode(',', getenv('TARANTOOL_CONNECTIONS')),
             'query' => (bool) getenv('TARANTOOL_DATABASE_QUERY'),
+            'sql' => (bool) getenv('TARANTOOL_SQL_QUERY'),
             'readOnly' => getenv('TARANTOOL_READONLY') == 'true' || getenv('TARANTOOL_READONLY') == '1',
             'version' => $version,
             'latest' => $latest,
