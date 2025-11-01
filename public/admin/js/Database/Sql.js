@@ -40,7 +40,6 @@ Ext.define('Admin.Database.Sql', {
         layout: 'fit',
         items: [{
             xtype: 'database-sql-editor',
-            value: 'SELECT 1 as one',
             minHeight: 80,
             maxHeight: 300,
             flex: 1,
