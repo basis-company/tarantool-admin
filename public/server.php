@@ -35,5 +35,6 @@ try {
     header('Content-Type: application/json');
     echo json_encode(['success' => true, 'data' => $result]);
 } catch (Exception $e) {
-    echo $e->getMessage();
+    header('Content-Type: application/json');
+    echo json_encode(['success' => false, 'message' => $e->getMessage()]);
 }

@@ -10,6 +10,7 @@ Ext.define('Admin.Database.Tab', {
   requires: [
     'Admin.Database.Info',
     'Admin.Database.Query',
+    'Admin.Database.Sql',
     'Admin.Database.Spaces',
   ],
 
@@ -53,6 +54,10 @@ Ext.define('Admin.Database.Tab', {
       this.activeTab = 0;
     }
 
+    if (this.activeTab == 2 && window.Admin.Database.Tab.prototype.items[2].hidden) {
+      this.activeTab = 0;
+    }
+
     this.callParent(arguments);
   },
 
@@ -60,6 +65,8 @@ Ext.define('Admin.Database.Tab', {
     xtype: 'database-info',
   }, {
     xtype: 'database-query',
+  }, {
+    xtype: 'database-sql',
   }, {
     xtype: 'database-spaces',
   } ],

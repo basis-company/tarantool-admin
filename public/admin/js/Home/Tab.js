@@ -120,6 +120,7 @@ Ext.define('Admin.Home.Tab', {
 
         Ext.require('Admin.Database.Tab', function() {
           window.Admin.Database.Tab.prototype.items[1].hidden = !result.query;
+          window.Admin.Database.Tab.prototype.items[2].hidden = !result.sql;
         });
 
         if (Ext.isArray(result.connections) && result.connections[0].length) {
