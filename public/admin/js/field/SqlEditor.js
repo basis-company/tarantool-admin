@@ -60,9 +60,7 @@ Ext.define('Admin.field.SqlEditor', {
                     wrap: !!me.getWrap(),
                     highlightActiveLine: true,
                 });
-                if (me.getValue()) {
-                    me.editor.session.setValue(me.getValue());
-                }
+                me.editor.session.setValue(this.config.value);
                 // Hotkey: Ctrl/Cmd + Enter → Execute
                 me.editor.commands.addCommand({
                     name: 'execute-sql',
@@ -135,6 +133,12 @@ Ext.define('Admin.field.SqlEditor', {
     },
 
     getValue: function () {
+        if (this.editor) {
+            return this.editor.session.getValue();
+        }
+        if (this.fallbackTextarea) {
+            return this.fallbackTextarea.value;
+        }
         return this.config && typeof this.config.value !== 'undefined' ? this.config.value : '';
     },
 
