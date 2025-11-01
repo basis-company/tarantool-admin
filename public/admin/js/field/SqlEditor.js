@@ -6,7 +6,9 @@ Ext.define('Admin.field.SqlEditor', {
     name: 'sql-editor',
 
     config: {
-        value: 'SELECT 1 as one',
+        value: '-- Remember that Tarantool converts all identifiers to uppercase by default. ' +
+            'When referring to identifiers, enclose them in quotation marks. Example: \n' +
+            'SELECT "s"."id" FROM "space" AS "s";',
         theme: 'ace/theme/textmate',
         mode: 'ace/mode/sql',
         fontSize: 12,
@@ -133,12 +135,6 @@ Ext.define('Admin.field.SqlEditor', {
     },
 
     getValue: function () {
-        if (this.editor) {
-            return this.editor.session.getValue();
-        }
-        if (this.fallbackTextarea) {
-            return this.fallbackTextarea.value;
-        }
         return this.config && typeof this.config.value !== 'undefined' ? this.config.value : '';
     },
 
