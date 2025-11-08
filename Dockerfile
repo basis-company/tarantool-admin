@@ -18,6 +18,8 @@ RUN wget -q https://use.fontawesome.com/releases/v5.0.6/fontawesome-free-5.0.6.z
     && unzip -q ./fontawesome-free-5.0.6.zip \
     && unzip -q ./ext-6.2.0-gpl.zip
 
+RUN git clone --branch v1.5.0 --depth 1 https://github.com/ajaxorg/ace-builds.git
+
 COPY .git .git/
 RUN CI_COMMIT_TAG=$(git describe --tags) \
     CI_COMMIT_REF_NAME=$(git rev-parse --abbrev-ref HEAD) \
@@ -70,5 +72,8 @@ COPY public public/
 COPY --from=build /build/fontawesome-free-5.0.6/on-server public/admin/fontawesome-free-5.0.6
 COPY --from=build /build/ext-6.2.0/build/ext-all.js public/admin/ext-6.2.0/ext-all.js
 COPY --from=build /build/ext-6.2.0/build/classic/theme-crisp public/admin/ext-6.2.0/classic/theme-crisp
+COPY --from=build /build/ace-builds/src-min-noconflict/ace.js public/admin/ace/ace.js
+COPY --from=build /build/ace-builds/src-min-noconflict/mode-sql.js public/admin/ace/mode-sql.js
+COPY --from=build /build/ace-builds/src-min-noconflict/theme-textmate.js public/admin/ace/theme-textmate.js
 COPY --from=build /build/vendor vendor/
 COPY --from=build /build/version.php var/

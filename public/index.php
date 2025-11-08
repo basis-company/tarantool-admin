@@ -22,9 +22,9 @@ if (file_exists($filename)) {
     </head>
     <body>
         <!-- Ace Editor (vendored locally) -->
-        <script src="/admin/vendor/ace/ace.js"></script>
-        <script src="/admin/vendor/ace/mode-sql.js"></script>
-        <script src="/admin/vendor/ace/theme-textmate.js"></script>
+        <script src="/admin/ace/ace.js"></script>
+        <script src="/admin/ace/mode-sql.js"></script>
+        <script src="/admin/ace/theme-textmate.js"></script>
 
         <script src="/admin/ext-6.2.0/ext-all.js"></script>
         <script src="/admin/js/bootstrap.js"></script>
