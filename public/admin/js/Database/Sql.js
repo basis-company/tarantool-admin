@@ -224,7 +224,7 @@ Ext.define('Admin.Database.Sql', {
                 btn.setDisabled(true);
                 panel.setLoading('Executing…');
 
-                dispatch('database.sql', Ext.apply({ sql_expression: sql }, panel.up('database-tab').params))
+                dispatch('database.sql', Ext.apply({ query: sql }, panel.up('database-tab').params))
                     .then(response => {
                         var result = panel.lookupReference('result') || panel.down('[name=result]');
 

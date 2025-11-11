@@ -8,7 +8,7 @@ use Tarantool\Client\Keys;
 
 class Sql extends Job
 {
-    public string $sql_expression;
+    public string $query;
 
     private const DEFAULT_LIMIT = 500;
     private const LIMITER_WRAPPER = "SELECT * FROM (%s) LIMIT %d";
@@ -20,33 +20,33 @@ class Sql extends Job
             throw new Exception("SQL code execution is forbidden");
         }
 
-        $tarantool_readonly =
+        $tarantoolReadonly =
             getenv("TARANTOOL_READONLY") === "true" ||
             getenv("TARANTOOL_READONLY") === "1";
 
-        $sql_expression = $this->sql_expression;
-        $sql_expression = $this->strip_sql_comments_regex($sql_expression);
+        $query = $this->query;
+        $query = $this->stripSqlCommentsRegex($query);
 
-        $is_read_query = $this->is_query_readonly($sql_expression);
+        $isReadQuery = $this->isQueryReadonly($query);
 
-        if (!$is_read_query && $tarantool_readonly) {
+        if (!$isReadQuery && $tarantoolReadonly) {
             throw new Exception("Tarantool admin is in readonly mode");
         }
 
-        $rows_limit = Sql::DEFAULT_LIMIT;
+        $rowsLimit = Sql::DEFAULT_LIMIT;
         if (
-            ($rows_limit_str = trim(getenv("TARANTOOL_SQL_LIMIT"))) &&
-            is_numeric($rows_limit_str)
+            ($rowsLimitStr = trim(getenv("TARANTOOL_SQL_LIMIT"))) &&
+            is_numeric($rowsLimitStr)
         ) {
-            $rows_limit = (int) $rows_limit_str;
+            $rowsLimit = (int) $rowsLimitStr;
         }
 
-        if ($is_read_query && $rows_limit > 0) {
-            $sql_expression = rtrim($sql_expression, ";\r\n\t ");
-            $sql_expression = sprintf(
+        if ($isReadQuery && $rowsLimit > 0) {
+            $query = rtrim($query, ";\r\n\t ");
+            $query = sprintf(
                 $this::LIMITER_WRAPPER,
-                $sql_expression,
-                $rows_limit,
+                $query,
+                $rowsLimit,
             );
         }
 
@@ -54,7 +54,7 @@ class Sql extends Job
         $mapper = $this->getMapper();
 
         try {
-            $response = $mapper->client->execute($sql_expression);
+            $response = $mapper->client->execute($query);
         } catch (\Throwable $e) {
             return [
                 "error" => $e->getMessage(),
@@ -73,19 +73,19 @@ class Sql extends Job
             "data" => $rows,
             "total" => count($rows),
             "timing" => 1000 * (microtime(true) - $start),
-            "limited" => $rows_limit > 0 ? count($rows) == $rows_limit : false,
-            "executed_sql" => $sql_expression,
+            "limited" => $rowsLimit > 0 ? count($rows) == $rowsLimit : false,
+            "executed_sql" => $query,
         ];
     }
 
     /**
-     * Returns true if sql_expression is read only
-     * @param string $sql_expression
+     * Returns true if query is read only
+     * @param string $query
      * @return bool
      */
-    private function is_query_readonly($sql_expression): bool
+    private function isQueryReadonly($query): bool
     {
-        return !preg_match($this::UPDATE_EXPR_REGEXP, $sql_expression);
+        return !preg_match($this::UPDATE_EXPR_REGEXP, $query);
     }
 
     /**
@@ -119,7 +119,7 @@ class Sql extends Job
         return [$msg, $columns, $rows];
     }
 
-    private function strip_sql_comments_regex($sql): string
+    private function stripSqlCommentsRegex($sql): string
     {
         // remove block comments not inside quotes
         $sql = preg_replace(
