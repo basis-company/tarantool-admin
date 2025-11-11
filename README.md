@@ -2,8 +2,8 @@
 This application can be used to manage schema and data in tarantool database using web gui.  
 Feel free to contribute any way.
 
-## Running existing build [![Docker Repository on Quay](https://quay.io/repository/basis-company/tarantool-admin/status "Docker Repository on Quay")](https://quay.io/repository/basis-company/tarantool-admin)
-Run `docker run -p 8000:80 quay.io/basis-company/tarantool-admin`
+## Running existing build
+Run `docker run -p 8000:80 basiscompany/tarantool-admin`
 Open [http://localhost:8000](http://localhost:8000) in your browser.
 
 ## Configure using env
