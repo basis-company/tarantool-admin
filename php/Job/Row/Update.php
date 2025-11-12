@@ -5,7 +5,6 @@ namespace Job\Row;
 use Exception;
 use stdClass;
 use Symfony\Component\Uid\Uuid;
-use Tarantool\Client\Schema\Operations;
 
 class Update extends Job
 {
@@ -18,8 +17,12 @@ class Update extends Job
 
         $format = $this->getFormat();
         foreach ($this->getMapper()->find('_vindex', ['id' => $space->getId()])[0]['parts'] as $part) {
-            $fieldName = $format[array_key_exists(0, $part) ? $part[0] : $part['field']]['name'];
+            $fieldFormat = $format[array_key_exists(0, $part) ? $part[0] : $part['field']];
+            $fieldName = $fieldFormat['name'];
             $pk[$fieldName] = $this->values->$fieldName;
+            if ($fieldFormat['type'] == 'uuid') {
+                $pk[$fieldName] = new Uuid($pk[$fieldName]);
+            }
         }
         $row = $space->findOrFail($pk);
         $changes = [];
