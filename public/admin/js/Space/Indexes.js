@@ -93,8 +93,16 @@ Ext.define('Admin.Space.Indexes', {
           });
       };
 
-      if (store.getAt(recordIndex).get('id') > 0) {
-        removeIndex();
+      if (store.getAt(recordIndex).get('iid') > 0) {
+        Ext.MessageBox.confirm(
+          'Warning!',
+          'Are you sure to drop index ' + params.name + ' in space ' + params.space + '?',
+          answer => {
+            if (answer == 'yes') {
+              removeIndex();
+            }
+          }
+        );
       }
       else {
         Ext.MessageBox.confirm(
