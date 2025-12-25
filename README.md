@@ -1,4 +1,6 @@
 # Tarantool admin
+[![Docker Build Test](https://github.com/basis-company/tarantool-admin/actions/workflows/build-test.yml/badge.svg)](https://github.com/basis-company/tarantool-admin/actions/workflows/build-test.yml)
+
 This application can be used to manage schema and data in tarantool database using web gui.  
 Feel free to contribute any way.
 
