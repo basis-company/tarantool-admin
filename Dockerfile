@@ -1,6 +1,6 @@
 # Build
 
-FROM php:apache AS build
+FROM php:8.4-apache AS build
 
 ARG CI_COMMIT_TAG=unknown
 ARG CI_COMMIT_REF_NAME=unknown
@@ -37,7 +37,7 @@ RUN composer install --prefer-dist --no-dev --no-autoloader --no-scripts --no-pr
 
 
 # Runtime
-FROM php:apache
+FROM php:8.4-apache
 
 WORKDIR /var/www/html
 
