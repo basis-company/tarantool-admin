@@ -19,6 +19,10 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      - name: Set vars
+        id: vars
+        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
       - name: Build and push
         uses: docker/build-push-action@v3
         with:
@@ -26,3 +30,8 @@ jobs:
           tags: |
             basiscompany/tarantool-admin:latest
             basiscompany/tarantool-admin:${{ github.ref_name }}
+          build-args: |
+            CI_COMMIT_TAG=${{ github.ref_name }}
+            CI_COMMIT_REF_NAME=${{ github.event.release.target_commitish }}
+            CI_COMMIT_SHA=${{ github.sha }}
+            CI_COMMIT_SHORT_SHA=${{ steps.vars.outputs.sha_short }}
