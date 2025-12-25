@@ -10,7 +10,7 @@ RUN curl -sSLf \
     chmod +x /usr/local/bin/install-php-extensions && \
     install-php-extensions gd xdebug
 
-RUN apt-get update && apt-get install -y git wget zip
+RUN apt-get update && apt-get install -y git wget zip libmpdec-dev
 RUN install-php-extensions decimal
 
 RUN wget -q https://use.fontawesome.com/releases/v5.0.6/fontawesome-free-5.0.6.zip \
@@ -49,8 +49,8 @@ RUN curl -sSLf \
 
 RUN install-php-extensions decimal
 
-RUN apt-get update && apt-get install -y zip zlib1g-dev libzip-dev uuid-dev \
-&& docker-php-ext-install zip opcache \
+RUN apt-get update && apt-get install -y zip zlib1g-dev libzip-dev uuid-dev libmpdec-dev \
+&& docker-php-ext-install zip \
 && pecl install uuid \
 && docker-php-ext-enable uuid \
 && a2enmod rewrite
