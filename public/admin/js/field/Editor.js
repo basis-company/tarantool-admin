@@ -1,0 +1,186 @@
+Ext.define('Admin.field.Editor', {
+  extend: 'Ext.Component',
+  xtype: 'database-editor',
+
+  config: {
+    value: '',
+    theme: 'ace/theme/textmate',
+    mode: 'ace/mode/text',
+    fontSize: 12,
+    wrap: true,
+    useWorker: false,
+    commandName: 'execute',
+    executePanel: null,
+    logPrefix: 'Editor',
+  },
+
+  // Size is controlled by the container (fixed height)
+  style: {
+    border: '1px solid #d0d0d0',
+    borderRadius: '2px',
+    backgroundColor: '#fff',
+  },
+
+  editor: null,
+  fallbackTextarea: null,
+
+  renderTpl: [
+    '<div class="ace-editor-el" style="position:relative;width:100%;height:100%;">',
+      '<div class="ace-editor" style="position:absolute;top:0;left:0;right:0;bottom:0;"></div>',
+    '</div>'
+  ],
+
+  initComponent() {
+    this.callParent(arguments);
+    this.on('afterrender', this.initAce, this, { single: true });
+    this.on('resize', this.refreshSize, this);
+  },
+
+  refreshSize() {
+    if (this.editor && this.editor.resize) {
+      this.editor.resize();
+    }
+  },
+
+  initAce() {
+    var me = this;
+    var el = me.el.down('.ace-editor');
+
+    if (!window.ace || !el) {
+      me.initFallback('ace-not-available');
+      return;
+    }
+
+    try {
+      me.editor = ace.edit(el.dom);
+      me.editor.session.setMode(me.getMode());
+      me.editor.session.setUseWorker(!!me.getUseWorker());
+      me.editor.setTheme(me.getTheme());
+      me.editor.setShowPrintMargin(false);
+      me.editor.setOptions({
+        fontSize: me.getFontSize(),
+        wrap: !!me.getWrap(),
+        highlightActiveLine: true,
+      });
+      me.editor.session.setValue(me.config.value || '');
+      // Hotkey: Ctrl/Cmd + Enter → Execute
+      me.editor.commands.addCommand({
+        name: me.getCommandName(),
+        bindKey: { win: 'Ctrl-Enter', mac: 'Command-Enter' },
+        exec: function () {
+            me.execute();
+        },
+      });
+    } catch (e) {
+      me.initFallback(e);
+    }
+  },
+
+  initFallback(reason) {
+    var me = this;
+    me.logFallback(reason);
+
+    var wrapper = me.el.down('.ace-editor');
+    if (!wrapper) {
+        return;
+    }
+
+    var ta = document.createElement('textarea');
+    ta.style.width = '100%';
+    ta.style.height = '100%';
+    ta.style.border = 'none';
+    ta.style.outline = 'none';
+    ta.style.resize = 'none';
+    ta.className = 'query-textarea';
+    ta.value = me.getValue() || '';
+
+    ta.addEventListener('keydown', function (e) {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        e.preventDefault();
+        me.execute();
+      }
+    });
+
+    wrapper.dom.innerHTML = '';
+    wrapper.dom.appendChild(ta);
+    me.fallbackTextarea = ta;
+  },
+
+  execute() {
+    var panel = this.up(this.getExecutePanel());
+    if (!panel) {
+      return;
+    }
+
+    var btn = panel.down('[text=Execute]');
+    if (btn && btn.handler) {
+      btn.handler.call(btn);
+    }
+  },
+
+  logFallback(reason) {
+    if (this._fallbackLogged) {
+      return;
+    }
+
+    var details = '';
+    if (typeof reason === 'string') {
+        details = reason;
+    } else if (reason && reason.message) {
+        details = reason.message;
+    }
+
+    if (typeof console !== 'undefined' && console && console.warn) {
+        console.warn('[' + this.getLogPrefix() + '] Ace failed to initialize; using fallback textarea.', details);
+    }
+
+    this._fallbackLogged = true;
+  },
+
+  getValue() {
+    if (this.editor) {
+      return this.editor.session.getValue();
+    }
+
+    if (this.fallbackTextarea) {
+      return this.fallbackTextarea.value;
+    }
+
+    return this.config && typeof this.config.value !== 'undefined' ? this.config.value : '';
+  },
+
+  setValue(v) {
+    v = v || '';
+
+    if (this.editor) {
+      this.editor.session.setValue(v);
+    } else if (this.fallbackTextarea) {
+      this.fallbackTextarea.value = v;
+    } else {
+      this.config.value = v;
+    }
+  },
+
+  focus() {
+    if (this.editor) {
+      this.editor.focus();
+      // place cursor at the end
+      var session = this.editor.session;
+      var row = session.getLength() - 1;
+      var col = session.getLine(row).length;
+      this.editor.moveCursorTo(row, col);
+    } else if (this.fallbackTextarea) {
+      this.fallbackTextarea.focus();
+    }
+  },
+
+  destroy() {
+    if (this.editor && this.editor.destroy) {
+      try { this.editor.destroy(); } catch (e) {}
+    }
+
+    this.editor = null;
+    this.fallbackTextarea = null;
+    this.callParent(arguments);
+  },
+});

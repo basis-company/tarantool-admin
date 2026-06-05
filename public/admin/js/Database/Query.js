@@ -5,6 +5,10 @@ Ext.define('Admin.Database.Query', {
   iconCls: 'fa fa-code',
   border: false,
 
+  requires: [
+    'Admin.field.QueryEditor',
+  ],
+
   layout: {
     type: 'vbox',
     align: 'stretch',
@@ -13,7 +17,11 @@ Ext.define('Admin.Database.Query', {
   listeners: {
     single: true,
     afterlayout() {
-      this.down('textarea').focus();
+      let ed = this.down('database-query-editor') || this.down('textarea');
+
+      if (ed && ed.focus) {
+        ed.focus();
+      }
     },
   },
 
@@ -31,21 +39,10 @@ Ext.define('Admin.Database.Query', {
     },
     layout: 'fit',
     items: [ {
-      xtype: 'textarea',
-      value: 'return box.space._space:select()',
-      cls: 'query-textarea',
-      grow: true,
-      flex: 1,
+      xtype: 'database-query-editor',
+      minHeight: 80,
       maxHeight: 300,
-      listeners: {
-        specialkey(f, e) {
-          if (e.keyCode == 13 && e.ctrlKey) {
-            f.up('database-query')
-              .down('[text=Execute]')
-              .handler();
-          }
-        },
-      },
+      flex: 1,
     } ],
   }, {
     bodyPadding: 10,
@@ -150,13 +147,15 @@ Ext.define('Admin.Database.Query', {
       text: 'Execute',
       iconCls: 'fa fa-play',
       handler() {
-        var script = this.up('database-query')
-          .down('textarea')
-          .getValue();
+        var panel = this.up('database-query');
+        var editorCmp = panel.down('database-query-editor');
+        var script = editorCmp && editorCmp.getValue
+          ? editorCmp.getValue()
+          : panel.down('textarea').getValue();
 
-        dispatch('database.execute', Ext.apply({ code: script }, this.up('database-tab').params))
+        dispatch('database.execute', Ext.apply({ code: script }, panel.up('database-tab').params))
           .then(result => {
-            this.up('database-query')
+            panel
               .down('[name=result]')
               .showResult(script, result);
           });

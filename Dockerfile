@@ -75,5 +75,6 @@ COPY --from=build /build/ext-6.2.0/build/classic/theme-crisp public/admin/ext-6.
 COPY --from=build /build/ace-builds/src-min-noconflict/ace.js public/admin/ace/ace.js
 COPY --from=build /build/ace-builds/src-min-noconflict/mode-sql.js public/admin/ace/mode-sql.js
 COPY --from=build /build/ace-builds/src-min-noconflict/theme-textmate.js public/admin/ace/theme-textmate.js
+COPY --from=build /build/ace-builds/src-noconflict/mode-lua.js public/admin/ace/mode-lua.js
 COPY --from=build /build/vendor vendor/
 COPY --from=build /build/version.php var/
