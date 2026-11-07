@@ -12,11 +12,19 @@ class Remove extends Job
 
     public function run(): void
     {
-        $space = $this->getSpace();
         $params = get_object_vars($this->id);
         if (!count($params)) {
             throw new Exception("Invalid params");
         }
-        $space->delete($space->findOrFail($params));
+
+        foreach ($this->getSpaceInstances() as $space) {
+            if ($space === null) {
+                continue;
+            }
+
+            foreach ($space->find($params) as $row) {
+                $space->delete($row);
+            }
+        }
     }
 }

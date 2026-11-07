@@ -10,32 +10,39 @@ class Truncate extends Job
 
     public function run(): void
     {
-        $space = $this->getSpace();
+        $instances = $this->getSpaceInstances();
 
-        if ($space->getId() < 512) {
+        $space = reset($instances);
+        if ($space && $space->getId() < 512) {
             throw new Exception('Disabled for system spaces');
         }
 
-        if (count($this->key) == 0) {
-            $this->getClient()->call('box.space.' . $space->getName() . ':truncate');
-        } else {
-            $this->getClient()->evaluate(
-                'local space, index, key, iterator = ...
-                box.begin()
-                box.space[space].index[index]:pairs(key, {iterator=iterator})
-                    :each(function(tuple)
-                        local pk = {}
-                        for _, part in pairs(box.space[space].index[0].parts) do
-                            table.insert(pk, tuple[part.fieldno])
-                        end
-                        box.space[space]:delete(pk)
-                    end)
-                box.commit()',
-                $space->getName(),
-                $this->index,
-                $this->trimTail($this->key),
-                $this->iterator
-            );
+        foreach ($instances as $instance) {
+            if ($instance === null) {
+                continue;
+            }
+
+            if (count($this->key) == 0) {
+                $instance->mapper->client->call('box.space.' . $instance->getName() . ':truncate');
+            } else {
+                $instance->mapper->client->evaluate(
+                    'local space, index, key, iterator = ...
+                    box.begin()
+                    box.space[space].index[index]:pairs(key, {iterator=iterator})
+                        :each(function(tuple)
+                            local pk = {}
+                            for _, part in pairs(box.space[space].index[0].parts) do
+                                table.insert(pk, tuple[part.fieldno])
+                            end
+                            box.space[space]:delete(pk)
+                        end)
+                    box.commit()',
+                    $instance->getName(),
+                    $this->indexNameOf($instance, $this->index) ?: $this->index,
+                    $this->trimTail($this->key),
+                    $this->iterator
+                );
+            }
         }
     }
 }

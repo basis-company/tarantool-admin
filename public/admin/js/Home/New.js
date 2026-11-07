@@ -2,7 +2,7 @@ Ext.define('Admin.Home.New', {
 
   extend: 'Ext.form.Panel',
 
-  height: 200,
+  height: 330,
   border: false,
   hidden: true,
   style: {
@@ -28,7 +28,6 @@ Ext.define('Admin.Home.New', {
 
   items: [ {
     fieldLabel: 'Hostname',
-    allowBlank: false,
     name: 'hostname',
   }, {
     fieldLabel: 'Port',
@@ -36,6 +35,23 @@ Ext.define('Admin.Home.New', {
     xtype: 'numberfield',
     minValue: 0,
     emptyText: 3301,
+  }, {
+    fieldLabel: 'Or a cluster',
+    name: 'name',
+  }, {
+    fieldLabel: 'Cluster hosts',
+    name: 'hosts',
+    xtype: 'textarea',
+    width: 250,
+    height: 70,
+    emptyText: 'host1:3301\nhost2:3301',
+    listeners: {
+      specialkey(field, e) {
+        if (e.getKey() == e.ENTER) {
+          e.stopEvent();
+        }
+      },
+    },
   }, {
     fieldLabel: 'Username',
     name: 'username',

@@ -10,10 +10,23 @@ class RemoveProperty extends Job
 
     public function run(): void
     {
-        $space = $this->getSpace();
-        $fields = $space->getFields();
+        $instances = $this->getSpaceInstances();
+
+        $reference = null;
+        foreach ($instances as $instance) {
+            if ($instance !== null) {
+                $reference = $instance;
+                break;
+            }
+        }
+
+        if ($reference === null) {
+            throw new Exception("Space $this->space does not exist");
+        }
+
+        $fields = $reference->getFields();
         $partsNumbers = [];
-        foreach ($space->mapper->find('_vindex', ['id' => $space->getId()]) as $index) {
+        foreach ($reference->mapper->find('_vindex', ['id' => $reference->getId()]) as $index) {
             foreach ($index['parts'] as $part) {
                 $partsNumbers[] = (array_key_exists('field', $part) ? $part['field'] : $part[0]);
             };
@@ -24,7 +37,7 @@ class RemoveProperty extends Job
         }
 
         if (!count($fields)) {
-            $space->getFieldFormat($this->name);
+            $reference->getFieldFormat($this->name);
         }
 
         if (array_reverse($fields)[0] !== $this->name) {
@@ -32,9 +45,15 @@ class RemoveProperty extends Job
         } elseif (in_array(array_search($this->name, $fields), $partsNumbers)) {
             throw new Exception("This property is the part of index. Remove related index first.");
         } else {
-            $format = $this->getFormat();
-            array_pop($format);
-            $space->mapper->client->call("box.space." . $space->getName() . ":format", $format);
+            foreach ($instances as $space) {
+                if ($space === null) {
+                    continue;
+                }
+
+                $format = $this->formatOf($space);
+                array_pop($format);
+                $space->mapper->client->call("box.space." . $space->getName() . ":format", $format);
+            }
         }
     }
 }

@@ -16,8 +16,9 @@ Ext.define('Admin.Home.Connections', {
   },
 
   store: {
-    fields: [ 'hostname', 'port', 'username', 'password' ],
+    fields: [ 'name', 'hosts', 'hostname', 'port', 'socket', 'username', 'password', 'cluster' ],
     sorters: [
+      { property: 'name', direction: 'ASC' },
       { property: 'hostname', direction: 'ASC' },
       { property: 'port', direction: 'ASC' },
       { property: 'username', direction: 'ASC' },
@@ -68,46 +69,50 @@ Ext.define('Admin.Home.Connections', {
     handler() {
       Ext.MessageBox.confirm('Confirmation', 'Are you sure want to remove all connections?<br/>This operation has no rollback!', (btn) => {
         if (btn == 'yes') {
-          var connection = this.up('grid')
-            .getSelectionModel()
-            .getSelection()[0]
-            .data;
-
-          this.up('home-tab').removeConnection(connection);
+          this.up('home-tab').clearConnections();
         }
       });
-      this.up('home-tab').clearConnections();
     },
   } ],
   columns: [ {
-    dataIndex: 'hostname',
-    header: 'Hostname',
+    dataIndex: 'name',
+    header: 'Name',
     align: 'center',
-    width: 150,
+    width: 120,
     renderer(v, e, r) {
-      return v || r.get('socket');
+      return v || '<span style="color: #999">-</span>';
     },
   }, {
-    header: 'Port',
-    dataIndex: 'port',
+    dataIndex: 'hosts',
+    header: 'Host(s)',
     align: 'center',
-    renderer(v, el) {
-      if (v == 3301) {
-        el.style = 'color: #999';
+    width: 220,
+    renderer(v, e, r) {
+      if (v) {
+        return Ext.isArray(v) ? v.join(', ') : v;
       }
 
-      return v;
+      return r.get('socket') || r.get('hostname');
     },
   }, {
     header: 'Username',
     dataIndex: 'username',
     align: 'center',
+    width: 100,
     renderer(v, el) {
       if (v == 'guest') {
         el.style = 'color: #999';
       }
 
       return v;
+    },
+  }, {
+    header: 'Cluster',
+    dataIndex: 'cluster',
+    align: 'center',
+    width: 70,
+    renderer(v) {
+      return v ? '<span class="fa fa-sitemap"></span>' : '';
     },
   } ],
 });

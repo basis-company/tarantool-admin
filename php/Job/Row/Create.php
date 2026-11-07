@@ -38,6 +38,16 @@ class Create extends Job
             }
             $values[$k] = $v;
         }
-        return ['row' => $space->create($values)];
+
+        $row = null;
+        foreach ($this->getSpaceInstances() as $dsn => $instance) {
+            if ($instance === null) {
+                throw new Exception("Space $this->space does not exist on $dsn");
+            }
+
+            $row = $instance->create($values);
+        }
+
+        return ['row' => $row];
     }
 }

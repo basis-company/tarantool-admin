@@ -12,56 +12,84 @@ class Update extends Job
 
     public function run(): void
     {
-        $pk = [];
-        $space = $this->getSpace();
+        $instances = $this->getSpaceInstances();
 
-        $format = $this->getFormat();
-        foreach ($this->getMapper()->find('_vindex', ['id' => $space->getId()])[0]['parts'] as $part) {
-            $fieldFormat = $format[array_key_exists(0, $part) ? $part[0] : $part['field']];
-            $fieldName = $fieldFormat['name'];
-            $pk[$fieldName] = $this->values->$fieldName;
-            if ($fieldFormat['type'] == 'uuid') {
-                $pk[$fieldName] = new Uuid($pk[$fieldName]);
+        $reference = null;
+        foreach ($instances as $instance) {
+            if ($instance !== null) {
+                $reference = $instance;
+                break;
             }
         }
-        $row = $space->findOrFail($pk);
-        $changes = [];
-        foreach ($this->values as $k => $v) {
-            $type = $space->getFieldFormat($k)['type'];
-            if ($type === 'uuid') {
-                $v = new Uuid($v);
-            } elseif ($type == '*') {
-                if (is_object($v)) {
-                    $v = $this->toArray($v);
+
+        if ($reference === null) {
+            throw new Exception("Space $this->space does not exist");
+        }
+
+        foreach ($instances as $dsn => $space) {
+            if ($space === null) {
+                continue;
+            }
+
+            $pk = [];
+            $format = $this->formatOf($space);
+
+            foreach ($space->mapper->find('_vindex', ['id' => $space->getId()])[0]['parts'] as $part) {
+                $fieldFormat = $format[array_key_exists(0, $part) ? $part[0] : $part['field']];
+                $fieldName = $fieldFormat['name'];
+                $pk[$fieldName] = $this->values->$fieldName;
+                if ($fieldFormat['type'] == 'uuid') {
+                    $pk[$fieldName] = new Uuid($pk[$fieldName]);
                 }
-            } elseif ($type == 'map') {
-                if ($v !== null) {
-                    if (is_string($v)) {
-                        $v = json_decode($v);
+            }
+
+            $rows = $space->find($pk);
+
+            if (!count($rows)) {
+                throw new Exception("Row not found in $this->space on $dsn");
+            }
+
+            $row = $rows[0];
+
+            $changes = [];
+            foreach ($this->values as $k => $v) {
+                $type = $space->getFieldFormat($k)['type'];
+                if ($type === 'uuid') {
+                    $v = new Uuid($v);
+                } elseif ($type == '*') {
+                    if (is_object($v)) {
+                        $v = $this->toArray($v);
                     }
-                    if (!is_array($v) && !is_object($v)) {
-                        $extra = '';
-                        if (is_string($this->values->$k)) {
-                            $extra .= ': ' . $this->values->$k;
+                } elseif ($type == 'map') {
+                    if ($v !== null) {
+                        if (is_string($v)) {
+                            $v = json_decode($v);
                         }
-                        throw new Exception("Invalid type for '$k' ($type)$extra");
+                        if (!is_array($v) && !is_object($v)) {
+                            $extra = '';
+                            if (is_string($this->values->$k)) {
+                                $extra .= ': ' . $this->values->$k;
+                            }
+                            throw new Exception("Invalid type for '$k' ($type)$extra");
+                        }
+                        $v = $this->toArray($v);
+                        if (!count($v)) {
+                            $v = null;
+                        }
                     }
-                    $v = $this->toArray($v);
-                    if (!count($v)) {
-                        $v = null;
+                } elseif ($type == 'unsigned') {
+                    if (is_string($v)) {
+                        $v = intval($v);
+                    }
+                } elseif ($type == 'number') {
+                    if (is_string($v)) {
+                        $v = floatval($v);
                     }
                 }
-            } elseif ($type == 'unsigned') {
-                if (is_string($v)) {
-                    $v = intval($v);
-                }
-            } elseif ($type == 'number') {
-                if (is_string($v)) {
-                    $v = floatval($v);
-                }
+                $changes[$k] = $v;
             }
-            $changes[$k] = $v;
+
+            $space->update($row, $changes);
         }
-        $space->update($row, $changes);
     }
 }

@@ -8,11 +8,19 @@ class Drop extends Job
 {
     public function run(): void
     {
-        $space = $this->getSpace();
-        if ($space->getId() < 512) {
+        $instances = $this->getSpaceInstances();
+
+        $space = reset($instances);
+        if ($space && $space->getId() < 512) {
             throw new Exception('Disabled for system spaces');
         }
 
-        $this->getClient()->call('box.space.' . $space->getName() . ':drop');
+        foreach ($instances as $instance) {
+            if ($instance === null) {
+                continue;
+            }
+
+            $instance->mapper->client->call('box.space.' . $instance->getName() . ':drop');
+        }
     }
 }

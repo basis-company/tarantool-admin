@@ -27,21 +27,8 @@ Ext.define('Admin.Database.Tab', {
   initComponent() {
     var params = this.params;
 
-    this.title = '';
-
-    if (params.username != 'guest') {
-      this.title += params.username + ' @ ';
-    }
-
-    if (params.socket) {
-      this.title += params.socket;
-    }
-    else {
-      this.title += params.hostname;
-
-      if (params.port != 3301) {
-        this.title += ' : ' + params.port;
-      }
+    if (!this.title || this.title == 'Database') {
+      this.title = (params.hosts || []).join(', ');
     }
 
     this.activeTab = +localStorage.getItem('database-default-item') || 0;

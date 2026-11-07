@@ -50,6 +50,12 @@ class Sql extends Job
             );
         }
 
+        $this->getClient();
+
+        if ($this->isCluster()) {
+            return $this->runCluster($query, $rowsLimit);
+        }
+
         $start = microtime(true);
         $mapper = $this->getMapper();
 
@@ -74,6 +80,72 @@ class Sql extends Job
             "total" => count($rows),
             "timing" => 1000 * (microtime(true) - $start),
             "limited" => $rowsLimit > 0 ? count($rows) == $rowsLimit : false,
+            "executed_sql" => $query,
+        ];
+    }
+
+    /**
+     * Runs the query on every host of the cluster and merges the rows.
+     */
+    protected function runCluster(string $query, int $rowsLimit): array
+    {
+        $start = microtime(true);
+
+        $columns = [];
+        $rows = [];
+        $messages = [];
+        $error = null;
+        $limited = false;
+
+        $hosts = $this->getMappers();
+
+        foreach ($hosts as $dsn => $mapper) {
+            try {
+                $response = $mapper->client->execute($query);
+            } catch (\Throwable $e) {
+                if ($error === null) {
+                    $error = $dsn . ': ' . $e->getMessage();
+                }
+                continue;
+            }
+
+            [$message, $hostColumns, $hostRows] = $this->parseExecuteResponse($response);
+
+            if ($message) {
+                $messages[] = $message;
+            }
+
+            if (!count($columns)) {
+                $columns = $hostColumns;
+            }
+
+            if ($rowsLimit > 0 && count($hostRows) == $rowsLimit) {
+                $limited = true;
+            }
+
+            $rows = array_merge($rows, $hostRows);
+        }
+
+        if ($error !== null && !count($rows) && !count($messages)) {
+            return [
+                "error" => $error,
+                "data" => [],
+                "total" => null,
+                "next" => false,
+                "timing" => 1000 * (microtime(true) - $start),
+            ];
+        }
+
+        return [
+            "error" => $error,
+            "columns" => $columns,
+            "message" => count($messages)
+                ? count($messages) . '/' . count($hosts) . ' hosts: ' . implode('; ', $messages)
+                : '',
+            "data" => $rows,
+            "total" => count($rows),
+            "timing" => 1000 * (microtime(true) - $start),
+            "limited" => $limited,
             "executed_sql" => $query,
         ];
     }

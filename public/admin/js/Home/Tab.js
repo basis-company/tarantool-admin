@@ -34,15 +34,25 @@ Ext.define('Admin.Home.Tab', {
     },
   },
 
-  showDatabase(params) {
-    params = {
-      hostname: params.hostname,
-      socket: params.socket,
-      port: params.port,
-      username: params.username,
-      password: params.password,
+  showDatabase(connection) {
+    // single hosts and clusters are dispatched uniformly as host lists
+    var params = {
+      hosts: this.getHosts(connection),
+      username: connection.username || 'guest',
+      password: connection.password || '',
     };
+
     var exists = false;
+
+    var title = connection.name;
+
+    if (!title) {
+      title = params.hosts[0].replace(/:3301$/, '');
+
+      if (params.username != 'guest') {
+        title = params.username + ' @ ' + title;
+      }
+    }
 
     this.up('tabpanel').items.each(item => {
       if (item.params && Ext.JSON.encode(item.params) == Ext.JSON.encode(params)) {
@@ -52,33 +62,120 @@ Ext.define('Admin.Home.Tab', {
     });
 
     if (!exists) {
-      var view = Ext.create('Admin.Database.Tab', { params: params });
+      var view = Ext.create('Admin.Database.Tab', { params: params, title: title });
 
       this.up('tabpanel').add(view);
       this.up('tabpanel').setActiveItem(view);
     }
   },
 
+  getHosts(connection) {
+    if (Ext.isArray(connection.hosts)) {
+      return connection.hosts;
+    }
+
+    if (connection.socket) {
+      return [connection.socket];
+    }
+
+    return [connection.hostname + ':' + (connection.port || 3301)];
+  },
+
+  /**
+   * Stored connections are either legacy `login@host:port` strings
+   * or cluster objects. Grid rows are normalized: `hosts` array plus
+   * an optional cluster `name`.
+   */
+  normalizeConnection(connection) {
+    if (Ext.isString(connection)) {
+      connection = this.parseConnectionString(connection);
+    }
+
+    if (Ext.isArray(connection.hosts)) {
+      return connection;
+    }
+
+    return {
+      name: connection.name || null,
+      cluster: !!connection.name,
+      hosts: this.getHosts(connection),
+      hostname: connection.hostname,
+      port: connection.port,
+      socket: connection.socket,
+      username: connection.username || 'guest',
+      password: connection.password || '',
+    };
+  },
+
+  connectionKey(connection) {
+    connection = this.normalizeConnection(connection);
+
+    return connection.name
+      ? 'cluster:' + connection.name
+      : connection.username + '@' + connection.hosts[0];
+  },
+
   createConnection() {
     var form = this.down('home-new');
 
-    if (form.isValid()) {
-      var connection = form.getValues();
+    if (!form.isValid()) {
+      return;
+    }
 
-      connection.port = connection.port || 3301;
-      connection.username = connection.username || 'guest';
-      form.reset();
+    var values = form.getValues();
 
-      if (connection.remember) {
-        var connections = Ext.JSON.decode(localStorage.getItem('connections')) || [];
+    var hosts = (values.hosts || '').split(/[\n,;]+/)
+      .map(host => host.trim())
+      .filter(host => host.length);
 
-        connections.push(this.getConnectionString(connection.hostname, connection.port, connection.username, connection.password));
+    var connection;
+
+    if (hosts.length) {
+      if (!values.name) {
+        Ext.MessageBox.alert('Warning!', 'Cluster connections require a name');
+
+        return;
+      }
+
+      connection = {
+        name: values.name,
+        hosts: hosts,
+        username: values.username || 'guest',
+        password: values.password || '',
+      };
+    }
+    else {
+      if (!values.hostname) {
+        Ext.MessageBox.alert('Warning!', 'Hostname or cluster hosts are required');
+
+        return;
+      }
+
+      connection = {
+        hostname: values.hostname,
+        port: values.port || 3301,
+        username: values.username || 'guest',
+        password: values.password || '',
+      };
+    }
+
+    form.reset();
+
+    if (values.remember) {
+      var connections = Ext.JSON.decode(localStorage.getItem('connections')) || [];
+
+      var stored = connection.name
+        ? connection
+        : this.getConnectionString(connection.hostname, connection.port, connection.username, connection.password);
+
+      if (!connections.some(entry => this.connectionKey(entry) == this.connectionKey(connection))) {
+        connections.push(stored);
         localStorage.setItem('connections', Ext.JSON.encode(connections));
         this.refreshConnections();
       }
-
-      this.showDatabase(connection);
     }
+
+    this.showDatabase(connection);
   },
 
   refreshConnections() {
@@ -123,21 +220,25 @@ Ext.define('Admin.Home.Tab', {
           window.Admin.Database.Tab.prototype.items[2].hidden = !result.sql;
         });
 
+        var map = {};
+
+        var addConnection = entry => {
+          var connection = this.normalizeConnection(entry);
+
+          map[this.connectionKey(connection)] = connection;
+        };
+
+        connections.forEach(addConnection);
+
         if (Ext.isArray(result.connections) && result.connections[0].length) {
-          var map = {};
-
-          connections.concat(result.connections).forEach(string => {
-            let connection = this.parseConnectionString(string);
-            let key = connection.username + '@' + connection.hostname + ':' + connection.port;
-
-            map[key] = string;
-          });
-          connections = Ext.Object.getValues(map);
+          result.connections.forEach(addConnection);
         }
+
+        connections = Ext.Object.getValues(map);
 
         if (connections.length) {
           grid.show();
-          grid.store.loadData(connections.map(string => this.parseConnectionString(string)));
+          grid.store.loadData(connections);
         }
         else {
           grid.hide();
@@ -147,15 +248,9 @@ Ext.define('Admin.Home.Tab', {
 
   removeConnection(connection) {
     var connections = Ext.JSON.decode(localStorage.getItem('connections')) || [];
-    var dsn = connection.username + '@' + connection.hostname + ':' + connection.port;
+    var key = this.connectionKey(connection);
 
-    connections
-      .filter(candidate => {
-        var connection = this.parseConnectionString(candidate);
-
-        return connection.username + '@' + connection.hostname + ':' + connection.port == dsn;
-      })
-      .forEach(todo => Ext.Array.remove(connections, todo));
+    connections = connections.filter(candidate => this.connectionKey(candidate) != key);
 
     localStorage.setItem('connections', Ext.JSON.encode(connections));
 

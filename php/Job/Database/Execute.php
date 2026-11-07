@@ -12,6 +12,12 @@ class Execute extends Job
             throw new Exception('Code execution is forbidden');
         }
 
+        $this->getClient();
+
+        if ($this->isCluster()) {
+            return $this->runCluster();
+        }
+
         $start = microtime(true);
         $result = $this->getMapper()->client->evaluate($this->code);
 
@@ -24,6 +30,38 @@ class Execute extends Job
         return [
             'result' => $result,
             'timing' => 1000 * (microtime(true) - $start),
+        ];
+    }
+
+    /**
+     * Evaluates the code on every host and concatenates the returned
+     * values: `return box.count()` on a cluster yields the count of
+     * each instance.
+     */
+    protected function runCluster(): array
+    {
+        $result = [];
+        $timing = 0;
+
+        foreach ($this->getMappers() as $dsn => $mapper) {
+            $start = microtime(true);
+            $returned = $mapper->client->evaluate($this->code);
+            $timing += 1000 * (microtime(true) - $start);
+
+            foreach ($returned as $k => $v) {
+                if (!is_array($v)) {
+                    $v = ['scalar' => $v];
+                }
+
+                $result[$k] = array_merge($result[$k] ?? [], $v);
+            }
+        }
+
+        ksort($result);
+
+        return [
+            'result' => array_values($result),
+            'timing' => $timing,
         ];
     }
 }
